@@ -16,6 +16,7 @@ public class Client {
     private LocalDate dateOfBirth;
     private UserRole role;
     private List<Movie> watchedMovies;
+    private List<Movie> watchList;
     public enum UserRole {
         ROLE_ADMIN, ROLE_CLIENT
     }
@@ -72,5 +73,11 @@ public class Client {
     }
     public void setWatchedMovies(List<Movie> watchedMovies) {
         this.watchedMovies = watchedMovies;
+    }
+    public List<Movie> getWatchList() {
+        return watchList;
+    }
+    public void setWatchList(List<Movie> watchList) {
+        this.watchList = watchList;
     }
 }

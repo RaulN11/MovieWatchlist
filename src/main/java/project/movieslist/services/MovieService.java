@@ -1,8 +1,11 @@
 package project.movieslist.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import project.movieslist.model.Movie;
+import project.movieslist.model.Review;
 import project.movieslist.repositories.MovieRepository;
 
 import java.util.List;
@@ -15,8 +18,8 @@ public class MovieService {
     public MovieService(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
     }
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public Page<Movie> getAllMovies(Pageable pageable) {
+        return movieRepository.findAll(pageable);
     }
     public Optional<Movie> getMovieById(String id) {
         return movieRepository.findById(id);
@@ -27,8 +30,8 @@ public class MovieService {
     public void deleteMovie(String id) {
         movieRepository.deleteById(id);
     }
-    public List<Movie> getMoviesByGenre(String genre) {
-        return movieRepository.findByGenreIgnoreCase(genre);
+    public Page<Movie> getMoviesByGenre(Pageable pageable,String genre) {
+        return movieRepository.findByGenreIgnoreCase(pageable,genre);
     }
     public long getMovieCount(){
         return movieRepository.count();
@@ -47,6 +50,9 @@ public class MovieService {
     }
     public Optional<Movie> findFirstByTitle(String title) {
         return movieRepository.findFirstByTitleIgnoreCase(title);
+    }
+    public Page<Movie> getByTitleContaining(String title, Pageable pageable) {
+        return movieRepository.findByTitleContainingIgnoreCase(title, pageable);
     }
 
 }

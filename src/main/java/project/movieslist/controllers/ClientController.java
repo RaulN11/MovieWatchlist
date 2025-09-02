@@ -21,10 +21,9 @@ public class ClientController {
         String username=authentication.getName();
         return clientService.addMovieToWatchedListByTitle(username,title,rating,comment);
     }
-    @GetMapping("/watchlist")
-    public List<Movie> getWatchedMovies(Authentication authentication) {
+    @PostMapping("/addtowatchlist/{title}")
+    public Client addToWatchlist(@PathVariable String title, Authentication authentication) {
         String username=authentication.getName();
-        return clientService.getWatchedMoviesByUsername(username);
+        return clientService.addMoviesToWatchlistByTitle(username,title);
     }
-
 }

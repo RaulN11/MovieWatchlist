@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${movie.title}">Movie Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .movie-container {
+            max-width: 600px;
+            margin: 30px auto;
+            text-align: center;
+        }
+        .movie-poster {
+            max-width: 100%;
+            height: auto;
+        }
+        .movie-info {
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div class="movie-container">
+    <h1 th:text="${movie.title}"></h1>
+    <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
+         alt="Poster" class="movie-poster"/>
+    <div class="movie-info">
+        <p><strong>Director:</strong> <span th:text="${movie.director}"></span></p>
+        <p><strong>Genre:</strong> <span th:text="${movie.genre}"></span></p>
+        <p><strong>Year:</strong> <span th:text="${movie.year}"></span></p>
+        <p th:if="${movie.rating != null}">
+            <strong>Rating:</strong> <span th:text="${movie.rating}"></span>
+        </p>
+        <p th:if="${movie.comment != null}">
+            <strong>Comment:</strong> <span th:text="${movie.comment}"></span>
+        </p>
+    </div>
+    <div class="reviews" th:if="${movie.reviews!=null and !movie.reviews.isEmpty()}">
+        <h3>Reviews</h3>
+        <div th:each="review:${movie.reviews}"class="review">
+            <p><strong th:text="${review.author}">Author</strong></p>
+            <p th:if="${review.rating!=null}">
+                <strong>Rating:</strong><span th:text="${review.rating}"></span>/10
+            </p>
+            <p th:if="${review.comment!=null}">
+                <strong>Comment:</strong><span th:text="${review.comment}"></span>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

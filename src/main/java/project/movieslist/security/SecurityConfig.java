@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(httpForm -> {
                     httpForm.loginPage("/login").permitAll();
-                    httpForm.defaultSuccessUrl("/api/movies/all");
+                    httpForm.defaultSuccessUrl("/allmovies");
                 })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(registry -> {
