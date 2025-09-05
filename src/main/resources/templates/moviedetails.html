@@ -26,6 +26,9 @@
     <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
          alt="Poster" class="movie-poster"/>
     <div class="movie-info">
+        <form th:action="@{'/client/addtoliked/' + ${movie.title}}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-primary me-2">Add To Liked</button>
+        </form>
         <p><strong>Director:</strong> <span th:text="${movie.director}"></span></p>
         <p><strong>Genre:</strong> <span th:text="${movie.genre}"></span></p>
         <p><strong>Year:</strong> <span th:text="${movie.year}"></span></p>

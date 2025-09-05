@@ -105,5 +105,9 @@ public class ViewController {
         model.addAttribute("currentPath", request.getRequestURI());
         return "allmovies";
     }
+    @GetMapping("/chat-test")
+    public String chatTest() {
+        return "chat"; // Returns chat-test.html via Thymeleaf
+    }
 
 }

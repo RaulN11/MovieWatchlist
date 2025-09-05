@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.List;
-
 @Document(collection = "users")
 public class Client {
     @Id
@@ -17,6 +16,9 @@ public class Client {
     private UserRole role;
     private List<Movie> watchedMovies;
     private List<Movie> watchList;
+    private List<Movie> likedMovies;
+    private List<String> following;
+    private List<String> followers;
     public enum UserRole {
         ROLE_ADMIN, ROLE_CLIENT
     }
@@ -79,5 +81,29 @@ public class Client {
     }
     public void setWatchList(List<Movie> watchList) {
         this.watchList = watchList;
+    }
+
+    public List<Movie> getLikedMovies() {
+        return likedMovies;
+    }
+
+    public void setLikedMovies(List<Movie> likedMovies) {
+        this.likedMovies = likedMovies;
+    }
+
+    public List<String> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<String> following) {
+        this.following = following;
+    }
+
+    public List<String> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<String> followers) {
+        this.followers = followers;
     }
 }

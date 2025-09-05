@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Chat Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h2>Movie Chat</h2>
+
+<div>
+    <label>Receiver:</label>
+    <input type="text" id="receiver" placeholder="Username to chat with"/>
+</div>
+
+<div>
+    <input type="text" id="message" placeholder="Type message"/>
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<h3>Messages:</h3>
+<ul id="messages"></ul>
+
+<script>
+    let stompClient = null;
+    let conversationId = null;
+
+    function connect() {
+        const socket = new SockJS('/wss');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+        });
+    }
+
+    function sendMessage() {
+        const receiver = document.getElementById('receiver').value;
+        const content = document.getElementById('message').value;
+
+        if (!receiver || !content) return;
+
+        stompClient.send("/app/chat.send", {}, JSON.stringify({
+            receiver: receiver,
+            content: content
+        }));
+
+        document.getElementById('message').value = '';
+    }
+
+    // Subscribe dynamically when receiver is set
+    document.getElementById('receiver').addEventListener('change', function() {
+        const receiver = this.value;
+        if (!receiver) return;
+
+        // Optional: fetch conversationId from backend
+        fetch('/chat/conversations')
+            .then(res => res.json())
+            .then(conversations => {
+                const convo = conversations.find(c => c.participants.includes(receiver));
+                conversationId = convo ? convo.id : null;
+
+                if (conversationId) {
+                    stompClient.subscribe('/topic/conversation.' + conversationId, function(msg) {
+                        const message = JSON.parse(msg.body);
+                        const li = document.createElement('li');
+                        li.textContent = message.sender + ': ' + message.content;
+                        document.getElementById('messages').appendChild(li);
+                    });
+                }
+            });
+    });
+
+    connect();
+</script>
+</body>
+</html>

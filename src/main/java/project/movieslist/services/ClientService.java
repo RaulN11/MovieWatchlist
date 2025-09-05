@@ -16,6 +16,7 @@ import project.movieslist.repositories.MovieRepository;
 import project.movieslist.security.ClientSecurity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService implements UserDetailsService {
@@ -34,7 +35,9 @@ public class ClientService implements UserDetailsService {
         return client.map(ClientSecurity::new)
                 .orElseThrow(()->new UsernameNotFoundException("Username not found!"+username));
     }
-
+    public Optional<Client> getUserByUsername(String username){
+        return clientRepository.findByUsername(username);
+    }
     public Client addMovieToWatchedListByTitle(String username,String title, Double rating, String comment){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
@@ -99,6 +102,23 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
 
     }
+    public Client addMovieToLikedByTitle(String username,String title){
+        Client client=clientRepository.findByUsername(username)
+                .orElseThrow(()->new RuntimeException("Client not found"));
+        Movie movie=movieRepository.findFirstByTitleIgnoreCase(title)
+                .orElseThrow(()->new RuntimeException("Movie not found"));
+        List<Movie> liked=client.getLikedMovies();
+        if(liked==null){
+            liked=new ArrayList<>();
+            client.setLikedMovies(liked);
+        }
+        if(liked.contains(movie)){
+            throw new RuntimeException("Movie is already in the liked list");
+        }
+        liked.add(movie);
+        movieRepository.save(movie);
+        return clientRepository.save(client);
+    }
     public Page<Movie> getWatchedMoviesByUsername(String username, Pageable pageable){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
@@ -120,6 +140,26 @@ public class ClientService implements UserDetailsService {
         int start=(int)pageable.getOffset();
         int end=Math.min(start+pageable.getPageSize(),watchlist.size());
         return new PageImpl<>(watchlist.subList(start,end),pageable,watchlist.size());
+    }
+    public Client addToFollowing(String c1, String c2){
+        Client client1=clientRepository.findByUsername(c1)
+                .orElseThrow(()->new RuntimeException("Client not found"));
+        Client client2=clientRepository.findByUsername(c2)
+                .orElseThrow(()->new RuntimeException("Client not found"));
+        List<String> followingC1=client1.getFollowing();
+        if(followingC1==null){
+            followingC1=new ArrayList<>();
+            followingC1.add(client2.getUsername());
+            client1.setFollowing(followingC1);
+        }
+        List<String> followersc2=client2.getFollowers();
+        if(followersc2==null){
+            followersc2=new ArrayList<>();
+            followersc2.add(client1.getUsername());
+            client2.setFollowers(followersc2);
+        }
+        clientRepository.save(client2);
+        return clientRepository.save(client1);
     }
 
 
