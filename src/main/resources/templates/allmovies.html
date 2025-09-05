@@ -8,8 +8,11 @@
 <body>
 <div class="container mt-4">
     <h1>Movies List</h1>
-    <a th:href="@{/watched}" class="btn btn-primary me-2">Watched Movies</a>
-    <a th:href="@{/watchlist}" class="btn btn-secondary">Watchlist</a>
+    <div class="mb-3">
+        <a th:href="@{/watched}" class="btn btn-primary me-2">Watched Movies</a>
+        <a th:href="@{/watchlist}" class="btn btn-secondary me-2">Watchlist</a>
+        <a th:href="@{/chat}" class="btn btn-info">Chat</a>
+    </div>
     <table class="table table-dark table-striped">
         <thead>
         <tr>

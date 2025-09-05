@@ -17,6 +17,7 @@ import project.movieslist.security.ClientSecurity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientService implements UserDetailsService {
@@ -38,6 +39,14 @@ public class ClientService implements UserDetailsService {
     public Optional<Client> getUserByUsername(String username){
         return clientRepository.findByUsername(username);
     }
+
+    // New method for chat functionality
+    public List<String> getAllUsernames() {
+        return clientRepository.findAll().stream()
+                .map(Client::getUsername)
+                .collect(Collectors.toList());
+    }
+
     public Client addMovieToWatchedListByTitle(String username,String title, Double rating, String comment){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
@@ -161,7 +170,4 @@ public class ClientService implements UserDetailsService {
         clientRepository.save(client2);
         return clientRepository.save(client1);
     }
-
-
-
 }

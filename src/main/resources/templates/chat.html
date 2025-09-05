@@ -1,78 +1,281 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Movie Chat Test</title>
+    <title>Movie Chat</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .chat-header {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .users-section {
+            border-bottom: 1px solid #eee;
+            padding: 15px;
+        }
+        .user-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .messages-container {
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #fafafa;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .message.sent {
+            background: #007bff;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+        .message.received {
+            background: #e9ecef;
+            color: #333;
+            margin-right: auto;
+        }
+        .message-sender {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        .message-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+        .message-input input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        .message-input button {
+            padding: 12px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .message-input button:hover {
+            background: #0056b3;
+        }
+        .status {
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        .connected {
+            color: green;
+        }
+        .disconnected {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-<h2>Movie Chat</h2>
+<div class="chat-container">
+    <div class="chat-header">
+        <h2>Movie Chat System</h2>
+    </div>
 
-<div>
-    <label>Receiver:</label>
-    <input type="text" id="receiver" placeholder="Username to chat with"/>
+    <div class="status" id="connectionStatus">
+        <span class="disconnected">Connecting...</span>
+    </div>
+
+    <div class="users-section">
+        <label for="userSelect">Select user to chat with:</label>
+        <select id="userSelect" class="user-select">
+            <option value="">Choose a user...</option>
+        </select>
+    </div>
+
+    <div class="messages-container" id="messagesContainer">
+        <div style="text-align: center; color: #666; margin-top: 50px;">
+            Select a user to start chatting
+        </div>
+    </div>
+
+    <div class="message-input">
+        <input type="text" id="messageInput" placeholder="Type your message..." disabled/>
+        <button onclick="sendMessage()" id="sendButton" disabled>Send</button>
+    </div>
 </div>
-
-<div>
-    <input type="text" id="message" placeholder="Type message"/>
-    <button onclick="sendMessage()">Send</button>
-</div>
-
-<h3>Messages:</h3>
-<ul id="messages"></ul>
 
 <script>
     let stompClient = null;
-    let conversationId = null;
+    let currentUser = /*[[${username}]]*/ 'defaultUser'; // safely get current username from controller
+    let selectedUser = null;
 
     function connect() {
-        const socket = new SockJS('/wss');
+        const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function(frame) {
             console.log('Connected: ' + frame);
+            updateConnectionStatus(true);
+
+            // Subscribe to personal message queue
+            stompClient.subscribe('/user/queue/messages', function(message) {
+                const chatMessage = JSON.parse(message.body);
+                if (selectedUser === chatMessage.sender) {
+                    displayMessage(chatMessage.sender, chatMessage.content, false);
+                }
+            });
+
+            loadUsers();
+        }, function(error) {
+            console.log('Connection error: ' + error);
+            updateConnectionStatus(false);
+            setTimeout(connect, 5000); // Retry connection
         });
     }
 
-    function sendMessage() {
-        const receiver = document.getElementById('receiver').value;
-        const content = document.getElementById('message').value;
-
-        if (!receiver || !content) return;
-
-        stompClient.send("/app/chat.send", {}, JSON.stringify({
-            receiver: receiver,
-            content: content
-        }));
-
-        document.getElementById('message').value = '';
+    function updateConnectionStatus(connected) {
+        const statusElement = document.getElementById('connectionStatus');
+        statusElement.innerHTML = connected
+            ? '<span class="connected">Connected</span>'
+            : '<span class="disconnected">Disconnected - Retrying...</span>';
     }
 
-    // Subscribe dynamically when receiver is set
-    document.getElementById('receiver').addEventListener('change', function() {
-        const receiver = this.value;
-        if (!receiver) return;
+    async function loadUsers() {
+        try {
+            const response = await fetch('/users');
+            const users = await response.json();
+            const userSelect = document.getElementById('userSelect');
 
-        // Optional: fetch conversationId from backend
-        fetch('/chat/conversations')
-            .then(res => res.json())
-            .then(conversations => {
-                const convo = conversations.find(c => c.participants.includes(receiver));
-                conversationId = convo ? convo.id : null;
+            // Clear existing options except the first one
+            userSelect.innerHTML = '<option value="">Choose a user...</option>';
 
-                if (conversationId) {
-                    stompClient.subscribe('/topic/conversation.' + conversationId, function(msg) {
-                        const message = JSON.parse(msg.body);
-                        const li = document.createElement('li');
-                        li.textContent = message.sender + ': ' + message.content;
-                        document.getElementById('messages').appendChild(li);
-                    });
+            users.forEach(username => {
+                if (username !== currentUser) {
+                    const option = document.createElement('option');
+                    option.value = username;
+                    option.textContent = username;
+                    userSelect.appendChild(option);
                 }
             });
-    });
+        } catch (error) {
+            console.error('Error loading users:', error);
+        }
+    }
 
+    function onUserSelect() {
+        const userSelect = document.getElementById('userSelect');
+        selectedUser = userSelect.value;
+
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        if (selectedUser) {
+            messageInput.disabled = false;
+            sendButton.disabled = false;
+            loadChatHistory();
+        } else {
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+            document.getElementById('messagesContainer').innerHTML =
+                '<div style="text-align: center; color: #666; margin-top: 50px;">Select a user to start chatting</div>';
+        }
+    }
+
+    async function loadChatHistory() {
+        if (!selectedUser) return;
+
+        try {
+            const response = await fetch(`/messages/${currentUser}/${selectedUser}`);
+            const messages = await response.json();
+
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.innerHTML = '';
+
+            messages.forEach(message => {
+                displayMessage(message.sender, message.content, message.sender === currentUser);
+            });
+
+            scrollToBottom();
+        } catch (error) {
+            console.error('Error loading chat history:', error);
+        }
+    }
+
+    function displayMessage(sender, content, isSent) {
+        const messagesContainer = document.getElementById('messagesContainer');
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+
+        const senderDiv = document.createElement('div');
+        senderDiv.className = 'message-sender';
+        senderDiv.textContent = isSent ? 'You' : sender;
+
+        const contentDiv = document.createElement('div');
+        contentDiv.textContent = content;
+
+        messageDiv.appendChild(senderDiv);
+        messageDiv.appendChild(contentDiv);
+        messagesContainer.appendChild(messageDiv);
+
+        scrollToBottom();
+    }
+
+    function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const content = messageInput.value.trim();
+
+        if (!content || !selectedUser || !stompClient) return;
+
+        const chatMessage = {
+            sender: currentUser,
+            receiver: selectedUser,
+            content: content,
+            timestamp: new Date().toISOString()
+        };
+
+        stompClient.send('/app/chat', {}, JSON.stringify(chatMessage));
+        displayMessage(currentUser, content, true);
+        messageInput.value = '';
+    }
+
+    function scrollToBottom() {
+        const messagesContainer = document.getElementById('messagesContainer');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Attach event listener for user selection
+    document.getElementById('userSelect').addEventListener('change', onUserSelect);
+
+    // Initialize WebSocket connection
     connect();
 </script>
-</body>
-</html>

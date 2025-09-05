@@ -52,8 +52,11 @@ public class SecurityConfig {
                             "/login",
                             "/signup",
                             "/req/signup",
-                            "css/**",
-                            "js/**"
+                            "/css/**",
+                            "/js/**",
+                            "/ws/**",      // Allow WebSocket endpoint
+                            "/users",      // Allow users endpoint for chat
+                            "/messages/**" // Allow messages endpoint for chat
                     ).permitAll();
                     registry.requestMatchers("/api/admin/**").hasRole("ADMIN");
                     registry.anyRequest().authenticated();
