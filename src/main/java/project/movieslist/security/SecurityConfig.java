@@ -27,6 +27,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return clientService;
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -34,10 +35,12 @@ public class SecurityConfig {
         authProvider.setUserDetailsService(clientService);
         return authProvider;
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -48,19 +51,17 @@ public class SecurityConfig {
                 })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(registry -> {
+                    // Public endpoints
                     registry.requestMatchers(
                             "/login",
                             "/signup",
                             "/req/signup",
                             "/css/**",
                             "/js/**",
-                            "/ws/**",      // Allow WebSocket endpoint
-                            "/users",      // Allow users endpoint for chat
-                            "/messages/**" // Allow messages endpoint for chat
+                            "/ws/**"
                     ).permitAll();
                     registry.requestMatchers("/api/admin/**").hasRole("ADMIN");
                     registry.anyRequest().authenticated();
-
                 })
                 .build();
     }

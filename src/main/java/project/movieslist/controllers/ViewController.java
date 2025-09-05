@@ -1,6 +1,5 @@
 package project.movieslist.controllers;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +20,7 @@ public class ViewController {
     MovieService movieService;
     @Autowired
     ClientService clientService;
+
     @GetMapping("/login")
     public String login() {
         return "login";
@@ -30,6 +30,7 @@ public class ViewController {
     public String signup() {
         return "signup";
     }
+
     @GetMapping("/allmovies")
     public String allMovies(@RequestParam(defaultValue="0") int page, Model model, HttpServletRequest request) {
         int pageSize=5;
@@ -44,6 +45,7 @@ public class ViewController {
 
         return "allmovies";
     }
+
     @GetMapping("/genre/{genre}")
     public String allMoviesByGenre(@PathVariable String genre,@RequestParam(defaultValue="0") int page, Model model,HttpServletRequest request) {
         int pageSize=5;
@@ -57,6 +59,7 @@ public class ViewController {
         model.addAttribute("currentPath", request.getRequestURI());
         return "allmovies";
     }
+
     @GetMapping("/title/{title}")
     public String allMoviesByTitle(@PathVariable String title,@RequestParam(defaultValue="0") int page, Model model,HttpServletRequest request) {
         int pageSize=5;
@@ -70,6 +73,7 @@ public class ViewController {
         model.addAttribute("currentPath", request.getRequestURI());
         return "allmovies";
     }
+
     @GetMapping("/details/{title}")
     public String movieDetails(@PathVariable String title,Model model){
         var movies=movieService.getMoviesByTitle(title);
@@ -77,6 +81,7 @@ public class ViewController {
         model.addAttribute("movie", movie);
         return "moviedetails";
     }
+
     @GetMapping("/watched")
     public String watchedMovies(@RequestParam(defaultValue="0") int page, Model model,HttpServletRequest request, Authentication auth) {
         int pageSize=5;
@@ -91,6 +96,7 @@ public class ViewController {
         model.addAttribute("currentPath", request.getRequestURI());
         return "allmovies";
     }
+
     @GetMapping("/watchlist")
     public String watchlistMovies(@RequestParam(defaultValue = "0")int page, Model model, HttpServletRequest request, Authentication auth) {
         int pageSize=5;
@@ -105,10 +111,6 @@ public class ViewController {
         model.addAttribute("currentPath", request.getRequestURI());
         return "allmovies";
     }
-    @GetMapping("/chat")
-    public String chat(Model model, Authentication auth) {
-        model.addAttribute("currentUser", auth.getName());
-        return "chat"; // Returns chat.html via Thymeleaf
-    }
 
+    // Removed the duplicate /chat mapping - this is handled by ChatController now
 }

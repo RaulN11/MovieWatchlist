@@ -24,6 +24,9 @@
             color: white;
             padding: 15px;
             text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .users-section {
             border-bottom: 1px solid #eee;
@@ -102,12 +105,26 @@
         .disconnected {
             color: red;
         }
+        .back-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
     </style>
 </head>
 <body>
 <div class="chat-container">
     <div class="chat-header">
+        <a href="/allmovies" class="back-button">← Back to Movies</a>
         <h2>Movie Chat System</h2>
+        <span th:text="'Welcome, ' + ${currentUser}"></span>
     </div>
 
     <div class="status" id="connectionStatus">
@@ -135,7 +152,7 @@
 
 <script>
     let stompClient = null;
-    let currentUser = /*[[${username}]]*/ 'defaultUser'; // safely get current username from controller
+    let currentUser = /*[[${currentUser}]]*/ 'defaultUser';
     let selectedUser = null;
 
     function connect() {
@@ -146,11 +163,12 @@
             console.log('Connected: ' + frame);
             updateConnectionStatus(true);
 
-            // Subscribe to personal message queue
+            // Subscribe to personal message queue - this matches your ChatController
             stompClient.subscribe('/user/queue/messages', function(message) {
-                const chatMessage = JSON.parse(message.body);
-                if (selectedUser === chatMessage.sender) {
-                    displayMessage(chatMessage.sender, chatMessage.content, false);
+                console.log('Received message:', message.body);
+                const chatNotification = JSON.parse(message.body);
+                if (selectedUser === chatNotification.sender) {
+                    displayMessage(chatNotification.sender, chatNotification.content, false);
                 }
             });
 
@@ -158,15 +176,15 @@
         }, function(error) {
             console.log('Connection error: ' + error);
             updateConnectionStatus(false);
-            setTimeout(connect, 5000); // Retry connection
+            setTimeout(connect, 5000);
         });
     }
 
     function updateConnectionStatus(connected) {
         const statusElement = document.getElementById('connectionStatus');
         statusElement.innerHTML = connected
-            ? '<span class="connected">Connected</span>'
-            : '<span class="disconnected">Disconnected - Retrying...</span>';
+            ? '<span class="connected">✓ Connected</span>'
+            : '<span class="disconnected">✗ Disconnected - Retrying...</span>';
     }
 
     async function loadUsers() {
@@ -175,7 +193,6 @@
             const users = await response.json();
             const userSelect = document.getElementById('userSelect');
 
-            // Clear existing options except the first one
             userSelect.innerHTML = '<option value="">Choose a user...</option>';
 
             users.forEach(username => {
@@ -201,6 +218,7 @@
         if (selectedUser) {
             messageInput.disabled = false;
             sendButton.disabled = false;
+            messageInput.focus();
             loadChatHistory();
         } else {
             messageInput.disabled = true;
@@ -220,9 +238,13 @@
             const messagesContainer = document.getElementById('messagesContainer');
             messagesContainer.innerHTML = '';
 
-            messages.forEach(message => {
-                displayMessage(message.sender, message.content, message.sender === currentUser);
-            });
+            if (messages.length === 0) {
+                messagesContainer.innerHTML = '<div style="text-align: center; color: #666;">No messages yet. Start the conversation!</div>';
+            } else {
+                messages.forEach(message => {
+                    displayMessage(message.sender, message.content, message.sender === currentUser);
+                });
+            }
 
             scrollToBottom();
         } catch (error) {
@@ -232,6 +254,11 @@
 
     function displayMessage(sender, content, isSent) {
         const messagesContainer = document.getElementById('messagesContainer');
+
+        // Remove the "no messages" placeholder if it exists
+        if (messagesContainer.innerHTML.includes('No messages yet') || messagesContainer.innerHTML.includes('Select a user')) {
+            messagesContainer.innerHTML = '';
+        }
 
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
@@ -256,14 +283,17 @@
 
         if (!content || !selectedUser || !stompClient) return;
 
+        // This matches your ChatController @MessageMapping("/chat")
         const chatMessage = {
             sender: currentUser,
             receiver: selectedUser,
             content: content,
-            timestamp: new Date().toISOString()
+            timestamp: new Date()
         };
 
+        console.log('Sending message:', chatMessage);
         stompClient.send('/app/chat', {}, JSON.stringify(chatMessage));
+
         displayMessage(currentUser, content, true);
         messageInput.value = '';
     }
@@ -273,9 +303,17 @@
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // Attach event listener for user selection
+    // Event listeners
     document.getElementById('userSelect').addEventListener('change', onUserSelect);
 
-    // Initialize WebSocket connection
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    // Initialize connection
     connect();
 </script>
+</body>
+</html>
