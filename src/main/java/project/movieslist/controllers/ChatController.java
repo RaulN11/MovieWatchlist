@@ -34,73 +34,80 @@ public class ChatController {
     }
 
     @GetMapping("/chat")
-    public String chatPage(Model model, Authentication authentication) {
-        if (authentication != null) {
-            model.addAttribute("currentUser", authentication.getName());
-        }
+    public String chatPage(Model model, Authentication auth) {
+        model.addAttribute("currentUser", auth.getName());
         return "chat";
     }
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload ChatMessage chatMessage, Authentication authentication) {
-        System.out.println("Received message: " + chatMessage);
-
-        // Set sender from authentication if not already set
-        if (chatMessage.getSender() == null && authentication != null) {
-            chatMessage.setSender(authentication.getName());
-        }
-
-        // Set timestamp if not already set
+    public void processMessage(@Payload ChatMessage chatMessage, Authentication auth) {
+        String authenticatedUsername = auth.getName();
+        chatMessage.setSender(authenticatedUsername);
         if (chatMessage.getTimestamp() == null) {
             chatMessage.setTimestamp(new Date());
         }
-
-        // Validate required fields
         if (chatMessage.getSender() == null || chatMessage.getReceiver() == null || chatMessage.getContent() == null) {
-            System.err.println("Invalid message - missing required fields");
+            return;
+        }
+
+        if (chatMessage.getSender().equals(chatMessage.getReceiver())) {
+            System.err.println("Cannot send message to self");
             return;
         }
 
         try {
             ChatMessage savedMsg = chatMessageService.save(chatMessage);
-            System.out.println("Message saved: " + savedMsg);
-
-            // Send notification to receiver
             ChatNotification notification = new ChatNotification(
                     savedMsg.getId(),
                     savedMsg.getSender(),
                     savedMsg.getReceiver(),
                     savedMsg.getContent()
             );
-
             messagingTemplate.convertAndSendToUser(
                     chatMessage.getReceiver(),
                     "/queue/messages",
                     notification
             );
+            messagingTemplate.convertAndSendToUser(
+                    chatMessage.getSender(),
+                    "/queue/messages",
+                    notification
+            );
 
-            System.out.println("Notification sent to: " + chatMessage.getReceiver());
         } catch (Exception e) {
             System.err.println("Error processing message: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    @GetMapping("/messages/{senderId}/{recipientId}")
+    @GetMapping("/messages/{sender}/{receiver}")
     @ResponseBody
-    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable String senderId,
-                                                              @PathVariable String recipientId) {
-        System.out.println("Loading messages between: " + senderId + " and " + recipientId);
-        List<ChatMessage> messages = chatMessageService.findChatMessages(senderId, recipientId);
-        System.out.println("Found " + messages.size() + " messages");
-        return ResponseEntity.ok(messages);
+    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable String sender,
+                                                              @PathVariable String receiver,
+                                                              Authentication auth) {
+        if (auth == null || (!auth.getName().equals(sender) && !auth.getName().equals(receiver))) {
+            System.err.println("Unauthorized access attempt");
+            return ResponseEntity.status(403).build();
+        }
+        try {
+            List<ChatMessage> messages = chatMessageService.findChatMessages(sender, receiver);
+            return ResponseEntity.ok(messages);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 
     @GetMapping("/users")
     @ResponseBody
-    public ResponseEntity<List<String>> getConnectedUsers() {
-        List<String> users = clientService.getAllUsernames();
-        System.out.println("Returning " + users.size() + " users");
-        return ResponseEntity.ok(users);
+    public ResponseEntity<List<String>> getConnectedUsers(Authentication authentication) {
+        try {
+            List<String> users = clientService.getAllUsernames();
+            users.removeIf(username -> username.equals(authentication.getName()));
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 }

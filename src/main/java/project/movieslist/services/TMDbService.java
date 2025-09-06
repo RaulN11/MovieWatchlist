@@ -11,15 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+@RequiredArgsConstructor
 @Service
 public class TMDbService {
     private final WebClient webClient;
     private final TMDbConfig tmDbConfig;
-    public TMDbService(WebClient webClient, TMDbConfig tmDbConfig) {
-        this.webClient = webClient;
-        this.tmDbConfig = tmDbConfig;
-    }
     public Movie fetchMovieByTitle(String title) {
         Map<String, Object> response = webClient
                 .get()

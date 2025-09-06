@@ -1,18 +1,16 @@
 package project.movieslist.security;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import project.movieslist.model.Client;
 
 import java.util.Collection;
 import java.util.List;
-
+@RequiredArgsConstructor
 public class ClientSecurity implements UserDetails {
     private final Client client;
-    public ClientSecurity(Client client) {
-        this.client = client;
-    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(()->client.getRole().toString());

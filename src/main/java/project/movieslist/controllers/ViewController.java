@@ -112,5 +112,4 @@ public class ViewController {
         return "allmovies";
     }
 
-    // Removed the duplicate /chat mapping - this is handled by ChatController now
 }

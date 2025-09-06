@@ -1,5 +1,6 @@
 package project.movieslist.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +20,9 @@ import project.movieslist.services.ClientService;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SecurityConfig {
-    @Autowired
-    private ClientService clientService;
-
+    private final ClientService clientService;
     @Bean
     public UserDetailsService userDetailsService() {
         return clientService;

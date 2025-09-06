@@ -8,47 +8,37 @@ import project.movieslist.model.ChatRoom;
 import java.util.Optional;
 
 @Service
-
+@RequiredArgsConstructor
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
-    public ChatRoomService(ChatRoomRepository chatRoomRepository) {
-        this.chatRoomRepository = chatRoomRepository;
-    }
-
-    public Optional<String> getChatRoomId(
-            String senderId,
-            String recipientId,
-            boolean createNewRoomIfNotExists
-    ) {
+    public Optional<String> getChatRoomId(String sender, String receiver, boolean createNewRoomIfNotExists){
         return chatRoomRepository
-                .findBySenderIdAndRecipientId(senderId, recipientId)
+                .findBySenderAndReceiver(sender, receiver)
                 .map(ChatRoom::getChatId)
                 .or(() -> {
                     if(createNewRoomIfNotExists) {
-                        var chatId = createChatId(senderId, recipientId);
+                        var chatId = createChatId(sender, receiver);
                         return Optional.of(chatId);
                     }
-
                     return  Optional.empty();
                 });
     }
 
-    private String createChatId(String senderId, String recipientId) {
-        var chatId = String.format("%s_%s", senderId, recipientId);
-
+    private String createChatId(String sender, String receiver) {
+        var chatId = String.format("%s_%s", sender, receiver);
         ChatRoom senderRecipient = ChatRoom
                 .builder()
                 .chatId(chatId)
-                .senderId(senderId)
-                .recipientId(recipientId)
+                .sender(sender)
+                .receiver(receiver)
                 .build();
 
         ChatRoom recipientSender = ChatRoom
                 .builder()
                 .chatId(chatId)
-                .senderId(recipientId)
-                .recipientId(senderId)
+                .sender(receiver)
+                .receiver(sender)
                 .build();
 
         chatRoomRepository.save(senderRecipient);

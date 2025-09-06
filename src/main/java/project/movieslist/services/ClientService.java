@@ -1,5 +1,6 @@
 package project.movieslist.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,16 +21,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ClientService implements UserDetailsService {
     private final TMDbService tmDbService;
     private final ClientRepository clientRepository;
     private final MovieRepository movieRepository;
-    @Autowired
-    public ClientService(ClientRepository clientRepository, MovieRepository movieRepository, TMDbService tmDbService) {
-        this.tmDbService=tmDbService;
-        this.clientRepository = clientRepository;
-        this.movieRepository = movieRepository;
-    }
     @Override
     public UserDetails loadUserByUsername(String username){
         var client = clientRepository.findByUsername(username);
