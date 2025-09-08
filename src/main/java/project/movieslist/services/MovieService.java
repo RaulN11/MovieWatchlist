@@ -44,7 +44,7 @@ public class MovieService {
         movieRepository.saveAll(movies);
     }
     public boolean movieExists(Movie movie) {
-        return movieRepository.existsById(movie.getId());
+        return movieRepository.existsByTitleIgnoreCase(movie.getTitle());
     }
     public Optional<Movie> findFirstByTitle(String title) {
         return movieRepository.findFirstByTitleIgnoreCase(title);

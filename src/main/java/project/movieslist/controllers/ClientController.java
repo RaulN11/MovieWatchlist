@@ -41,4 +41,9 @@ public class ClientController {
         String username1 = authentication.getName();
         return clientService.addToFollowing(username1,username);
     }
+    @GetMapping("/picture")
+    public Client addProfilePicture(@RequestBody String url, Authentication authentication) {
+        String username1 = authentication.getName();
+        return clientService.addProfilePicture(username1,url);
+    }
 }

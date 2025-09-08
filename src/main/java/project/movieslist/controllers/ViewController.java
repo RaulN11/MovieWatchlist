@@ -10,9 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import project.movieslist.model.Client;
 import project.movieslist.model.Movie;
 import project.movieslist.services.ClientService;
 import project.movieslist.services.MovieService;
+import project.movieslist.services.TMDbService;
+
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ViewController {
@@ -20,6 +25,8 @@ public class ViewController {
     MovieService movieService;
     @Autowired
     ClientService clientService;
+    @Autowired
+    TMDbService tmDbService;
 
     @GetMapping("/login")
     public String login() {
@@ -31,21 +38,41 @@ public class ViewController {
         return "signup";
     }
 
-    @GetMapping("/allmovies")
-    public String allMovies(@RequestParam(defaultValue="0") int page, Model model, HttpServletRequest request) {
+    @GetMapping("/allmovies1")
+    public String allMovies(@RequestParam(defaultValue="0") int page, Model model, HttpServletRequest request, Authentication auth) {
         int pageSize=5;
         Pageable pageable= PageRequest.of(page,pageSize);
         var moviePage=movieService.getAllMovies(pageable);
+        String username=auth.getName();
+        Optional<Client> client=clientService.getUserByUsername(username);
+        model.addAttribute("client",client.get());
         model.addAttribute("movies", moviePage.getContent());
         model.addAttribute("currentPage", moviePage);
         model.addAttribute("totalPages", moviePage.getTotalPages());
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < moviePage.getTotalPages() - 1 ? page + 1 : page);
         model.addAttribute("currentPath", request.getRequestURI());
-
-        return "allmovies";
+        return "homepage";
     }
+    @GetMapping("/homepage")
+    public String allMovies(Model model, Authentication auth,HttpServletRequest request) {
+        String username=auth.getName();
+        List<Movie> top6Trending=tmDbService.getTrendingMovies()
+                .stream()
+                .limit(6)
+                .toList();
+        List<Movie> top6Upcoming=tmDbService.getUpcomingMovies()
+                .stream()
+                .limit(6)
+                .toList();
+        Optional<Client> client=clientService.getUserByUsername(username);
+        model.addAttribute("client",client.get());
+        model.addAttribute("trendingMovies", top6Trending);
+        model.addAttribute("upcomingMovies", top6Upcoming);
+        model.addAttribute("currentPath", request.getRequestURI());
+        return "homepage";
 
+    }
     @GetMapping("/genre/{genre}")
     public String allMoviesByGenre(@PathVariable String genre,@RequestParam(defaultValue="0") int page, Model model,HttpServletRequest request) {
         int pageSize=5;
@@ -57,7 +84,7 @@ public class ViewController {
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < moviePage.getTotalPages() - 1 ? page + 1 : page);
         model.addAttribute("currentPath", request.getRequestURI());
-        return "allmovies";
+        return "homepage";
     }
 
     @GetMapping("/title/{title}")
@@ -71,7 +98,7 @@ public class ViewController {
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < moviePage.getTotalPages() - 1 ? page + 1 : page);
         model.addAttribute("currentPath", request.getRequestURI());
-        return "allmovies";
+        return "homepage";
     }
 
     @GetMapping("/details/{title}")
@@ -94,7 +121,7 @@ public class ViewController {
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < movies.getTotalPages() ? page + 1 : page);
         model.addAttribute("currentPath", request.getRequestURI());
-        return "allmovies";
+        return "homepage";
     }
 
     @GetMapping("/watchlist")
@@ -109,7 +136,11 @@ public class ViewController {
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < movies.getTotalPages() ? page + 1 : page);
         model.addAttribute("currentPath", request.getRequestURI());
-        return "allmovies";
+        return "homepage";
+    }
+    @GetMapping("/profile")
+    public String profile(Model model) {
+        return "profile";
     }
 
 }

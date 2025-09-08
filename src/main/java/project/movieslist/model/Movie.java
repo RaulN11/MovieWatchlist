@@ -20,9 +20,11 @@ public class Movie {
     private String director;
     private String genre;
     private String posterPath;
+    private String overview;
     private int year;
     private Double rating;
     private String comment;
     private List<Review> reviews = new ArrayList<>();
+    private List<Actor> actors = new ArrayList<>();
 
 }

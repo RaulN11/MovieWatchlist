@@ -166,4 +166,10 @@ public class ClientService implements UserDetailsService {
         clientRepository.save(client2);
         return clientRepository.save(client1);
     }
+    public Client addProfilePicture(String username,String url){
+        Client client=clientRepository.findByUsername(username)
+                .orElseThrow(()->new RuntimeException("Client not found"));
+        client.setProfilePicture(url);
+        return clientRepository.save(client);
+    }
 }

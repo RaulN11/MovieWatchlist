@@ -1,13 +1,9 @@
 let stompClient = null;
-// Get current user from Thymeleaf - this is the key fix
-let currentUser = /*[[${currentUser}]]*/ null;
+let currentUser = window.currentUser;
 let selectedUser = null;
 
-console.log('Current user initialized as:', currentUser);
 
 function connect() {
-    console.log('Attempting to connect with user:', currentUser);
-
     if (!currentUser) {
         console.error('No current user found');
         updateConnectionStatus(false);
@@ -18,37 +14,28 @@ function connect() {
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function(frame) {
-        console.log('Connected: ' + frame);
-        console.log('Subscribing for user:', currentUser);
         updateConnectionStatus(true);
-
-        // Subscribe to personal message queue
         stompClient.subscribe('/user/queue/messages', function(message) {
-            console.log('Received message:', message.body);
             try {
                 const chatNotification = JSON.parse(message.body);
-                console.log('Parsed notification:', chatNotification);
-
-                // Display message if it's from the currently selected user
-                if (selectedUser === chatNotification.sender) {
-                    displayMessage(chatNotification.sender, chatNotification.content, false);
-                } else {
-                    // Show notification for other users
-                    showNewMessageNotification(chatNotification.sender);
+                if (chatNotification.sender !== currentUser) {
+                    if (selectedUser === chatNotification.sender) {
+                        displayMessage(chatNotification.sender, chatNotification.content, false);
+                    } else {
+                        showNewMessageNotification(chatNotification.sender);
+                    }
                 }
             } catch (e) {
                 console.error('Error parsing message:', e);
             }
         });
 
-        // Subscribe to public messages (if needed)
+
         stompClient.subscribe('/topic/public', function(message) {
-            console.log('Received public message:', message.body);
         });
 
         loadUsers();
     }, function(error) {
-        console.log('Connection error: ' + error);
         updateConnectionStatus(false);
         setTimeout(connect, 5000);
     });
@@ -63,8 +50,6 @@ function updateConnectionStatus(connected) {
 
 function showNewMessageNotification(sender) {
     // You can implement visual notifications here
-    console.log('New message from:', sender);
-    // For example, you could update the user list to show unread messages
 }
 
 async function loadUsers() {
@@ -75,7 +60,6 @@ async function loadUsers() {
         }
 
         const users = await response.json();
-        console.log('Loaded users:', users);
 
         const userSelect = document.getElementById('userSelect');
         userSelect.innerHTML = '<option value="">Choose a user...</option>';
@@ -96,11 +80,8 @@ async function loadUsers() {
 function onUserSelect() {
     const userSelect = document.getElementById('userSelect');
     selectedUser = userSelect.value;
-    console.log('Selected user:', selectedUser);
-
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendButton');
-
     if (selectedUser) {
         messageInput.disabled = false;
         sendButton.disabled = false;
@@ -118,7 +99,6 @@ async function loadChatHistory() {
     if (!selectedUser) return;
 
     try {
-        console.log('Loading chat history between', currentUser, 'and', selectedUser);
         const response = await fetch(`/messages/${currentUser}/${selectedUser}`);
 
         if (!response.ok) {
@@ -126,7 +106,6 @@ async function loadChatHistory() {
         }
 
         const messages = await response.json();
-        console.log('Loaded messages:', messages);
 
         const messagesContainer = document.getElementById('messagesContainer');
         messagesContainer.innerHTML = '';
@@ -190,8 +169,6 @@ function sendMessage() {
         timestamp: new Date().toISOString()
     };
 
-    console.log('Sending message:', chatMessage);
-
     try {
         stompClient.send('/app/chat', {}, JSON.stringify(chatMessage));
         displayMessage(currentUser, content, true);
@@ -217,7 +194,6 @@ document.getElementById('messageInput').addEventListener('keypress', function(e)
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Page loaded, current user:', currentUser);
     if (currentUser) {
         connect();
     } else {
@@ -225,8 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updateConnectionStatus(false);
     }
 });
-
-// Handle page unload
 window.addEventListener('beforeunload', function() {
     if (stompClient) {
         stompClient.disconnect();

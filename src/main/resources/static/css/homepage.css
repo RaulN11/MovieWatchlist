@@ -1,0 +1,139 @@
+.monoton-regular {
+    font-family: "Monoton", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.cossette-titre-regular {
+    font-family: "Cossette Titre", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.cossette-titre-bold {
+    font-family: "Cossette Titre", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.first-word, .second-word {
+    font-family: "Monoton", sans-serif;
+    font-size: 50px;
+    margin: 0;
+}
+.first-word {
+    color: #4444ba;
+}
+
+.second-word {
+    color: #710a42;
+}
+
+.top-container {
+    background-color: #171616;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    margin: 0;
+}
+.top-container p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+.top-nav{
+    height: 30px;
+    width: 180px;
+    border-radius:4px;
+    border-width: medium;
+    font-size: 12px;
+    border-color: rgb(131, 143, 154);
+    background-color: rgb(131, 143, 154);
+    text-align: center;
+
+}
+.top-nav:focus{
+}
+.top-nav::placeholder{
+    font-family:"Times New Roman";
+    color: #171616;
+    font-weight:500;
+    font-size: 14px;
+    text-align: center;
+}
+.profile-pic{
+    height: 50px;
+    width: 50px;
+    margin-right: 20px;
+    border-radius: 25px;
+}
+.left-side {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.movies-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(150px, 1fr));
+    column-gap: 20px;
+    padding: 20px;
+    margin-left: 200px;
+    margin-right: 200px;
+}
+.movie-poster {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    transition:  border 0.3s ease;
+    border:2px solid transparent;
+}
+.movie-poster:hover{
+    border-color: rgb(131, 143, 154);
+}
+.movie-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+body{
+    background-color: #000000;
+    margin: 0;
+    padding: 0;
+}
+p {
+    color: white;
+    margin-top: 80px;
+    margin-left: 50px;
+}
+.welcome-paragraph{
+    color: rgb(131, 143, 154);
+    text-align: center;
+    font-size: 30px;
+    letter-spacing: 5px;
+
+}
+body, html {
+    margin: 0;
+    padding: 0;
+}
+.watchlist{
+    color: rgb(131, 143, 154);
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 10px;
+}
+.watchlist:hover{
+    color: rgb(149, 161, 172);
+}
+a {
+    text-decoration: none;
+}
+.fa-magnifying-glass{
+    margin-right: 20px;
+    margin-left: 0;
+}

@@ -25,6 +25,7 @@ public class Client {
     private List<Movie> likedMovies;
     private List<String> following;
     private List<String> followers;
+    private String profilePicture;
     public enum UserRole {
         ROLE_ADMIN, ROLE_CLIENT
     }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SeenIt</title>
+    <link rel="stylesheet" href="/css/homepage.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cossette+Titre:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="top-container">
+    <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+    <div class="left-side">
+        <a href="/watched">
+            <p class="watchlist">DIARY</p>
+        </a>
+        <a href="/watchlist">
+            <p class="watchlist">WATCHLIST</p>
+        </a>
+        <a href="/chat">
+            <p class="watchlist">INBOX</p>
+        </a>
+        <input class="top-nav" type="text" placeholder="SEARCH">
+        <a>
+            <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+        </a>
+        <a href="/profile">
+            <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
+        </a>
+    </div>
+</div>
+<p th:if="${client != null}" class="welcome-paragraph">
+    WELCOME, <span th:text="${client.username}"></span>! HERE IS WHAT IS TRENDING THIS WEEK.
+</p>
+
+<div class="movies-grid">
+    <div th:each="trendingMovie : ${trendingMovies}" class="movie-card">
+        <a th:href="@{'/details/' + ${trendingMovie.title}}">
+            <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${trendingMovie.posterPath}}"  th:alt="${trendingMovie.title}" class="movie-poster">
+        </a>
+    </div>
+</div>
+<p class="welcome-paragraph">ALSO, KEEP UP TO DATE WITH THESE UPCOMING MOVIES!</p>
+<div class="movies-grid">
+    <div th:each="upcomingMovie : ${upcomingMovies}" class="movie-card">
+        <a th:href="@{'/details/'+${upcomingMovie.title}}">
+            <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${upcomingMovie.posterPath}}"  th:alt="${upcomingMovie.title}" class="movie-poster">
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
