@@ -102,11 +102,21 @@ public class ViewController {
     }
 
     @GetMapping("/details/{title}")
-    public String movieDetails(@PathVariable String title,Model model){
+    public String movieDetails(@PathVariable String title,Model model, Authentication auth){
         var movies=movieService.getMoviesByTitle(title);
         Movie movie=movies.get(0);
+        String username=auth.getName();
+        Optional<Client> clientOpt = clientService.getUserByUsername(username);
+        Client client = clientOpt.orElseThrow(() -> new RuntimeException("Client not found"));
+        List<Movie> likedMovies = client.getLikedMovies() != null ? client.getLikedMovies() : List.of();
+        List<Movie> watchedMovies = client.getWatchedMovies() != null ? client.getWatchedMovies() : List.of();
+        List<Movie> watchlist = client.getWatchList() != null ? client.getWatchList() : List.of();
         model.addAttribute("movie", movie);
-        return "moviedetails";
+        model.addAttribute("client",client);
+        model.addAttribute("liked", likedMovies);
+        model.addAttribute("watched", watchedMovies);
+        model.addAttribute("watchlist", watchlist);
+        return "moviedetails1";
     }
 
     @GetMapping("/watched")

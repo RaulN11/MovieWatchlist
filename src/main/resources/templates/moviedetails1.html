@@ -1,12 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8" >
     <title>Details</title>
-
-
+    <link rel="stylesheet" href="/css/moviedetails.css">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="/js/moviedetails.js"></script>
 </head>
 <body>
+<div class="top-container">
+  <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+  <div class="left-side">
+    <a href="/watched">
+      <p class="watchlist">DIARY</p>
+    </a>
+    <a href="/watchlist">
+      <p class="watchlist">WATCHLIST</p>
+    </a>
+    <a href="/chat">
+      <p class="watchlist">INBOX</p>
+    </a>
+    <input class="top-nav" type="text" placeholder="SEARCH">
+    <a>
+      <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+    </a>
+    <a href="/profile">
+      <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
+    </a>
+  </div>
+</div>
+<div class="movie-details">
+    <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
+         alt="Movie Poster"
+         class="movie-poster">
+    <div class="text-details">
+        <p class="title">
+            <span th:text="${movie.title}"></span>
+            <span class="year" th:text="'(' + ${movie.year} + ')'"></span>
+        </p>
+
+        <p class="director" th:text="${movie.director}"></p>
+        <p class="details">
+            &#x2022; <span th:text="${movie.genre}">Action, Drama</span>
+            <span class="time">&#x2022;1:48h</span>
+        </p>
+        <p class="overview-top">Overview</p>
+        <p class="overview-text" th:text="${movie.overview}"></p>
+        <div class="buttons-grid">
+            <div class="button-background"
+                 id="like-button"
+                 data-title="${movie.title}"
+                 th:attr="data-state=${liked.contains(movie) ? 'active' : 'inactive'}">
+                <i class="fa-solid fa-heart"
+                   th:style="${liked.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
+
+            </div>
+            <div class="button-background"
+                 id="watched-button"
+                 data-title="${movie.title}"
+                 th:attr="data-state=${watched.contains(movie) ? 'active' : 'inactive'}">
+                <i class="fa-solid fa-circle-check"
+                   th:style="${watched.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
+            </div>
+            <div class="button-background"
+                 id="watchlist-button"
+                 data-title="${movie.title}"
+                 th:attr="data-state=${watchlist.contains(movie) ? 'active' : 'inactive'}">
+                <i class="fa-solid fa-eye"
+                   th:style="${watchlist.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="cast">
+    <p class="cast_title">Cast</p>
+    <div class="cast-list">
+        <div class="actor" th:each="actor : ${movie.actors}">
+            <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${actor.picture}}"
+                 alt="Actor Poster"
+                 class="actor-poster">
+            <p class="actor-name" th:text="${actor.fullName}">Actor Name</p>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
