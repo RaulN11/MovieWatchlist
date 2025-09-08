@@ -36,7 +36,6 @@ public class ClientService implements UserDetailsService {
         return clientRepository.findByUsername(username);
     }
 
-    // New method for chat functionality
     public List<String> getAllUsernames() {
         return clientRepository.findAll().stream()
                 .map(Client::getUsername)
@@ -90,7 +89,11 @@ public class ClientService implements UserDetailsService {
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findFirstByTitleIgnoreCase(title)
-                .orElseThrow(()->new RuntimeException("Movie not found"));
+                .orElseGet(()->{
+                    Movie fetched = tmDbService.fetchAndSaveMovieByTitle(title);
+                    if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
+                    return fetched;
+                });
         List<Movie> watched=client.getWatchedMovies();
         if(watched.contains(movie)){
             throw new RuntimeException("Movie is already watched");
@@ -111,7 +114,11 @@ public class ClientService implements UserDetailsService {
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findFirstByTitleIgnoreCase(title)
-                .orElseThrow(()->new RuntimeException("Movie not found"));
+                .orElseGet(()->{
+                    Movie fetched = tmDbService.fetchAndSaveMovieByTitle(title);
+                    if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
+                    return fetched;
+                });
         List<Movie> liked=client.getLikedMovies();
         if(liked==null){
             liked=new ArrayList<>();

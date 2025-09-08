@@ -102,9 +102,17 @@ public class ViewController {
     }
 
     @GetMapping("/details/{title}")
-    public String movieDetails(@PathVariable String title,Model model, Authentication auth){
-        var movies=movieService.getMoviesByTitle(title);
-        Movie movie=movies.get(0);
+    public String movieDetails(@PathVariable String title, Model model, Authentication auth){
+        var moviesInDb=movieService.getMoviesByTitle(title);
+        Movie movie;
+        if(!moviesInDb.isEmpty()){
+            movie=moviesInDb.get(0);
+        }else{
+            movie= tmDbService.fetchMovieByTitle(title);
+            if(movie==null){
+                throw new RuntimeException("Movie not found");
+            }
+        }
         String username=auth.getName();
         Optional<Client> clientOpt = clientService.getUserByUsername(username);
         Client client = clientOpt.orElseThrow(() -> new RuntimeException("Client not found"));

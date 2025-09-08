@@ -105,14 +105,9 @@ public class TMDbService {
         for (Map<String, Object> result : results) {
             Movie movie = mapToMovie(result, true);
             movies.add(movie);
-
-            if (!movieService.movieExists(movie)) {
-                movieService.addMovie(movie);
-            }
         }
         return movies;
     }
-
     public Movie fetchMovieByTitle(String title) {
         Map<String, Object> response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -126,8 +121,14 @@ public class TMDbService {
 
         var results = (List<Map<String, Object>>) response.get("results");
         if (results.isEmpty()) return null;
-
         return mapToMovie(results.get(0), true);
+    }
+    public Movie fetchAndSaveMovieByTitle(String title) {
+        Movie movie = fetchMovieByTitle(title);
+        if (movie != null && !movieService.movieExists(movie)) {
+            movieService.addMovie(movie);
+        }
+        return movie;
     }
 
     public List<Movie> getTrendingMovies() {
