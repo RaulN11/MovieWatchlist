@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import project.movieslist.model.Client;
 import project.movieslist.model.Movie;
+import project.movieslist.model.Review;
 import project.movieslist.services.ClientService;
 import project.movieslist.services.MovieService;
 import project.movieslist.services.TMDbService;
@@ -36,23 +37,6 @@ public class ViewController {
     @GetMapping("/req/signup")
     public String signup() {
         return "signup";
-    }
-
-    @GetMapping("/allmovies1")
-    public String allMovies(@RequestParam(defaultValue="0") int page, Model model, HttpServletRequest request, Authentication auth) {
-        int pageSize=5;
-        Pageable pageable= PageRequest.of(page,pageSize);
-        var moviePage=movieService.getAllMovies(pageable);
-        String username=auth.getName();
-        Optional<Client> client=clientService.getUserByUsername(username);
-        model.addAttribute("client",client.get());
-        model.addAttribute("movies", moviePage.getContent());
-        model.addAttribute("currentPage", moviePage);
-        model.addAttribute("totalPages", moviePage.getTotalPages());
-        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
-        model.addAttribute("nextPage", page < moviePage.getTotalPages() - 1 ? page + 1 : page);
-        model.addAttribute("currentPath", request.getRequestURI());
-        return "homepage";
     }
     @GetMapping("/homepage")
     public String allMovies(Model model, Authentication auth,HttpServletRequest request) {
@@ -113,6 +97,7 @@ public class ViewController {
                 throw new RuntimeException("Movie not found");
             }
         }
+        List<Review> reviews=movie.getReviews();
         String username=auth.getName();
         Optional<Client> clientOpt = clientService.getUserByUsername(username);
         Client client = clientOpt.orElseThrow(() -> new RuntimeException("Client not found"));
@@ -124,22 +109,26 @@ public class ViewController {
         model.addAttribute("liked", likedMovies);
         model.addAttribute("watched", watchedMovies);
         model.addAttribute("watchlist", watchlist);
-        return "moviedetails1";
+        model.addAttribute("reviews", reviews);
+        return "moviedetails";
     }
 
     @GetMapping("/watched")
     public String watchedMovies(@RequestParam(defaultValue="0") int page, Model model,HttpServletRequest request, Authentication auth) {
-        int pageSize=5;
+        int pageSize=20;
         Pageable pageable= PageRequest.of(page,pageSize);
         String username=auth.getName();
+        Optional<Client>clientOpt=clientService.getUserByUsername(username);
+        Client client=clientOpt.get();
         var movies=clientService.getWatchedMoviesByUsername(username,pageable);
         model.addAttribute("movies", movies);
+        model.addAttribute("client",client);
         model.addAttribute("currentPage", movies);
         model.addAttribute("totalPages", movies.getTotalPages());
         model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
         model.addAttribute("nextPage", page < movies.getTotalPages() ? page + 1 : page);
         model.addAttribute("currentPath", request.getRequestURI());
-        return "homepage";
+        return "diary";
     }
 
     @GetMapping("/watchlist")

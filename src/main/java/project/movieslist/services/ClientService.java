@@ -47,9 +47,9 @@ public class ClientService implements UserDetailsService {
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findFirstByTitleIgnoreCase(title)
                 .orElseGet(() -> {
-                    Movie fetched = tmDbService.fetchMovieByTitle(title);
+                    Movie fetched = tmDbService.fetchAndSaveMovieByTitle(title);
                     if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
-                    return movieRepository.save(fetched);
+                    return fetched;
                 });
         Review review=new Review();
         if(rating!=null)
@@ -64,6 +64,7 @@ public class ClientService implements UserDetailsService {
         }
         if(review.getComment()!=null && review.getRating()!=null){
             review.setAuthor(username);
+            review.setAuthorPicture(client.getProfilePicture());
             if(movie.getReviews()==null){
                 List<Review> reviews=new ArrayList<>();
                 reviews.add(review);
@@ -84,6 +85,24 @@ public class ClientService implements UserDetailsService {
         watched.add(movie);
         return clientRepository.save(client);
 
+    }
+    public Client removeMovieFromWatchedListByTitle(String username,String title){
+        Client client=clientRepository.findByUsername(username)
+                .orElseThrow(()->new RuntimeException("Client not found"));
+        Movie movie=movieRepository.findFirstByTitleIgnoreCase(title)
+                .orElseGet(() -> {
+                    Movie fetched = tmDbService.fetchMovieByTitle(title);
+                    if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
+                    return fetched;
+                });
+        List<Movie>watched=client.getWatchedMovies();
+        if(!watched.contains(movie)){
+            throw new RuntimeException("Movie not found in watched list ");
+        }else{
+            watched.remove(movie);
+            client.setWatchedMovies(watched);
+        }
+        return clientRepository.save(client);
     }
     public Client addMoviesToWatchlistByTitle(String username,String title){
         Client client=clientRepository.findByUsername(username)
@@ -110,6 +129,24 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
 
     }
+    public Client removeMovieFromWatchlistListByTitle(String username,String title){
+        Client client=clientRepository.findByUsername(username)
+                .orElseThrow(()->new RuntimeException("Client not found"));
+        Movie movie=movieRepository.findFirstByTitleIgnoreCase(title)
+                .orElseGet(() -> {
+                    Movie fetched = tmDbService.fetchMovieByTitle(title);
+                    if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
+                    return fetched;
+                });
+        List<Movie>watchlist=client.getWatchList();
+        if(!watchlist.contains(movie)){
+            throw new RuntimeException("Movie not found in watchlist list ");
+        }else{
+            watchlist.remove(movie);
+            client.setWatchList(watchlist);
+        }
+        return clientRepository.save(client);
+    }
     public Client addMovieToLikedByTitle(String username,String title){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
@@ -129,6 +166,24 @@ public class ClientService implements UserDetailsService {
         }
         liked.add(movie);
         movieRepository.save(movie);
+        return clientRepository.save(client);
+    }
+    public Client removeMovieFromLikedListByTitle(String username,String title){
+        Client client=clientRepository.findByUsername(username)
+                .orElseThrow(()->new RuntimeException("Client not found"));
+        Movie movie=movieRepository.findFirstByTitleIgnoreCase(title)
+                .orElseGet(() -> {
+                    Movie fetched = tmDbService.fetchMovieByTitle(title);
+                    if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
+                    return fetched;
+                });
+        List<Movie>liked=client.getLikedMovies();
+        if(!liked.contains(movie)){
+            throw new RuntimeException("Movie not found in liked list ");
+        }else{
+            liked.remove(movie);
+            client.setLikedMovies(liked);
+        }
         return clientRepository.save(client);
     }
     public Page<Movie> getWatchedMoviesByUsername(String username, Pageable pageable){

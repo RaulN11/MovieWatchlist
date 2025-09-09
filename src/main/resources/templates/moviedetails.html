@@ -1,56 +1,108 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${movie.title}">Movie Details</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .movie-container {
-            max-width: 600px;
-            margin: 30px auto;
-            text-align: center;
-        }
-        .movie-poster {
-            max-width: 100%;
-            height: auto;
-        }
-        .movie-info {
-            margin-top: 20px;
-            text-align: left;
-        }
-    </style>
+    <meta charset="UTF-8" >
+    <title>Details</title>
+    <link rel="stylesheet" href="/css/moviedetails.css">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="/js/moviedetails.js"></script>
 </head>
 <body>
-<div class="movie-container">
-    <h1 th:text="${movie.title}"></h1>
-    <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
-         alt="Poster" class="movie-poster"/>
-    <div class="movie-info">
-        <form th:action="@{'/client/addtoliked/' + ${movie.title}}" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-primary me-2">Add To Liked</button>
-        </form>
-        <p><strong>Director:</strong> <span th:text="${movie.director}"></span></p>
-        <p><strong>Genre:</strong> <span th:text="${movie.genre}"></span></p>
-        <p><strong>Year:</strong> <span th:text="${movie.year}"></span></p>
-        <p th:if="${movie.rating != null}">
-            <strong>Rating:</strong> <span th:text="${movie.rating}"></span>
-        </p>
-        <p th:if="${movie.comment != null}">
-            <strong>Comment:</strong> <span th:text="${movie.comment}"></span>
-        </p>
+<div class="top-container">
+    <a href="/homepage">
+        <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+    </a>
+    <div class="left-side">
+        <a href="/watched">
+            <p class="watchlist">DIARY</p>
+        </a>
+        <a href="/watchlist">
+            <p class="watchlist">WATCHLIST</p>
+        </a>
+        <a href="/chat">
+            <p class="watchlist">INBOX</p>
+        </a>
+        <input class="top-nav" type="text" placeholder="SEARCH">
+        <a>
+            <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+        </a>
+        <a href="/profile">
+            <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
+        </a>
     </div>
-    <div class="reviews" th:if="${movie.reviews!=null and !movie.reviews.isEmpty()}">
-        <h3>Reviews</h3>
-        <div th:each="review:${movie.reviews}"class="review">
-            <p><strong th:text="${review.author}">Author</strong></p>
-            <p th:if="${review.rating!=null}">
-                <strong>Rating:</strong><span th:text="${review.rating}"></span>/10
-            </p>
-            <p th:if="${review.comment!=null}">
-                <strong>Comment:</strong><span th:text="${review.comment}"></span>
-            </p>
+</div>
+<div class="movie-details">
+    <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
+         alt="Movie Poster"
+         class="movie-poster">
+    <div class="text-details">
+        <p class="title">
+            <span th:text="${movie.title}"></span>
+            <span class="year" th:text="'(' + ${movie.year} + ')'"></span>
+        </p>
+
+        <p class="director" th:text="${movie.director}"></p>
+        <p class="details">
+            &#x2022; <span th:text="${movie.genre}"></span>
+            <span class="time">&#x2022;1:48h</span>
+        </p>
+        <p class="overview-top">Overview</p>
+        <p class="overview-text" th:text="${movie.overview}"></p>
+        <div class="buttons-grid">
+            <div class="button-background"
+                 id="like-button"
+                 th:data-title="${movie.title}"
+                 th:attr="data-state=${liked.contains(movie) ? 'active' : 'inactive'}">
+                <i class="fa-solid fa-heart"
+                   th:style="${liked.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
+
+            </div>
+            <div class="button-background"
+                 id="watched-button"
+                 th:data-title="${movie.title}"
+                 th:attr="data-state=${watched.contains(movie) ? 'active' : 'inactive'}">
+                <i class="fa-solid fa-circle-check"
+                   th:style="${watched.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
+            </div>
+            <div class="button-background"
+                 id="watchlist-button"
+                 th:data-title="${movie.title}"
+                 th:attr="data-state=${watchlist.contains(movie) ? 'active' : 'inactive'}">
+                <i class="fa-solid fa-eye"
+                   th:style="${watchlist.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
+            </div>
         </div>
     </div>
 </div>
+<div class="cast">
+    <p class="cast_title">CAST</p>
+    <hr class="separator">
+    <div class="cast-list">
+        <div class="actor" th:each="actor : ${movie.actors}">
+            <img th:src="${actor.picture} ?
+                 @{'https://image.tmdb.org/t/p/w200/' + ${actor.picture}} :
+                 @{'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}"
+                 alt="Actor Poster"
+                 class="actor-poster">
+            <p class="actor-name" th:text="${actor.fullName}">Actor Name</p>
+        </div>
+    </div>
+</div>
+<div class="reviews">
+    <p class="review-title">Reviews</p>
+    <hr class="separator">
+    <hr class="separator2">
+    <div class="review-card" th:each="review:${reviews}">
+        <img th:src="${review.authorPicture}" class="review-pic">
+        <div class="review-text">
+            <p class="review-author">Review by <strong th:text="${review.author}"></strong></p>
+            <p class="review-grade"><span th:text="${review.rating}"></span>/10</p>
+            <p class="review-comment" th:text="${review.comment}"></p>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

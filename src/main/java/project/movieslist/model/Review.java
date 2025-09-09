@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class Review {
     private String author;
+    private String authorPicture;
     private Double rating;
     private String comment;
 }

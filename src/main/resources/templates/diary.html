@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Diary</title>
+    <link rel="stylesheet" href="/css/diary.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cossette+Titre:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="top-container">
+    <a href="/homepage">
+        <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+    </a>
+    <div class="left-side">
+        <a href="/watched">
+            <p class="watchlist">DIARY</p>
+        </a>
+        <a href="/watchlist">
+            <p class="watchlist">WATCHLIST</p>
+        </a>
+        <a href="/chat">
+            <p class="watchlist">INBOX</p>
+        </a>
+        <input class="top-nav" type="text" placeholder="SEARCH">
+        <a>
+            <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+        </a>
+        <a href="/profile">
+            <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
+        </a>
+    </div>
+</div>
+<p class="title">YOUR DIARY</p>
+<hr class="separator">
+<div class="movie-grid">
+    <div class="movie-card" th:each="movie:${movies}">
+        <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}" class="movie-poster">
+        <div class="movie-title" th:text="${movie.title}"></div>
+    </div>
+</div>
+</body>
+</html>

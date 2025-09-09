@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 @Getter
 @Setter
-@EqualsAndHashCode
 @Document(collection = "movies")
 public class Movie {
     @Id
@@ -26,5 +25,17 @@ public class Movie {
     private String comment;
     private List<Review> reviews = new ArrayList<>();
     private List<Actor> actors = new ArrayList<>();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Movie)) return false;
+        Movie movie = (Movie) o;
+        return id != null && id.equals(movie.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 
 }

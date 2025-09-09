@@ -26,24 +26,39 @@ public class ClientController {
         String username=authentication.getName();
         return clientService.addMovieToWatchedListByTitle(username,title,rating,comment);
     }
+    @DeleteMapping("/removefromwatched/{title}")
+    public Client removeWatchedMovie(@PathVariable String title, Authentication auth) {
+        String username=auth.getName();
+        return clientService.removeMovieFromWatchedListByTitle(username,title);
+    }
     @PostMapping("/addtowatchlist/{title}")
-    public Client addToWatchlist(@PathVariable String title, Authentication authentication) {
-        String username=authentication.getName();
+    public Client addToWatchlist(@PathVariable String title, Authentication auth) {
+        String username=auth.getName();
         return clientService.addMoviesToWatchlistByTitle(username,title);
+    }
+    @DeleteMapping("/removefromwatchlist/{title}")
+    public Client removeFromWatchlist(@PathVariable String title, Authentication auth) {
+        String username=auth.getName();
+        return clientService.removeMovieFromWatchlistListByTitle(username,title);
     }
     @PostMapping("/addtoliked/{title}")
     public Client addToLikedMovie(@PathVariable String title, Authentication auth) {
         String username = auth.getName();
         return clientService.addMovieToLikedByTitle(username, title);
     }
+    @DeleteMapping("/removefromliked/{title}")
+    public Client removeFromLikedMovie(@PathVariable String title, Authentication auth) {
+        String username=auth.getName();
+        return clientService.removeMovieFromLikedListByTitle(username, title);
+    }
     @PostMapping("/follow/{username}")
-    public Client follow(@PathVariable String username, Authentication authentication) {
-        String username1 = authentication.getName();
+    public Client follow(@PathVariable String username, Authentication auth) {
+        String username1 = auth.getName();
         return clientService.addToFollowing(username1,username);
     }
     @GetMapping("/picture")
-    public Client addProfilePicture(@RequestBody String url, Authentication authentication) {
-        String username1 = authentication.getName();
+    public Client addProfilePicture(@RequestBody String url, Authentication auth) {
+        String username1 = auth.getName();
         return clientService.addProfilePicture(username1,url);
     }
 }

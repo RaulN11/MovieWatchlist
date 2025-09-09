@@ -207,7 +207,68 @@ body, html {
     margin-bottom: 0;
     margin-top:5px;
     font-weight: bolder;
-    font-style: oblique;
+    letter-spacing: 1px;
 
 }
+.separator{
+    background-color: white;
+    height: 1px;
+    width: 100%;
+    border: none;
+}
+.reviews{
+    display: flex;
+    flex-direction: column;
+    background-color: #2b2929;
+    align-items: center;
+}
+.review-title{
+    margin-bottom: 0;
+    text-align: center;
+    color: rgb(207, 216, 220);
+    font-size: 24px;
+}
+.review-card{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    width: 700px;
+    grid-template-columns:30px 1fr;
+}
+.review-pic{
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+}
+.review-text{
+    display: flex;
+    flex-direction: column;
+}
 
+.review-author{
+    margin-top:0;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    color:rgb(131, 143, 154);
+    font-size: 18px;
+}
+.review-grade{
+    margin-left: 20px;
+    margin-top: 0;
+    color:rgb(131, 143, 154);
+    font-size: 20px;
+}
+.review-comment{
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    margin-left: 20px;
+    margin-top: 0;
+}
+.separator2{
+    height: 1px;
+    margin-top: 20px;
+    background-color: rgb(131, 143, 154);
+    width: 50%;
+    align-self: center;
+}

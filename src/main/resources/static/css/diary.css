@@ -1,0 +1,128 @@
+.monoton-regular {
+    font-family: "Monoton", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.first-word, .second-word {
+    font-family: "Monoton", sans-serif;
+    font-size: 50px;
+    margin: 0;
+}
+.first-word {
+    color: #4444ba;
+}
+.second-word {
+    color: #710a42;
+}
+.top-container {
+    background-color: #171616;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    margin: 0;
+}
+.top-container p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+.top-nav {
+    height: 30px;
+    width: 180px;
+    border-radius:4px;
+    border-width: medium;
+    font-size: 12px;
+    border-color: rgb(131, 143, 154);
+    background-color: rgb(131, 143, 154);
+    text-align: center;
+}
+.top-nav::placeholder {
+    font-family:"Times New Roman";
+    color: #171616;
+    font-weight:500;
+    font-size: 14px;
+    text-align: center;
+}
+.profile-pic {
+    height: 50px;
+    width: 50px;
+    margin-right: 20px;
+    border-radius: 25px;
+}
+.left-side {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+a {
+    text-decoration: none;
+}
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+}
+.watchlist {
+    color: rgb(131, 143, 154);
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 10px;
+}
+.watchlist:hover {
+    color: rgb(149, 161, 172);
+}
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    justify-content: center;
+    padding: 0 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.movie-card {
+    position: relative;
+    width: 200px;
+}
+.movie-poster {
+    width: 100%;
+    height: 300px;
+    border-radius: 5px;
+    border: 3px solid transparent;
+    transition: border-color 0.8s ease, filter 0.8s ease;
+    display: block;
+}
+.movie-poster:hover {
+    border-color: rgb(131, 143, 154);
+    filter: blur(3px);
+}
+.movie-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.8s ease, transform 0.8s ease, font-size 0.8s ease;
+    pointer-events: none;
+}
+.movie-card:hover .movie-title {
+    opacity: 1;
+    font-size: 30px;
+    transform: translate(-50%, -50%) scale(1);
+}
+.title {
+    color: rgb(131, 143, 154);
+    text-align: center;
+    font-size: 50px;
+    margin-bottom: 0;
+}
+.separator {
+    width: 50%;
+    height: 1px;
+    background-color: rgb(131, 143, 154);
+    margin: 10px auto;
+}

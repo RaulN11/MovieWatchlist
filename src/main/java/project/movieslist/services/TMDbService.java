@@ -113,8 +113,8 @@ public class TMDbService {
                 .uri(uriBuilder -> uriBuilder
                         .path("/search/movie")
                         .queryParam("api_key", tmDbConfig.getApiKey())
-                        .queryParam("query", title)
-                        .build())
+                        .queryParam("query", "{title}")
+                        .build(title))
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
