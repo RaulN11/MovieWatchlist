@@ -29,7 +29,7 @@ public class RegistrationController {
             if(existingClient.isVerified()){
                 return new ResponseEntity<>("User already exists and verified", HttpStatus.BAD_REQUEST);
             }else{
-                String verificationToken= JWTUtil.generateToken(client.getEmail());
+                String verificationToken= JWTUtil.generateToken(existingClient.getEmail());
                 existingClient.setVerificationToken(verificationToken);
                 clientRepository.save(existingClient);
                 return new ResponseEntity<>("Verification Email Resent", HttpStatus.OK);

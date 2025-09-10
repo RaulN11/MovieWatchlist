@@ -16,21 +16,39 @@ public class VerficiationController {
     private ClientRepository clientRepository;
     @Autowired
     private JWTUtil jwtUtil;
+
     @GetMapping("/req/signup/verify")
     public ResponseEntity verifyEmail(@RequestParam("token") String token) {
-        String email = jwtUtil.getEmailFromToken(token);
-        Client client = clientRepository.findByEmail(email);
-        if(client==null || client.getVerificationToken()==null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token Expired 1");
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token Invalid or Expired");
         }
-        if(!jwtUtil.validateToken(token) || !client.getVerificationToken().equals(token)) {
-            System.out.println("parameter token"+token);
-            System.out.println("user token"+client.getVerificationToken());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token Expired 2");
+        String email;
+        try {
+            email = jwtUtil.getEmailFromToken(token);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Token");
+        }
+        Client client = clientRepository.findByEmail(email);
+        if (client == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        if (client.isVerified()) {
+            return ResponseEntity.status(HttpStatus.OK).body("Already Verified");
+        }
+
+        if (client.getVerificationToken() == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No verification pending");
+        }
+
+        if (!client.getVerificationToken().equals(token)) {
+            System.out.println("client "+ client.getVerificationToken());
+            System.out.println("token +"+ token);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token Mismatch");
         }
         client.setVerificationToken(null);
         client.setVerified(true);
         clientRepository.save(client);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Token Verified");
+
+        return ResponseEntity.status(HttpStatus.OK).body("Email Verified Successfully");
     }
 }
