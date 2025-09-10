@@ -55,7 +55,7 @@ public class SecurityConfig {
                     registry.requestMatchers(
                             "/login",
                             "/signup",
-                            "/req/signup",
+                            "/req/**",
                             "/css/**",
                             "/js/**",
                             "/ws/**"
