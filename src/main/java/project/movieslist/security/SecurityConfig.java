@@ -51,7 +51,6 @@ public class SecurityConfig {
                 })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(registry -> {
-                    // Public endpoints
                     registry.requestMatchers(
                             "/login",
                             "/signup",

@@ -11,7 +11,7 @@ import project.movieslist.repositories.ClientRepository;
 import project.movieslist.util.JWTUtil;
 
 @RestController
-public class VerficiationController {
+public class VerificationController {
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
