@@ -38,6 +38,7 @@ public class ViewController {
     public String signup() {
         return "signup";
     }
+
     @GetMapping("/homepage")
     public String allMovies(Model model, Authentication auth,HttpServletRequest request) {
         String username=auth.getName();
@@ -57,34 +58,6 @@ public class ViewController {
         return "homepage";
 
     }
-    @GetMapping("/genre/{genre}")
-    public String allMoviesByGenre(@PathVariable String genre,@RequestParam(defaultValue="0") int page, Model model,HttpServletRequest request) {
-        int pageSize=5;
-        Pageable pageable= PageRequest.of(page,pageSize);
-        var moviePage=movieService.getMoviesByGenre(pageable,genre);
-        model.addAttribute("movies", moviePage.getContent());
-        model.addAttribute("currentPage", moviePage);
-        model.addAttribute("totalPages", moviePage.getTotalPages());
-        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
-        model.addAttribute("nextPage", page < moviePage.getTotalPages() - 1 ? page + 1 : page);
-        model.addAttribute("currentPath", request.getRequestURI());
-        return "homepage";
-    }
-
-    @GetMapping("/title/{title}")
-    public String allMoviesByTitle(@PathVariable String title,@RequestParam(defaultValue="0") int page, Model model,HttpServletRequest request) {
-        int pageSize=5;
-        Pageable pageable= PageRequest.of(page,pageSize);
-        var moviePage=movieService.getByTitleContaining(title,pageable);
-        model.addAttribute("movies", moviePage.getContent());
-        model.addAttribute("currentPage", moviePage);
-        model.addAttribute("totalPages", moviePage.getTotalPages());
-        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
-        model.addAttribute("nextPage", page < moviePage.getTotalPages() - 1 ? page + 1 : page);
-        model.addAttribute("currentPath", request.getRequestURI());
-        return "homepage";
-    }
-
     @GetMapping("/details/{title}")
     public String movieDetails(@PathVariable String title, Model model, Authentication auth){
         var moviesInDb=movieService.getMoviesByTitle(title);
@@ -148,6 +121,21 @@ public class ViewController {
     @GetMapping("/profile")
     public String profile(Model model) {
         return "profile";
+    }
+    @GetMapping("/searchMenu/{type}/{searched}")
+    public String searchMenu(@PathVariable String searched,@PathVariable String type, Model model, Authentication auth){
+        List<Movie>byTitle= tmDbService.fetchMoviesByTitle(searched);
+        String username=auth.getName();
+        Optional<Client>clientOpt=clientService.getUserByUsername(username);
+        Client client=clientOpt.get();
+        model.addAttribute("client",client);
+        switch (type.toLowerCase()){
+            case "movies" -> model.addAttribute("movies", tmDbService.fetchMoviesByTitle(searched));
+            case "actors" -> model.addAttribute("actors", tmDbService.fetchActorsByName(searched));
+        }
+        model.addAttribute("searched", searched);
+
+        return "searchmenu";
     }
 
 }

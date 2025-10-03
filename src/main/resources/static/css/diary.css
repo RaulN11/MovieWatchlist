@@ -61,7 +61,7 @@ a {
 body, html {
     margin: 0;
     padding: 0;
-    background-color: black;
+    background-color: #1e1e1e;
 }
 .watchlist {
     color: rgb(131, 143, 154);
@@ -125,4 +125,15 @@ body, html {
     height: 1px;
     background-color: rgb(131, 143, 154);
     margin: 10px auto;
+}
+.search-button{
+     background-color: #171616;
+ }
+body {
+    background-color: #1e1e1e;
+    background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+    background-repeat: repeat;
+    background-size: auto;
+    margin: 0;
+    padding: 0;
 }

@@ -108,6 +108,25 @@ public class TMDbService {
         }
         return movies;
     }
+    public List<Movie> fetchMoviesByTitle(String title) {
+        Map<String,Object> response=webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/search/movie")
+                        .queryParam("api_key",tmDbConfig.getApiKey())
+                        .queryParam("query", "{title}")
+                        .build(title))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+        var results=(List<Map<String,Object>>)response.get("results");
+        if (results.isEmpty()) return null;
+        List<Movie> movies=new ArrayList<>();
+        for(Map<String, Object> result:results){
+            movies.add(mapToMovie(result,true));
+        }
+        return movies;
+
+    }
     public Movie fetchMovieByTitle(String title) {
         Map<String, Object> response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -137,5 +156,27 @@ public class TMDbService {
 
     public List<Movie> getUpcomingMovies() {
         return fetchMoviesFromEndpoint("/movie/upcoming");
+    }
+    public List<Actor> fetchActorsByName(String name){
+        Map<String,Object> response=webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/search/person")
+                        .queryParam("api_key", tmDbConfig.getApiKey())
+                        .queryParam("query", name)
+                        .build())
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+        List<Map<String, Object>> results = (List<Map<String, Object>>) response.get("results");
+        if (results.isEmpty()) return null;
+        List<Actor> actors = new ArrayList<>();
+        for (Map<String, Object> result : results) {
+            Actor actor=new Actor();
+            actor.setId((Integer)result.get("id"));
+            actor.setFullName((String)result.get("name"));
+            actor.setPicture((String)result.get("profile_path"));
+            actors.add(actor);
+        }
+        return actors;
     }
 }

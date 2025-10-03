@@ -42,6 +42,6 @@ public class ClientSecurity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+            return client.isEnabled();
     }
 }

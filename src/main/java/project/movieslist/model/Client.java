@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +29,11 @@ public class Client implements UserDetails {
     private String email;
     private LocalDate dateOfBirth;
     private UserRole role;
-    private List<Movie> watchedMovies;
-    private List<Movie> watchList;
-    private List<Movie> likedMovies;
-    private List<String> following;
-    private List<String> followers;
+    private List<Movie> watchedMovies=new ArrayList<>();
+    private List<Movie> watchList=new ArrayList<>();
+    private List<Movie> likedMovies=new ArrayList<>();
+    private List<String> following=new ArrayList<>();
+    private List<String> followers=new ArrayList<>();
     private String verificationToken;
     private boolean isVerified;
     private String resetToken;
