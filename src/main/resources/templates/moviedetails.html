@@ -103,6 +103,36 @@
         </div>
     </div>
 </div>
-
+<div id="review-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Enter your review</h2>
+            <div class="close-btn">&times;</div>
+        </div>
+        <div class="review-body">
+            <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
+                 alt="Movie Poster"
+                 class="review-poster"
+                 onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';"
+            >
+            <div class="review_details">
+                <div class="modal-names">
+                    <p th:text="${movie.title}" class="modal-title"></p>
+                    <p th:text="${movie.year}" class="modal-year"></p>
+                </div>
+                <textarea id="review-area" class="review-text" rows="6" placeholder=" Add a review..."></textarea>
+                <textarea id="rating-area" class="rating"  rows="1" placeholder=" Rating"></textarea>
+                <div class="review-buttons">
+                    <button id="cancel" class="cancel-button">Cancel</button>
+                    <button id="save" class="save-button">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<button id="open-test-modal"
+        style="position: fixed; bottom: 20px; right: 20px; z-index: 3000; padding: 10px 15px; border: none; border-radius: 6px; background-color: #710a42; color: white; font-weight: bold; cursor: pointer;">
+    Open Modal (Test)
+</button>
 </body>
 </html>

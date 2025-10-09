@@ -44,11 +44,11 @@ public class ViewController {
         String username=auth.getName();
         List<Movie> top6Trending=tmDbService.getTrendingMovies()
                 .stream()
-                .limit(6)
+                .limit(5)
                 .toList();
         List<Movie> top6Upcoming=tmDbService.getUpcomingMovies()
                 .stream()
-                .limit(6)
+                .limit(5)
                 .toList();
         Optional<Client> client=clientService.getUserByUsername(username);
         model.addAttribute("client",client.get());
@@ -87,36 +87,36 @@ public class ViewController {
     }
 
     @GetMapping("/watched")
-    public String watchedMovies(@RequestParam(defaultValue="0") int page, Model model,HttpServletRequest request, Authentication auth) {
-        int pageSize=20;
-        Pageable pageable= PageRequest.of(page,pageSize);
+    public String watchedMovies(Model model,HttpServletRequest request, Authentication auth) {
         String username=auth.getName();
         Optional<Client>clientOpt=clientService.getUserByUsername(username);
         Client client=clientOpt.get();
-        var movies=clientService.getWatchedMoviesByUsername(username,pageable);
+        var movies=clientService.getWatchedMoviesByUsername(username);
         model.addAttribute("movies", movies);
         model.addAttribute("client",client);
-        model.addAttribute("currentPage", movies);
-        model.addAttribute("totalPages", movies.getTotalPages());
-        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
-        model.addAttribute("nextPage", page < movies.getTotalPages() ? page + 1 : page);
-        model.addAttribute("currentPath", request.getRequestURI());
         return "diary";
     }
 
     @GetMapping("/watchlist")
-    public String watchlistMovies(@RequestParam(defaultValue = "0")int page, Model model, HttpServletRequest request, Authentication auth) {
-        int pageSize=5;
-        Pageable pageable= PageRequest.of(page,pageSize);
+    public String watchlistMovies(Model model, HttpServletRequest request, Authentication auth) {
         String username=auth.getName();
-        var movies=clientService.getWatchlistByUsername(username,pageable);
+        Optional<Client>clientOpt=clientService.getUserByUsername(username);
+        Client client=clientOpt.get();
+        var movies=clientService.getWatchlistByUsername(username);
         model.addAttribute("movies", movies);
-        model.addAttribute("currentPage", movies);
-        model.addAttribute("totalPages", movies.getTotalPages());
-        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
-        model.addAttribute("nextPage", page < movies.getTotalPages() ? page + 1 : page);
-        model.addAttribute("currentPath", request.getRequestURI());
-        return "homepage";
+        model.addAttribute("client",client);
+        return "diary";
+    }
+
+    @GetMapping("/liked")
+    public String likedMovies(Model model, HttpServletRequest request, Authentication auth) {
+        String username=auth.getName();
+        Optional<Client>clientOpt=clientService.getUserByUsername(username);
+        Client client=clientOpt.get();
+        var movies=clientService.getLikedByUsername(username);
+        model.addAttribute("movies", movies);
+        model.addAttribute("client",client);
+        return "diary";
     }
     @GetMapping("/profile")
     public String profile(Model model) {

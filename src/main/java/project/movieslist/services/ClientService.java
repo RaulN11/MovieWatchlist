@@ -186,27 +186,32 @@ public class ClientService implements UserDetailsService {
         }
         return clientRepository.save(client);
     }
-    public Page<Movie> getWatchedMoviesByUsername(String username, Pageable pageable){
+    public List<Movie> getWatchedMoviesByUsername(String username){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         List<Movie> watched=client.getWatchedMovies();
         if(watched==null){
             watched=new ArrayList<>();
         }
-        int start=(int)pageable.getOffset();
-        int end=Math.min(start+pageable.getPageSize(),watched.size());
-        return new PageImpl<>(watched.subList(start,end),pageable,watched.size());
+        return watched;
     }
-    public Page<Movie> getWatchlistByUsername(String username, Pageable pageable){
+    public List<Movie> getWatchlistByUsername(String username){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         List<Movie> watchlist=client.getWatchList();
         if(watchlist==null){
             watchlist=new ArrayList<>();
         }
-        int start=(int)pageable.getOffset();
-        int end=Math.min(start+pageable.getPageSize(),watchlist.size());
-        return new PageImpl<>(watchlist.subList(start,end),pageable,watchlist.size());
+        return watchlist;
+    }
+    public List<Movie> getLikedByUsername(String username){
+        Client client=clientRepository.findByUsername(username)
+                .orElseThrow(()->new RuntimeException("Client not found"));
+        List<Movie> liked=client.getLikedMovies();
+        if (liked==null){
+            liked=new ArrayList<>();
+        }
+        return liked;
     }
     public Client addToFollowing(String c1, String c2){
         Client client1=clientRepository.findByUsername(c1)

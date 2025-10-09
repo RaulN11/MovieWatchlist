@@ -71,6 +71,12 @@ body, html {
     margin: 0;
     padding: 0;
 }
+body{
+    background-color: #1e1e1e;
+    background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+    background-repeat: repeat;
+    background-size: auto;
+}
 .watchlist{
     color: rgb(131, 143, 154);
     font-size: 16px;
@@ -271,4 +277,138 @@ body, html {
     background-color: rgb(131, 143, 154);
     width: 50%;
     align-self: center;
+}
+.modal{
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    z-index: 2000;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 30, 30, 0.6);
+    backdrop-filter: blur(6px);
+    justify-content: center;
+    align-items: center;
+}
+.modal-content{
+    background-color: #1e293b;
+    width: 600px;
+    position: relative;
+    z-index: 2100;
+    border-radius: 5px;
+    padding: 10px 20px 20px 20px;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+}
+.modal-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+    padding-top: 15px;
+
+}
+h2{
+    margin: 0;
+    color: rgb(207, 216, 220);
+    align-self: flex-start;
+    font-size: 30px;
+    font-weight: normal;
+}
+.close-btn{
+    align-self: flex-end;
+    color: rgb(207, 216, 220);
+    position: absolute;
+    font-size: 26px;
+    margin-top: 0;
+}
+.review-body{
+    display: flex;
+    flex-direction: row;
+    gap:30px;
+    background-color: #2e3953;
+    padding: 10px;
+    border-radius: 5px;
+
+}
+.review-poster{
+    height: 300px;
+    width: 200px;
+}
+.review-details{
+    display: flex;
+    flex-direction: column;
+    padding:0;
+    width: 100%;
+    min-width: 400px;
+
+}
+.modal-names{
+    display: flex;
+    flex-direction: row;
+
+
+}
+.modal-title{
+    color: rgb(207, 216, 220);
+    font-size: 28px;
+    margin-right: 10px;
+    margin-top:0;
+    margin-bottom: 15px;
+}
+.modal-year{
+    color: rgb(151, 147, 147);
+    font-size: 28px;
+    margin-top: 0;
+    margin-bottom: 15px;
+
+}
+.review-text{
+    resize: none;
+    margin-bottom: 20px;
+    width: 300px;
+    border-radius: 5px;
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    border-width: 2px;
+    border-color: #1e293b;
+}
+.rating{
+    resize: none;
+    margin-bottom: 50px;
+    width: 70px;
+    border-radius: 5px;
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    border-width: 2px;
+    border-color: #1e293b;
+
+}
+.review-text:focus, .rating:focus{
+    outline: none;
+}
+.review-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-self: end;
+    gap:10px;
+    height: 30px;
+}
+.cancel-button{
+    height: 30px;
+    width: 70px;
+    border-radius: 15px;
+    border: none;
+    background-color: #1e293b;
+    color: rgb(207, 216, 220);
+}
+.save-button{
+    height: 30px;
+    width: 70px;
+    border-radius: 15px;
+    border:none;
+    background-color: #141a27;
+    color: rgb(207, 216, 220);
 }
