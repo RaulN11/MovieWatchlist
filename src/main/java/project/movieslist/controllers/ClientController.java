@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import project.movieslist.model.Client;
 import project.movieslist.model.Movie;
+import project.movieslist.model.Review;
 import project.movieslist.repositories.ClientRepository;
 import project.movieslist.services.ClientService;
+import project.movieslist.services.MovieService;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +20,7 @@ public class ClientController {
     @Autowired
     ClientService clientService;
     @Autowired
-    private ClientRepository clientRepository;
+    MovieService movieService;
 
     @PostMapping("/addtowatched")
     public Client addWatchedMovie(@RequestParam String title, @RequestParam(required = false) Double rating,
@@ -60,5 +62,19 @@ public class ClientController {
     public Client addProfilePicture(@RequestBody String url, Authentication auth) {
         String username1 = auth.getName();
         return clientService.addProfilePicture(username1,url);
+    }
+    @PostMapping("/addreview/{title}")
+    public Movie addReview(@RequestBody Review review,@PathVariable String title, Authentication auth) {
+        Optional<Movie> optMovie=movieService.findFirstByTitle(title);
+        Movie movie=optMovie.orElse(null);
+        String username=auth.getName();
+        Optional<Client> optClient=clientService.getUserByUsername(username);
+        Client client=optClient.orElse(null);
+        Review review1=new Review();
+        review1.setAuthor(client.getUsername());
+        review1.setAuthorPicture(client.getProfilePicture());
+        review1.setComment(review.getComment());
+        review1.setRating(review.getRating());
+        return movieService.addReviewToMovie(movie,review1);
     }
 }

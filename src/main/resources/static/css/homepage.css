@@ -3,69 +3,6 @@
     font-weight: 400;
     font-style: normal;
 }
-.monoton-regular {
-    font-family: "Monoton", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
-.first-word, .second-word {
-    font-family: "Monoton", sans-serif;
-    font-size: 50px;
-    margin: 0;
-}
-.first-word {
-    color: #4444ba;
-}
-
-.second-word {
-    color: #710a42;
-}
-
-.top-container {
-    background-color: #171616;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 20px;
-    margin: 0;
-}
-.top-container p {
-    margin: 0;
-    display: flex;
-    align-items: center;
-}
-.top-nav{
-    height: 30px;
-    width: 180px;
-    border-radius:4px;
-    border-width: medium;
-    font-size: 12px;
-    border-color: rgb(131, 143, 154);
-    background-color: rgb(131, 143, 154);
-    text-align: center;
-
-}
-.top-nav:focus{
-}
-.top-nav::placeholder{
-    font-family:"Times New Roman";
-    color: #171616;
-    font-weight:500;
-    font-size: 14px;
-    text-align: center;
-}
-.profile-pic{
-    height: 50px;
-    width: 50px;
-    margin-right: 20px;
-    border-radius: 25px;
-}
-.left-side {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
 .movies-grid{
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(150px, 1fr));
@@ -92,12 +29,6 @@
     align-items: center;
     text-align: center;
 }
-
-body{
-    background-color: #1e1e1e;
-    margin: 0;
-    padding: 0;
-}
 p {
     color: white;
     margin-top: 80px;
@@ -111,10 +42,6 @@ p {
     letter-spacing: 5px;
 
 }
-body, html {
-    margin: 0;
-    padding: 0;
-}
 .watchlist{
     color: rgb(131, 143, 154);
     font-size: 16px;
@@ -123,18 +50,4 @@ body, html {
 }
 .watchlist:hover{
     color: rgb(149, 161, 172);
-}
-a {
-    text-decoration: none;
-}
-.search-button{
-    background-color: #171616;
-}
-body {
-    background-color: #1e1e1e;
-    background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
-    background-repeat: repeat;
-    background-size: auto;
-    margin: 0;
-    padding: 0;
 }

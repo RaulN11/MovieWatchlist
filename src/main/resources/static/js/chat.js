@@ -49,7 +49,6 @@ function updateConnectionStatus(connected) {
 }
 
 function showNewMessageNotification(sender) {
-    // You can implement visual notifications here
 }
 
 async function loadUsers() {
@@ -183,7 +182,6 @@ function scrollToBottom() {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// Event listeners
 document.getElementById('userSelect').addEventListener('change', onUserSelect);
 
 document.getElementById('messageInput').addEventListener('keypress', function(e) {

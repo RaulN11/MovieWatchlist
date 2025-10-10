@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const buttons = [
         { id: 'like-button', addUrl: '/client/addtoliked/', removeUrl: '/client/removefromliked/' },
         { id: 'watched-button', addUrl: '/client/addtowatched?title=', removeUrl: '/client/removefromwatched/' },
@@ -10,11 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelBtn = document.getElementById('cancel');
     const saveBtn = document.getElementById('save');
     const textarea = document.querySelector('.review-text');
+    if (modal) {
+        modal.style.display = 'none';
+    }
 
     buttons.forEach(btnConfig => {
         const btn = document.getElementById(btnConfig.id);
         if (!btn) return;
-
         const icon = btn.querySelector('i');
         icon.style.color = btn.dataset.state === 'active' ? '#710a42' : 'white';
 
@@ -22,8 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const title = btn.dataset.title;
             const state = btn.dataset.state;
-
-            // Handle fetch toggle
             const url = state === 'inactive'
                 ? btnConfig.addUrl + encodeURIComponent(title)
                 : btnConfig.removeUrl + encodeURIComponent(title);
@@ -42,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     icon.style.color = '#710a42';
                     if (btnConfig.id === 'watched-button') {
                         modal.style.display = 'flex';
-                        document.body.style.overflow = 'hidden'; 
+                        document.body.style.overflow = 'hidden';
                     }
 
                 } else {
@@ -55,27 +54,48 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    // Close modal when clicking × or Cancel
     const closeModal = () => {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
-        textarea.value = ''; // reset text
+        textarea.value = '';
     };
-
     closeBtn?.addEventListener('click', closeModal);
     cancelBtn?.addEventListener('click', closeModal);
-
-    // Optional: clicking outside modal closes it
     window.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-
-    // Save button handler (for now, just close modal)
-    saveBtn?.addEventListener('click', () => {
+    saveBtn?.addEventListener('click', async () => {
         const reviewText = textarea.value.trim();
-        console.log('Review saved:', reviewText);
-        // TODO: send reviewText to backend via fetch()
-        closeModal();
+        const ratingInput = document.getElementById('rating-area');
+        const rating = ratingInput.value.trim();
+        const watchedBtn = document.getElementById('watched-button');
+        const movieTitle = watchedBtn.dataset.title;
+        if (!reviewText && !rating) {
+            closeModal();
+            return;
+        }
+
+        try {
+            const response = await fetch(`/client/addreview/${encodeURIComponent(movieTitle)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    comment: reviewText,
+                    rating: rating ? parseFloat(rating) : null
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save review');
+            }
+
+            console.log('Review saved successfully');
+            closeModal();
+            location.reload();
+
+        } catch (err) {
+            console.error('Error saving review:', err);
+            alert('Failed to save review. Please try again.');
+        }
     });
 });

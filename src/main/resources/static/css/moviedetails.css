@@ -1,168 +1,65 @@
-.monoton-regular {
-    font-family: "Monoton", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
-.first-word, .second-word {
-    font-family: "Monoton", sans-serif;
-    font-size: 50px;
-    margin: 0;
-}
-.first-word {
-    color: #4444ba;
-}
-
-.second-word {
-    color: #710a42;
-}
-
-.top-container {
-    background-color: #171616;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 20px;
-    margin: 0;
-}
-.top-container p {
-    margin: 0;
-    display: flex;
-    align-items: center;
-}
-.top-nav{
-    height: 30px;
-    width: 180px;
-    border-radius:4px;
-    border-width: medium;
-    font-size: 12px;
-    border-color: rgb(131, 143, 154);
-    background-color: rgb(131, 143, 154);
-    text-align: center;
-
-}
-.top-nav:focus{
-}
-.top-nav::placeholder{
-    font-family:"Times New Roman";
-    color: #171616;
-    font-weight:500;
-    font-size: 14px;
-    text-align: center;
-}
-.profile-pic{
-    height: 50px;
-    width: 50px;
-    margin-right: 20px;
-    border-radius: 25px;
-}
-.left-side {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-a {
-    text-decoration: none;
-}
-.fa-magnifying-glass{
-    margin-right: 20px;
-    margin-left: 0;
-}
-body, html {
-    margin: 0;
-    padding: 0;
-}
-body{
-    background-color: #1e1e1e;
-    background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
-    background-repeat: repeat;
-    background-size: auto;
-}
-.watchlist{
-    color: rgb(131, 143, 154);
-    font-size: 16px;
-    letter-spacing: 1px;
-    padding: 10px;
-}
-.watchlist:hover{
-    color: rgb(149, 161, 172);
-}
-.movie-details{
+.movie-details {
     background-color: #2b2929;
     display: grid;
     grid-template-columns: 400px 1fr;
     height: 500px;
-    align-items:start;
+    align-items: start;
 }
-.movie-poster{
+.movie-poster {
     width: 300px;
     margin-left: 50px;
     margin-top: 30px;
     margin-bottom: 30px;
 }
-.title{
+.title {
     color: rgb(226, 232, 237);
-    margin-top:50px;
+    margin-top: 50px;
     margin-left: 10px;
     font-size: 40px;
     font-weight: bold;
     letter-spacing: 1px;
     margin-bottom: 0;
 }
-.year{
+.year {
     font-weight: lighter;
     color: rgb(149, 161, 172);
     letter-spacing: 0;
     font-size: 30px;
 }
-.director{
+.director {
     color: rgb(149, 161, 172);
     margin-top: 10px;
     margin-left: 10px;
     font-size: 18px;
     margin-bottom: 0;
 }
-.details{
+.details {
     color: rgb(207, 216, 220);
     margin-left: 10px;
     font-style: italic;
     font-size: 16px;
 }
-.time{
+.time {
     font-style: normal;
     margin-left: 10px;
 }
-.overview-top{
+.overview-top {
     color: rgb(149, 161, 172);
     font-size: 22px;
     margin-left: 10px;
     margin-top: 0;
     text-decoration: underline;
 }
-.overview-text{
+.overview-text {
     color: rgb(207, 216, 220);
     margin-left: 10px;
     font-size: 18px;
     font-style: oblique;
 }
-.buttons-grid{
+.buttons-grid {
     display: flex;
 }
-.fa-heart{
-    font-size: 30px;
-    text-shadow:2px 2px 10px rgba(0, 0, 0, 0.5);
-}
-.fa-heart:checked{
-    color: white;
-}
-.fa-eye{
-    font-size: 30px;
-    text-shadow:2px 2px 10px rgba(0, 0, 0, 0.5);
-}
-.fa-circle-check{
-    font-size: 30px;
-    text-shadow:2px 2px 10px rgba(0, 0, 0, 0.5);
-}
-.button-background{
+.button-background {
     margin-top: 40px;
     margin-left: 10px;
     margin-right: 20px;
@@ -173,28 +70,44 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
-.cast-list{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+.fa-heart,
+.fa-eye,
+.fa-circle-check {
+    font-size: 30px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
 }
-.cast{
+.cast {
     display: flex;
     flex-direction: column;
     background-color: #423f3f;
 }
-.actor{
+.cast_title {
+    color: rgb(207, 216, 220);
+    align-self: center;
+    font-size: 40px;
+    margin-bottom: 0;
+    margin-top: 5px;
+    font-weight: bolder;
+    letter-spacing: 1px;
+}
+.cast-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.actor {
     display: flex;
     flex-direction: column;
     margin-left: 40px;
     margin-top: 30px;
     align-items: center;
 }
-.actor-poster{
+.actor-poster {
     height: 80px;
     width: 80px;
-    border-radius:40px;
+    border-radius: 40px;
 }
 .actor-name {
     color: rgb(207, 216, 220);
@@ -205,85 +118,66 @@ body{
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
-
-.cast_title{
-    color: rgb(207, 216, 220);
-    align-self: center;
-    font-size: 40px;
-    margin-bottom: 0;
-    margin-top:5px;
-    font-weight: bolder;
-    letter-spacing: 1px;
-
-}
-.separator{
-    background-color: white;
-    height: 1px;
-    width: 100%;
-    border: none;
-}
-.reviews{
+.reviews {
     display: flex;
     flex-direction: column;
     background-color: #2b2929;
     align-items: center;
 }
-.review-title{
+.review-title {
     margin-bottom: 0;
     text-align: center;
     color: rgb(207, 216, 220);
     font-size: 24px;
 }
-.review-card{
-    margin-top: 50px;
-    margin-bottom: 50px;
-    display: flex;
-    flex-direction: row;
-    width: 700px;
-    grid-template-columns:30px 1fr;
-}
-.review-pic{
-    height: 40px;
-    width: 40px;
-    border-radius: 20px;
-}
-.review-text{
-    display: flex;
-    flex-direction: column;
-}
-
-.review-author{
-    margin-top:0;
-    margin-left: 20px;
-    margin-bottom: 10px;
-    color:rgb(131, 143, 154);
-    font-size: 18px;
-}
-.review-grade{
-    margin-left: 20px;
-    margin-top: 0;
-    color:rgb(131, 143, 154);
-    font-size: 20px;
-}
-.review-comment{
-    color: rgb(255, 255, 255);
-    font-size: 20px;
-    margin-left: 20px;
-    margin-top: 0;
-}
-.separator2{
+.separator2 {
     height: 1px;
     margin-top: 20px;
     background-color: rgb(131, 143, 154);
     width: 50%;
     align-self: center;
 }
-.modal{
+.review-card {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    width: 700px;
+}
+.review-pic {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+}
+.review-text {
+    display: flex;
+    flex-direction: column;
+}
+.review-author {
+    margin-top: 0;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    color: rgb(131, 143, 154);
+    font-size: 18px;
+}
+.review-grade {
+    margin-left: 20px;
+    margin-top: 0;
+    color: rgb(131, 143, 154);
+    font-size: 20px;
+}
+.review-comment {
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    margin-left: 20px;
+    margin-top: 0;
+}
+.modal {
     display: flex;
     flex-direction: row;
     position: fixed;
     z-index: 2000;
-    top:0;
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
@@ -292,80 +186,73 @@ body{
     justify-content: center;
     align-items: center;
 }
-.modal-content{
+.modal-content {
     background-color: #1e293b;
     width: 600px;
     position: relative;
     z-index: 2100;
     border-radius: 5px;
     padding: 10px 20px 20px 20px;
-
-    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
 }
-.modal-header{
+.modal-header {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-bottom: 20px;
     padding-top: 15px;
-
 }
-h2{
+h2 {
     margin: 0;
     color: rgb(207, 216, 220);
     align-self: flex-start;
     font-size: 30px;
     font-weight: normal;
 }
-.close-btn{
+.close-btn {
     align-self: flex-end;
     color: rgb(207, 216, 220);
     position: absolute;
     font-size: 26px;
     margin-top: 0;
+    cursor: pointer;
 }
-.review-body{
+.review-body {
     display: flex;
     flex-direction: row;
-    gap:30px;
+    gap: 30px;
     background-color: #2e3953;
     padding: 10px;
     border-radius: 5px;
-
 }
-.review-poster{
+.review-poster {
     height: 300px;
     width: 200px;
 }
-.review-details{
+.review_details {
     display: flex;
     flex-direction: column;
-    padding:0;
+    padding: 0;
     width: 100%;
-    min-width: 400px;
-
 }
-.modal-names{
+.modal-names {
     display: flex;
     flex-direction: row;
-
-
 }
-.modal-title{
+.modal-title {
     color: rgb(207, 216, 220);
     font-size: 28px;
     margin-right: 10px;
-    margin-top:0;
+    margin-top: 0;
     margin-bottom: 15px;
 }
-.modal-year{
+.modal-year {
     color: rgb(151, 147, 147);
     font-size: 28px;
     margin-top: 0;
     margin-bottom: 15px;
-
 }
-.review-text{
+.review-text {
     resize: none;
     margin-bottom: 20px;
     width: 300px;
@@ -375,7 +262,7 @@ h2{
     border-width: 2px;
     border-color: #1e293b;
 }
-.rating{
+.rating {
     resize: none;
     margin-bottom: 50px;
     width: 70px;
@@ -384,31 +271,33 @@ h2{
     font-size: 16px;
     border-width: 2px;
     border-color: #1e293b;
-
 }
-.review-text:focus, .rating:focus{
+.review-text:focus,
+.rating:focus {
     outline: none;
 }
-.review-buttons{
+.review-buttons {
     display: flex;
     flex-direction: row;
     justify-self: end;
-    gap:10px;
+    gap: 10px;
     height: 30px;
 }
-.cancel-button{
+.cancel-button {
     height: 30px;
     width: 70px;
     border-radius: 15px;
     border: none;
     background-color: #1e293b;
     color: rgb(207, 216, 220);
+    cursor: pointer;
 }
-.save-button{
+.save-button {
     height: 30px;
     width: 70px;
     border-radius: 15px;
-    border:none;
+    border: none;
     background-color: #141a27;
     color: rgb(207, 216, 220);
+    cursor: pointer;
 }

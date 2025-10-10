@@ -10,6 +10,7 @@ import project.movieslist.model.Movie;
 import project.movieslist.model.Review;
 import project.movieslist.repositories.MovieRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @RequiredArgsConstructor
@@ -51,6 +52,14 @@ public class MovieService {
     }
     public Page<Movie> getByTitleContaining(String title, Pageable pageable) {
         return movieRepository.findByTitleContainingIgnoreCase(title, pageable);
+    }
+    public Movie addReviewToMovie(Movie movie, Review review) {
+        if(movie.getReviews()==null){
+            movie.setReviews(new ArrayList<Review>());
+        }else {
+            movie.getReviews().add(review);
+        }
+        return movieRepository.save(movie);
     }
 
 }
