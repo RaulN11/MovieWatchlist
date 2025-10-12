@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="/js/homepage.js" defer></script>
 </head>
 <body>
@@ -38,9 +38,8 @@
     </div>
 </div>
 <p th:if="${client != null}" class="welcome-paragraph">
-    WELCOME, <span th:text="${client.username}"></span>! HERE IS WHAT IS TRENDING THIS WEEK.
+    Welcome, <span th:text="${client.username}" class="pink"></span>! here is what is <span class="pink">trending</span> this week...
 </p>
-
 <div class="movies-grid">
     <div th:each="trendingMovie : ${trendingMovies}" class="movie-card">
         <a th:href="@{'/details/' + ${trendingMovie.title}}">
@@ -48,7 +47,15 @@
         </a>
     </div>
 </div>
-<p class="welcome-paragraph">ALSO, KEEP UP TO DATE WITH THESE UPCOMING MOVIES!</p>
+
+<div class="login-buttons">
+    <p class="welcome-paragraph"><span class="pink">New</span> here? Or not <span class="pink">connected?</span></p>
+    <div class="buttons">
+        <button id="login" class="login-button">Log In</button>
+        <button id="register" class="register-button">Register</button>
+    </div>
+</div>
+<p class="welcome-paragraph">Also, keep up to date with these <span class="pink">incoming</span> movies!</p>
 <div class="movies-grid">
     <div th:each="upcomingMovie : ${upcomingMovies}" class="movie-card">
         <a th:href="@{'/details/'+${upcomingMovie.title}}">

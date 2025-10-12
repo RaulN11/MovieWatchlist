@@ -2,14 +2,11 @@ package project.movieslist.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import project.movieslist.model.Client;
 import project.movieslist.model.Movie;
 import project.movieslist.model.Review;
@@ -42,18 +39,22 @@ public class ViewController {
     @GetMapping("/homepage")
     public String allMovies(Model model, Authentication auth,HttpServletRequest request) {
         String username=auth.getName();
-        List<Movie> top6Trending=tmDbService.getTrendingMovies()
+        List<Movie> top5Upcoming=tmDbService.getUpcomingMovies()
                 .stream()
                 .limit(5)
                 .toList();
-        List<Movie> top6Upcoming=tmDbService.getUpcomingMovies()
+        var upcomingTitles = top5Upcoming.stream()
+                .map(Movie::getTitle)
+                .toList();
+        List<Movie> top5Trending =tmDbService.getTrendingMovies()
                 .stream()
+                .filter(movie -> !upcomingTitles.contains(movie.getTitle()))
                 .limit(5)
                 .toList();
         Optional<Client> client=clientService.getUserByUsername(username);
         model.addAttribute("client",client.get());
-        model.addAttribute("trendingMovies", top6Trending);
-        model.addAttribute("upcomingMovies", top6Upcoming);
+        model.addAttribute("trendingMovies", top5Trending);
+        model.addAttribute("upcomingMovies", top5Upcoming);
         model.addAttribute("currentPath", request.getRequestURI());
         return "homepage";
 

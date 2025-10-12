@@ -1,19 +1,46 @@
-.bitcount-prop {
-    font-family: "Bitcount Prop Single Ink", sans-serif;
+.cormorant-upright-light {
+    font-family: "Cormorant Upright", serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.cormorant-upright-regular {
+    font-family: "Cormorant Upright", serif;
     font-weight: 400;
     font-style: normal;
 }
+
+.cormorant-upright-medium {
+    font-family: "Cormorant Upright", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.cormorant-upright-semibold {
+    font-family: "Cormorant Upright", serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.cormorant-upright-bold {
+    font-family: "Cormorant Upright", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
 .movies-grid{
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(150px, 1fr));
     column-gap: 20px;
+    gap: 10px;
     padding: 20px;
     margin-left: 200px;
     margin-right: 200px;
+    margin-bottom: 0;
 }
 .movie-poster {
     width: 100%;
-    height: 300px;
+    height: 250px;
     object-fit: cover;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     border-radius: 5px;
@@ -35,12 +62,18 @@ p {
     margin-left: 50px;
 }
 .welcome-paragraph{
-    color: rgb(131, 143, 154);
-    font-family: "Bitcount Prop Single Ink", serif;
+    color: #4444ba;
+    font-family: "Cormorant Upright", serif;
     text-align: center;
-    font-size: 26px;
-    letter-spacing: 5px;
-
+    font-size: 32px;
+    font-weight: bolder;
+    letter-spacing: 3px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+.pink{
+    color: #710a42;
+    font-family: "Cormorant Upright", serif;
 }
 .watchlist{
     color: rgb(131, 143, 154);
@@ -50,4 +83,36 @@ p {
 }
 .watchlist:hover{
     color: rgb(149, 161, 172);
+}
+.login-buttons{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    align-items: center;
+}
+.buttons{
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.login-button{
+    background-color: rgb(131, 143, 154);
+    color: #710a42;
+    font-family: "Cormorant Upright", serif;
+    font-size: 24px;
+    font-weight: bold;
+    height: 40px;
+    width: 120px;
+    border: none;
+}
+.register-button{
+    background-color: rgb(131, 143, 154);
+    color: #4444ba;
+    font-family: "Cormorant Upright", serif;
+    font-size: 24px;
+    font-weight: bold;
+    height: 40px;
+    width: 120px;
+    border: none;
 }
