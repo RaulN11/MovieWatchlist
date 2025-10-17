@@ -37,24 +37,27 @@ public class ViewController {
     }
 
     @GetMapping("/homepage")
-    public String allMovies(Model model, Authentication auth,HttpServletRequest request) {
-        String username=auth.getName();
-        List<Movie> top5Upcoming=tmDbService.getUpcomingMovies()
+    public String allMovies(Model model, HttpServletRequest request, Authentication auth) {
+        if (auth != null) {
+            String username=auth.getName();
+            Optional<Client> clientOpt=clientService.getUserByUsername(username);
+            Client client = clientOpt.get();
+            model.addAttribute("client", client);
+        }
+        List<Movie> top6Upcoming =tmDbService.getUpcomingMovies()
                 .stream()
-                .limit(5)
+                .limit(6)
                 .toList();
-        var upcomingTitles = top5Upcoming.stream()
+        var upcomingTitles = top6Upcoming.stream()
                 .map(Movie::getTitle)
                 .toList();
-        List<Movie> top5Trending =tmDbService.getTrendingMovies()
+        List<Movie> top6Trending =tmDbService.getTrendingMovies()
                 .stream()
                 .filter(movie -> !upcomingTitles.contains(movie.getTitle()))
-                .limit(5)
+                .limit(6)
                 .toList();
-        Optional<Client> client=clientService.getUserByUsername(username);
-        model.addAttribute("client",client.get());
-        model.addAttribute("trendingMovies", top5Trending);
-        model.addAttribute("upcomingMovies", top5Upcoming);
+        model.addAttribute("trendingMovies", top6Trending);
+        model.addAttribute("upcomingMovies", top6Upcoming);
         model.addAttribute("currentPath", request.getRequestURI());
         return "homepage";
 
@@ -71,18 +74,20 @@ public class ViewController {
                 throw new RuntimeException("Movie not found");
             }
         }
+        if (auth != null) {
+            String username=auth.getName();
+            Optional<Client>clientOpt=clientService.getUserByUsername(username);
+            Client client = clientOpt.get();
+            List<Movie> likedMovies=client.getLikedMovies()!=null ? client.getLikedMovies(): List.of();
+            List<Movie> watchedMovies=client.getWatchedMovies()!=null ? client.getWatchedMovies(): List.of();
+            List<Movie> watchlist = client.getWatchList() != null ? client.getWatchList() : List.of();
+            model.addAttribute("client",client);
+            model.addAttribute("liked", likedMovies);
+            model.addAttribute("watched", watchedMovies);
+            model.addAttribute("watchlist", watchlist);
+        }
         List<Review> reviews=movie.getReviews();
-        String username=auth.getName();
-        Optional<Client> clientOpt = clientService.getUserByUsername(username);
-        Client client = clientOpt.orElseThrow(() -> new RuntimeException("Client not found"));
-        List<Movie> likedMovies = client.getLikedMovies() != null ? client.getLikedMovies() : List.of();
-        List<Movie> watchedMovies = client.getWatchedMovies() != null ? client.getWatchedMovies() : List.of();
-        List<Movie> watchlist = client.getWatchList() != null ? client.getWatchList() : List.of();
         model.addAttribute("movie", movie);
-        model.addAttribute("client",client);
-        model.addAttribute("liked", likedMovies);
-        model.addAttribute("watched", watchedMovies);
-        model.addAttribute("watchlist", watchlist);
         model.addAttribute("reviews", reviews);
         return "moviedetails";
     }
@@ -119,9 +124,13 @@ public class ViewController {
         model.addAttribute("client",client);
         return "diary";
     }
-    @GetMapping("/profile")
-    public String profile(Model model) {
-        return "profile";
+    @GetMapping("/yourprofile")
+    public String profile(Model model, Authentication auth) {
+        String username=auth.getName();
+        Optional<Client> clientOpt=clientService.getUserByUsername(username);
+        Client client=clientOpt.get();
+        model.addAttribute("client",client);
+        return "yourprofile";
     }
     @GetMapping("/searchMenu/{type}/{searched}")
     public String searchMenu(@PathVariable String searched,@PathVariable String type, Model model, Authentication auth){

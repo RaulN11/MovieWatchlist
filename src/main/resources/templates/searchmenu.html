@@ -19,20 +19,16 @@
         <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
     </a>
     <div class="left-side">
-        <a href="/watched">
-            <p class="watchlist">DIARY</p>
-        </a>
-        <a href="/watchlist">
-            <p class="watchlist">WATCHLIST</p>
-        </a>
-        <a href="/chat">
-            <p class="watchlist">INBOX</p>
-        </a>
-        <input class="top-nav" type="text" placeholder="SEARCH">
+        <div class="nav-links">
+            <a href="/watched">DIARY</a>
+            <a href="/watchlist">WATCHLIST</a>
+            <a href="/chat">INBOX</a>
+        </div>
+        <input class="top-nav" type="text" placeholder="Search here...">
         <button class="search-button">
             <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
         </button>
-        <a href="/profile">
+        <a href="/yourprofile">
             <img th:src="${client.profilePicture}" alt="Profile Picture" class="profile-pic">
         </a>
     </div>
@@ -45,7 +41,7 @@
             <hr class="separator">
             <a th:href="@{'/details/' + ${movie.title}}">
                 <div class="result">
-                    <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
+                    <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
                          alt="Movie Poster"
                          class="result_picture"
                          onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';">
@@ -57,7 +53,7 @@
         <div th:if="${actors!=null}" th:each="actor: ${actors}" class="result_container">
             <hr class="separator">
             <div class="result">
-                <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${actor.picture}}"
+                <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${actor.picture}}"
                      alt="Actor Picture"
                      class="result_picture"
                      onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s';">

@@ -13,53 +13,67 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <script src="/js/homepage.js" defer></script>
 </head>
 <body>
 <div class="top-container">
     <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
     <div class="left-side">
-        <a href="/watched">
-            <p class="watchlist">DIARY</p>
-        </a>
-        <a href="/watchlist">
-            <p class="watchlist">WATCHLIST</p>
-        </a>
-        <a href="/chat">
-            <p class="watchlist">INBOX</p>
-        </a>
-        <input class="top-nav" type="text" placeholder="SEARCH">
+        <div class="nav-links">
+            <a href="/watched">DIARY</a>
+            <a href="/watchlist">WATCHLIST</a>
+            <a href="/chat">INBOX</a>
+        </div>
+        <input class="top-nav" type="text" placeholder="Search here...">
         <button class="search-button">
             <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
         </button>
-        <a href="/profile">
-            <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
-        </a>
+        <div th:if="${client!=null}">
+            <a href="/yourprofile">
+                <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
+            </a>
+        </div>
     </div>
 </div>
-<p th:if="${client != null}" class="welcome-paragraph">
-    Welcome, <span th:text="${client.username}" class="pink"></span>! here is what is <span class="pink">trending</span> this week...
+<div class="welcome-section">
+    <div class="welcome-background"></div>
+    <div class="welcome-pattern"></div>
+    <div class="welcome-content">
+        <h1 class="welcome-title">
+            Welcome<span th:if="${client!=null}" th:text="', '+ ${client.username}"></span>
+        </h1>
+        <p class="welcome-subtitle">
+            Discover, Track, and Share Your <span class="pink">Cinematic Journey</span>
+        </p>
+    </div>
+</div>
+<p class="section-title">
+    <span class="pink">Trending</span> this week
 </p>
 <div class="movies-grid">
     <div th:each="trendingMovie : ${trendingMovies}" class="movie-card">
         <a th:href="@{'/details/' + ${trendingMovie.title}}">
-            <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${trendingMovie.posterPath}}"  th:alt="${trendingMovie.title}" class="movie-poster">
+            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${trendingMovie.posterPath}}"  th:alt="${trendingMovie.title}" class="movie-poster">
         </a>
     </div>
 </div>
 
-<div class="login-buttons">
-    <p class="welcome-paragraph"><span class="pink">New</span> here? Or not <span class="pink">connected?</span></p>
-    <div class="buttons">
-        <button id="login" class="login-button">Log In</button>
-        <button id="register" class="register-button">Register</button>
+<div th:if="${client==null}" class="login-section">
+    <div class="section-title">
+        <span class="pink">New</span> here? Or not <span class="pink">connected</span>?
+    </div>
+    <div class="button-group">
+        <button id="login" class="btn login-button">Log In</button>
+        <button id="register" class="btn register-button">Register</button>
     </div>
 </div>
-<p class="welcome-paragraph">Also, keep up to date with these <span class="pink">incoming</span> movies!</p>
+<p class="section-title">
+    <span class="pink">Coming</span> soon</p>
 <div class="movies-grid">
     <div th:each="upcomingMovie : ${upcomingMovies}" class="movie-card">
         <a th:href="@{'/details/'+${upcomingMovie.title}}">
-            <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${upcomingMovie.posterPath}}"  th:alt="${upcomingMovie.title}" class="movie-poster">
+            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${upcomingMovie.posterPath}}"  th:alt="${upcomingMovie.title}" class="movie-poster">
         </a>
     </div>
 </div>

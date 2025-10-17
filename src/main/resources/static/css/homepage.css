@@ -1,118 +1,221 @@
-.cormorant-upright-light {
-    font-family: "Cormorant Upright", serif;
-    font-weight: 300;
-    font-style: normal;
+.welcome-section {
+    position: relative;
+    height: 600px;
+    margin-bottom: 80px;
+    overflow: hidden;
 }
 
-.cormorant-upright-regular {
-    font-family: "Cormorant Upright", serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-.cormorant-upright-medium {
-    font-family: "Cormorant Upright", serif;
-    font-weight: 500;
-    font-style: normal;
-}
-
-.cormorant-upright-semibold {
-    font-family: "Cormorant Upright", serif;
-    font-weight: 600;
-    font-style: normal;
-}
-
-.cormorant-upright-bold {
-    font-family: "Cormorant Upright", serif;
-    font-weight: 700;
-    font-style: normal;
-}
-
-.movies-grid{
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(150px, 1fr));
-    column-gap: 20px;
-    gap: 10px;
-    padding: 20px;
-    margin-left: 200px;
-    margin-right: 200px;
-    margin-bottom: 0;
-}
-.movie-poster {
+.welcome-background {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 250px;
-    object-fit: cover;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    border-radius: 5px;
-    transition:  border 0.3s ease;
-    border:2px solid transparent;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(113, 10, 66, 0.3), rgba(68, 68, 186, 0.3));
+    opacity: 0.6;
 }
-.movie-poster:hover{
-    border-color: rgb(131, 143, 154);
+
+.welcome-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+            radial-gradient(circle at 20% 50%, rgba(113, 10, 66, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(68, 68, 186, 0.1) 0%, transparent 50%);
 }
-.movie-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+.welcome-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 50px;
     text-align: center;
 }
-p {
-    color: white;
-    margin-top: 80px;
-    margin-left: 50px;
+
+.welcome-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 72px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    animation: fadeInDown 1s ease-out;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
-.welcome-paragraph{
-    color: #4444ba;
-    font-family: "Cormorant Upright", serif;
-    text-align: center;
-    font-size: 32px;
-    font-weight: bolder;
-    letter-spacing: 3px;
-    margin-top: 40px;
-    margin-bottom: 10px;
-}
-.pink{
-    color: #710a42;
-    font-family: "Cormorant Upright", serif;
-}
-.watchlist{
-    color: rgb(131, 143, 154);
-    font-size: 16px;
-    letter-spacing: 1px;
-    padding: 10px;
-}
-.watchlist:hover{
-    color: rgb(149, 161, 172);
-}
-.login-buttons{
-    display: flex;
-    flex-direction: column;
-    gap:20px;
-    align-items: center;
-}
-.buttons{
-    margin-top: 0;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-}
-.login-button{
-    background-color: rgb(131, 143, 154);
-    color: #710a42;
-    font-family: "Cormorant Upright", serif;
+
+.welcome-subtitle {
+    font-family: 'Oswald', sans-serif;
     font-size: 24px;
-    font-weight: bold;
-    height: 40px;
-    width: 120px;
-    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 2px;
+    animation: fadeInUp 1s ease-out 0.3s backwards;
 }
-.register-button{
-    background-color: rgb(131, 143, 154);
-    color: #4444ba;
-    font-family: "Cormorant Upright", serif;
-    font-size: 24px;
-    font-weight: bold;
-    height: 40px;
-    width: 120px;
-    border: none;
+
+.welcome-subtitle .pink {
+    color: #710a42;
+    font-weight: 600;
 }
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.movies-grid{
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(150px, 1fr));
+        column-gap: 20px;
+        gap: 10px;
+        padding: 20px;
+        margin-left: 200px;
+        margin-right: 200px;
+        margin-bottom: 0;
+    }
+    .movie-poster {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-radius: 5px;
+        transition:  border 0.3s ease;
+        border:2px solid transparent;
+    }
+    .movie-poster:hover{
+        border-color: rgb(131, 143, 154);
+    }
+    .movie-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    p {
+        color: white;
+        margin-top: 80px;
+        margin-left: 50px;
+    }
+    .section-title{
+        color: rgba(255, 255, 255, 0.8);
+        font-family: "Oswald", serif;
+        text-align: center;
+        font-size: 36px;
+        font-weight: 400;
+        letter-spacing: 1px;
+        margin-top: 40px;
+        margin-bottom: 10px;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+    .pink{
+        color: #710a42;
+        font-family: "Oswald", serif;
+    }
+    .login-section {
+        background: rgba(113, 10, 66, 0.1);
+        border: 1px solid rgba(113, 10, 66, 0.2);
+        border-radius: 12px;
+        padding: 60px;
+        text-align: center;
+        margin-bottom: 100px;
+    }
+
+    .login-section .section-title {
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .btn {
+        padding: 12px 40px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        border: 2px solid;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Oswald", sans-serif;
+        text-transform: uppercase;
+    }
+
+    .login-button {
+        background: #838f9a;
+        border-color: #838f9a;
+        color: #0f0f1e;
+    }
+
+    .login-button:hover {
+        background: #9fa1a2;
+        border-color: #9fa1a2;
+        box-shadow: 0 8px 20px rgba(131, 143, 154, 0.2);
+    }
+
+    .register-button {
+        background: transparent;
+        border-color: #710a42;
+        color: #710a42;
+    }
+
+    .register-button:hover {
+        background: #710a42;
+        color: white;
+        box-shadow: 0 8px 20px rgba(113, 10, 66, 0.2);
+    }
+    @media (max-width: 768px) {
+        .top-container {
+            padding: 15px 30px;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .main-content {
+            padding: 40px 30px;
+        }
+
+        .search-bar input {
+            width: 100px;
+        }
+
+        .movies-grid {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .section-title {
+            font-size: 24px;
+        }
+
+        .login-section {
+            padding: 40px 20px;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+    }
+

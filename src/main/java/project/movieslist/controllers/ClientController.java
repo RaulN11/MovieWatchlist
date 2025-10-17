@@ -58,11 +58,6 @@ public class ClientController {
         String username1 = auth.getName();
         return clientService.addToFollowing(username1,username);
     }
-    @GetMapping("/picture")
-    public Client addProfilePicture(@RequestBody String url, Authentication auth) {
-        String username1 = auth.getName();
-        return clientService.addProfilePicture(username1,url);
-    }
     @PostMapping("/addreview/{title}")
     public Movie addReview(@RequestBody Review review,@PathVariable String title, Authentication auth) {
         Optional<Movie> optMovie=movieService.findFirstByTitle(title);
@@ -76,5 +71,34 @@ public class ClientController {
         review1.setComment(review.getComment());
         review1.setRating(review.getRating());
         return movieService.addReviewToMovie(movie,review1);
+    }
+    @PostMapping("/addpicture")
+    public Client addProfilePicture(@RequestBody String url, Authentication auth) {
+        String username = auth.getName();
+        Optional<Client> optClient= clientService.getUserByUsername(username);
+        Client client = optClient.get();
+        return clientService.addProfilePicture(client,url);
+    }
+    @PostMapping("/addbio")
+    public Client addBio(@RequestBody String bio, Authentication auth) {
+        String username=auth.getName();
+        Optional<Client> optClient=clientService.getUserByUsername(username);
+        Client client=optClient.get();
+        return clientService.addBio(client,bio);
+
+    }
+    @PostMapping("/addcity")
+    public Client addCity(@RequestBody String city, Authentication auth) {
+        String username=auth.getName();
+        Optional<Client> optClient=clientService.getUserByUsername(username);
+        Client client=optClient.get();
+        return clientService.addCity(client,city);
+    }
+    @PostMapping("/addcountry")
+    public Client addCountry(@RequestBody String country, Authentication auth) {
+        String username=auth.getName();
+        Optional<Client> optClient=clientService.getUserByUsername(username);
+        Client client=optClient.get();
+        return clientService.addCountry(client,country);
     }
 }

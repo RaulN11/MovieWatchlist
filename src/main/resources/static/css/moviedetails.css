@@ -1,5 +1,5 @@
 .movie-details {
-    background-color: #2b2929;
+    background-color: #1a1a2e;
     display: grid;
     grid-template-columns: 400px 1fr;
     height: 500px;
@@ -12,7 +12,8 @@
     margin-bottom: 30px;
 }
 .title {
-    color: rgb(226, 232, 237);
+    font-family: Oswald, serif;
+    color: #838f9a;
     margin-top: 50px;
     margin-left: 10px;
     font-size: 40px;
@@ -81,15 +82,15 @@
 .cast {
     display: flex;
     flex-direction: column;
-    background-color: #423f3f;
+    background-color: #0f0f1e;
 }
 .cast_title {
-    color: rgb(207, 216, 220);
+    color: #838f9a;
+    font-family: Oswald, serif;
     align-self: center;
-    font-size: 40px;
+    font-size: 30px;
     margin-bottom: 0;
     margin-top: 5px;
-    font-weight: bolder;
     letter-spacing: 1px;
 }
 .cast-list {
@@ -107,10 +108,12 @@
 .actor-poster {
     height: 80px;
     width: 80px;
+    object-fit: cover;
     border-radius: 40px;
 }
 .actor-name {
-    color: rgb(207, 216, 220);
+    color: #838f9a;
+    font-family: Oswald, serif;
     font-size: 18px;
     font-weight: lighter;
     text-align: center;
@@ -121,19 +124,21 @@
 .reviews {
     display: flex;
     flex-direction: column;
-    background-color: #2b2929;
+    background-color: #1a1a2e;
     align-items: center;
 }
 .review-title {
     margin-bottom: 0;
+    font-family: Oswald, serif;
     text-align: center;
-    color: rgb(207, 216, 220);
-    font-size: 24px;
+    color: #838f9a;
+    font-size: 30px;
+    text-transform: uppercase;
 }
 .separator2 {
     height: 1px;
     margin-top: 20px;
-    background-color: rgb(131, 143, 154);
+    background-color: #838f9a;
     width: 50%;
     align-self: center;
 }
@@ -152,18 +157,19 @@
 .review-text {
     display: flex;
     flex-direction: column;
+    background-color: #1a1a2e;
 }
 .review-author {
     margin-top: 0;
     margin-left: 20px;
     margin-bottom: 10px;
-    color: rgb(131, 143, 154);
+    color: #838f9a;
     font-size: 18px;
 }
 .review-grade {
     margin-left: 20px;
     margin-top: 0;
-    color: rgb(131, 143, 154);
+    color: #838f9a;
     font-size: 20px;
 }
 .review-comment {
@@ -181,13 +187,13 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(30, 30, 30, 0.6);
+    background-color: rgba(15, 15, 30, 0.8);
     backdrop-filter: blur(6px);
     justify-content: center;
     align-items: center;
 }
 .modal-content {
-    background-color: #1e293b;
+    background-color: #1a1a2e;
     width: 600px;
     position: relative;
     z-index: 2100;
@@ -204,14 +210,21 @@
 }
 h2 {
     margin: 0;
-    color: rgb(207, 216, 220);
+    color: #4444ba;
     align-self: flex-start;
     font-size: 30px;
     font-weight: normal;
+    font-family: Oswald, serif;
+    text-transform: uppercase;
+
+}
+.pink{
+    color: #710a42;
+    font-family: Oswald, serif;
 }
 .close-btn {
     align-self: flex-end;
-    color: rgb(207, 216, 220);
+    color: #838f9a;
     position: absolute;
     font-size: 26px;
     margin-top: 0;
@@ -221,13 +234,14 @@ h2 {
     display: flex;
     flex-direction: row;
     gap: 30px;
-    background-color: #2e3953;
+    background-color: #0f0f1e;
     padding: 10px;
     border-radius: 5px;
 }
 .review-poster {
     height: 300px;
     width: 200px;
+    border-radius: 5px;
 }
 .review_details {
     display: flex;
@@ -237,40 +251,49 @@ h2 {
 }
 .modal-names {
     display: flex;
+    align-items: end;
     flex-direction: row;
 }
 .modal-title {
-    color: rgb(207, 216, 220);
+    font-family: Oswald, serif;
+    color: #838f9a;
     font-size: 28px;
     margin-right: 10px;
     margin-top: 0;
     margin-bottom: 15px;
+    align-self: end;
 }
 .modal-year {
-    color: rgb(151, 147, 147);
-    font-size: 28px;
+    font-family: Oswald, serif;
+    color: #838f9a;
+    font-size: 20px;
     margin-top: 0;
     margin-bottom: 15px;
 }
-.review-text {
+.review-textbox {
     resize: none;
     margin-bottom: 20px;
+    background-color: rgba(131, 143, 154, 0.1);
     width: 300px;
     border-radius: 5px;
     font-family: "Times New Roman", serif;
     font-size: 16px;
     border-width: 2px;
-    border-color: #1e293b;
+    border-color: #1a1a2e;
+    color:#838f9a;
 }
 .rating {
     resize: none;
     margin-bottom: 50px;
+    background-color: rgba(131, 143, 154, 0.1);
     width: 70px;
     border-radius: 5px;
     font-family: "Times New Roman", serif;
     font-size: 16px;
     border-width: 2px;
-    border-color: #1e293b;
+    border-color: #1a1a2e;
+    color:#838f9a;
+    justify-content: center;
 }
 .review-text:focus,
 .rating:focus {
@@ -283,21 +306,47 @@ h2 {
     gap: 10px;
     height: 30px;
 }
-.cancel-button {
-    height: 30px;
-    width: 70px;
-    border-radius: 15px;
-    border: none;
-    background-color: #1e293b;
-    color: rgb(207, 216, 220);
-    cursor: pointer;
-}
 .save-button {
     height: 30px;
     width: 70px;
-    border-radius: 15px;
-    border: none;
-    background-color: #141a27;
-    color: rgb(207, 216, 220);
+    background: #838f9a;
+    border-color: #838f9a;
+    color: #0f0f1e;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border: 2px solid;
+    border-radius: 6px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Oswald", sans-serif;
+    text-transform: uppercase;
+
+}
+.save-button:hover{
+    background: #9fa1a2;
+    border-color: #9fa1a2;
+    box-shadow: 0 8px 20px rgba(131, 143, 154, 0.2);
+
+}
+.cancel-button {
+    height: 30px;
+    width: 70px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border: 2px solid;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Oswald", sans-serif;
+    text-transform: uppercase;
+    background: transparent;
+    border-color: #710a42;
+    color: #710a42;
+}
+.cancel-button:hover{
+    background: #710a42;
+    color: white;
+    box-shadow: 0 8px 20px rgba(113, 10, 66, 0.2);
 }

@@ -75,9 +75,21 @@ public class SecurityConfig {
                             "/req/**",
                             "/css/**",
                             "/js/**",
-                            "/ws/**"
+                            "/ws/**",
+                            "/homepage",
+                            "/details/**",
+                            "/searchMenu/**"
                     ).permitAll();
-                    registry.requestMatchers("/api/admin/**").hasRole("ADMIN");
+                    registry.requestMatchers(
+                            "/watched",
+                            "/watchlist",
+                            "/liked",
+                            "/profile",
+                            "/client/**",
+                            "/chat",
+                            "/messages/**",
+                            "/users"
+                    ).authenticated();
                     registry.anyRequest().authenticated();
                 })
                 .build();

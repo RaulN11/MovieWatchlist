@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Profile</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/yourprofile.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="/js/yourprofile.js" defer></script>
+</head>
+<body>
+<div class="top-container">
+  <a href="/homepage">
+    <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+  </a>
+  <div class="left-side">
+    <div class="nav-links">
+      <a href="/watched">DIARY</a>
+      <a href="/watchlist">WATCHLIST</a>
+      <a href="/chat">INBOX</a>
+    </div>
+    <input class="top-nav" type="text" placeholder="Search here...">
+    <a>
+      <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+    </a>
+  </div>
+</div>
+<div class="profile-body">
+  <div class="profile-details">
+    <button class="edit-profile-btn" onclick="openEditModal()">
+      <i class="fa-solid fa-pen" style="color: white;"></i>
+    </button>
+    <img id="profilePicture"
+         th:src="${client.profilePicture}"
+         alt="profile pic"
+         class="profile-picture"
+         onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
+    <p class="username" th:text="${client.username}"></p>
+    <p class="bio" id="bioText" th:text="${client.bio}">Always in need of something to watch.</p>
+    <i class="fa-solid fa-location-dot" style="color: #710a42;">
+      <span class="detail" id="locationText" th:text="${client.city + ', ' + client.country}">Aiud, Romania</span>
+    </i>
+    <i class="fa-brands fa-instagram" style="color: #710a42;">
+      <span class="detail" th:text="${client.instagram}">raullllll</span>
+    </i>
+    <i class="fa-solid fa-calendar" style="color: #710a42;">
+      <span class="detail" th:text="${client.joinedDate}">12.03.2024</span>
+    </i>
+  </div>
+  <div class="follow-stats">
+    <div class="follow-item">
+      <span th:text="${client.followers.size()}" class="follow-number"></span>
+      <span class="follow-label">Followers</span>
+    </div>
+    <div class="follow-divider"></div>
+    <div class="follow-item">
+      <span th:text="${client.following.size()}" class="follow-number"></span>
+      <span class="follow-label">Following</span>
+    </div>
+  </div>
+  <div class="favouritemovies">
+    <p class="title">Your <span class="pink">favourite</span> movies</p>
+    <div class="movies">
+      <img src="https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="1st" class="movie">
+      <img src="https://m.media-amazon.com/images/M/MV5BMTgzMTEwZjQtMjI2NS00NDEwLWFjNWEtNTNlNzdhODBhMDE0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="2nd" class="movie">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcyJYd_sWzQdj87gwIiDRpi6JtzfY6-XLG-w&s" alt="3rd" class="movie">
+    </div>
+  </div>
+  <p class="title">Your <span class="pink">stats</span></p>
+  <div class="stats">
+    <div class="stat">
+      <p th:text="${client.watchedMovies.size()}" class="pink"></p>
+      <p class="stat-text">WATCHED</p>
+    </div>
+    <div class="stat">
+      <p th:text="${client.likedMovies.size()}" class="pink"></p>
+      <p class="stat-text">LIKED</p>
+    </div>
+    <div class="stat">
+      <p th:text="${client.watchList.size()}" class="pink"></p>
+      <p class="stat-text">TO WATCH</p>
+    </div>
+  </div>
+</div>
+<div id="edit-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <p class="modal-title">Edit your profile</p>
+      <div class="close-btn" onclick="closeEditModal()">&times;</div>
+    </div>
+    <div class="modal-body">
+      <form id="editProfileForm">
+        <div class="form-group">
+          <label for="bioInput">Bio</label>
+          <textarea id="bioInput" placeholder="Tell us about yourself..." th:value="${client.bio}"></textarea>
+        </div>
+        <div class="location-group">
+          <div class="form-group">
+            <label for="cityInput">City</label>
+            <input type="text" id="cityInput" placeholder="Your city" th:value="${client.city}">
+          </div>
+          <div class="form-group">
+            <label for="countryInput">Country</label>
+            <input type="text" id="countryInput" placeholder="Your country" th:value="${client.country}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="profilePicInput">Profile Picture URL</label>
+          <input type="text" id="profilePicInput" placeholder="https://image.url/picture.jpg" th:value="${client.profilePicture}">
+        </div>
+      </form>
+    </div>
+    <div class="modal-buttons">
+      <button class="btn cancel-btn" type="button" onclick="closeEditModal()">Cancel</button>
+      <button class="btn save-btn" type="button" onclick="saveProfile()">Save Changes</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <script src="/js/moviedetails.js"></script>
 </head>
 <body>
@@ -16,26 +17,24 @@
         <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
     </a>
     <div class="left-side">
-        <a href="/watched">
-            <p class="watchlist">DIARY</p>
-        </a>
-        <a href="/watchlist">
-            <p class="watchlist">WATCHLIST</p>
-        </a>
-        <a href="/chat">
-            <p class="watchlist">INBOX</p>
-        </a>
-        <input class="top-nav" type="text" placeholder="SEARCH">
+        <div class="nav-links">
+            <a href="/watched">DIARY</a>
+            <a href="/watchlist">WATCHLIST</a>
+            <a href="/chat">INBOX</a>
+        </div>
+        <input class="top-nav" type="text" placeholder="Search here...">
         <a>
             <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
         </a>
-        <a href="/profile">
-            <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
-        </a>
+        <div th:if="${client!=null}">
+            <a href="/yourprofile">
+                <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
+            </a>
+        </div>
     </div>
 </div>
 <div class="movie-details">
-    <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
+    <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
          alt="Movie Poster"
          class="movie-poster">
     <div class="text-details">
@@ -51,7 +50,7 @@
         </p>
         <p class="overview-top">Overview</p>
         <p class="overview-text" th:text="${movie.overview}"></p>
-        <div class="buttons-grid">
+        <div th:if="${client!=null}"class="buttons-grid">
             <div class="button-background"
                  id="like-button"
                  th:data-title="${movie.title}"
@@ -83,7 +82,7 @@
     <div class="cast-list">
         <div class="actor" th:each="actor : ${movie.actors}">
             <img th:src="${actor.picture} ?
-                 @{'https://image.tmdb.org/t/p/w200/' + ${actor.picture}} :
+                 @{'https://image.tmdb.org/t/p/w780/' + ${actor.picture}} :
                  @{'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}"
                  alt="Actor Poster"
                  class="actor-poster">
@@ -107,11 +106,11 @@
 <div id="review-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Enter your review</h2>
+            <h2>Enter your <span class="pink">review</span></h2>
             <div class="close-btn">&times;</div>
         </div>
         <div class="review-body">
-            <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
+            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
                  alt="Movie Poster"
                  class="review-poster"
                  onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';"
@@ -121,7 +120,7 @@
                     <p th:text="${movie.title}" class="modal-title"></p>
                     <p th:text="${movie.year}" class="modal-year"></p>
                 </div>
-                <textarea id="review-area" class="review-text" rows="6" placeholder=" Add a review..."></textarea>
+                <textarea id="review-area" class="review-textbox" rows="6" placeholder=" Add a review..."></textarea>
                 <textarea id="rating-area" class="rating"  rows="1" placeholder=" Rating"></textarea>
                 <div class="review-buttons">
                     <button id="cancel" class="cancel-button">Cancel</button>

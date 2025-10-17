@@ -4,18 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.domain.Auditable;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -27,7 +21,6 @@ public class Client implements UserDetails {
     private String username;
     private String password;
     private String email;
-    private LocalDate dateOfBirth;
     private UserRole role;
     private List<Movie> watchedMovies=new ArrayList<>();
     private List<Movie> watchList=new ArrayList<>();
@@ -37,8 +30,12 @@ public class Client implements UserDetails {
     private String verificationToken;
     private boolean isVerified;
     private String resetToken;
-    private String profilePicture="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png";
-
+    private String profilePicture;
+    private String bio;
+    private String city;
+    private String country;
+    private String instagram;
+    private LocalDate joinedDate;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.toString()));

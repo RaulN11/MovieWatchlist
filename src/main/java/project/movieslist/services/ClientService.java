@@ -224,19 +224,35 @@ public class ClientService implements UserDetailsService {
             followingC1.add(client2.getUsername());
             client1.setFollowing(followingC1);
         }
+        else{
+            followingC1.add(client2.getUsername());
+        }
         List<String> followersc2=client2.getFollowers();
         if(followersc2==null){
             followersc2=new ArrayList<>();
             followersc2.add(client1.getUsername());
             client2.setFollowers(followersc2);
         }
+        else{
+            followersc2.add(client1.getUsername());
+        }
         clientRepository.save(client2);
         return clientRepository.save(client1);
     }
-    public Client addProfilePicture(String username,String url){
-        Client client=clientRepository.findByUsername(username)
-                .orElseThrow(()->new RuntimeException("Client not found"));
+    public Client addProfilePicture(Client client,String url){
         client.setProfilePicture(url);
+        return clientRepository.save(client);
+    }
+    public Client addBio(Client client, String bio){
+        client.setBio(bio);
+        return clientRepository.save(client);
+    }
+    public Client addCity(Client client, String city){
+        client.setCity(city);
+        return clientRepository.save(client);
+    }
+    public Client addCountry(Client client, String country){
+        client.setCountry(country);
         return clientRepository.save(client);
     }
 }

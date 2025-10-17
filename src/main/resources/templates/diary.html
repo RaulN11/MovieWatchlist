@@ -18,38 +18,38 @@
         <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
     </a>
     <div class="left-side">
-        <a href="/watched">
-            <p class="watchlist">DIARY</p>
-        </a>
-        <a href="/watchlist">
-            <p class="watchlist">WATCHLIST</p>
-        </a>
-        <a href="/chat">
-            <p class="watchlist">INBOX</p>
-        </a>
-        <input class="top-nav" type="text" placeholder="SEARCH">
+        <div class="nav-links">
+            <a href="/watched">DIARY</a>
+            <a href="/watchlist">WATCHLIST</a>
+            <a href="/chat">INBOX</a>
+        </div>
+        <input class="top-nav" type="text" placeholder="Search here...">
         <button class="search-button">
             <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
         </button>
-        <a href="/profile">
+        <a href="/yourprofile">
             <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
         </a>
     </div>
 </div>
 <div class="movie-grid">
    <div th:each="movie:${movies}" class="movie-card">
-       <a th:href="@{'/details/' + ${movie.title}}"></a>
-       <img th:src="@{'https://image.tmdb.org/t/p/w200/' + ${movie.posterPath}}"
-             alt="Movie poster"
-             class="movie-poster">
-        <p class="movie-title" th:text="${movie.title}"></p>
-        <p class="movie-director" th:text="${movie.director}"></p>
-        <p class="movie-year" th:text="${movie.year}"></p>
+       <a th:href="@{'/details/' + ${movie.title}}">
+           <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
+                alt="Movie poster"
+                class="movie-poster">
+       </a>
+       <div class="texts">
+           <p class="movie-title" th:text="${movie.title}"></p>
+           <p class="movie-director" th:text="${movie.director}"></p>
+           <p class="movie-year" th:text="${movie.year}"></p>
+       </div>
         <div class="date">
             <p class="day">18</p>
             <p class="month">Dec</p>
             <p class="year">2025</p>
         </div>
+       <i th:if="${client.likedMovies.contains(movie)}" class="fa-solid fa-heart" style="color: #710a42;"></i>
    </div>
 </div>
 </body>
