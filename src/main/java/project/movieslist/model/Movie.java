@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Document(collection = "movies")
-public class Movie {
+public class Movie{
     @Id
     private String id;
     private String title;
@@ -21,8 +21,11 @@ public class Movie {
     private String posterPath;
     private String overview;
     private int year;
-    private Double rating;
-    private String comment;
+    private String  runtime;
+    private int watchedCount;
+    private int likedCount;
+    private int ratingCount;
+    private double ratingSum;
     private List<Review> reviews = new ArrayList<>();
     private List<Actor> actors = new ArrayList<>();
     @Override
@@ -37,5 +40,4 @@ public class Movie {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
-
 }

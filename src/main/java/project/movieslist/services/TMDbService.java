@@ -83,7 +83,15 @@ public class TMDbService {
         } else {
             movie.setGenre("Unknown");
         }
-
+        Object runtimeObj = details.get("runtime");
+        if (runtimeObj instanceof Number) {
+            int totalMinutes = ((Number) runtimeObj).intValue();
+            int hours = totalMinutes / 60;
+            int minutes = totalMinutes % 60;
+            movie.setRuntime(String.format("%dh %02dm", hours, minutes));
+        } else {
+            movie.setRuntime("Unknown");
+        }
         movie.setPosterPath((String) details.getOrDefault("poster_path", ""));
         movie.setOverview((String)details.getOrDefault("overview", ""));
         return movie;

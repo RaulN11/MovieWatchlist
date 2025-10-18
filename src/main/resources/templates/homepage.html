@@ -21,7 +21,7 @@
     <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
     <div class="left-side">
         <div class="nav-links">
-            <a href="/watched">DIARY</a>
+            <a href="/watched/all">DIARY</a>
             <a href="/watchlist">WATCHLIST</a>
             <a href="/chat">INBOX</a>
         </div>
@@ -31,7 +31,11 @@
         </button>
         <div th:if="${client!=null}">
             <a href="/yourprofile">
-                <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
+                <img th:src="${client.profilePicture}"
+                     alt="Profile Picture"
+                     class="profile-pic"
+                     onerror="this.onerror=null; this.src=' https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+                >
             </a>
         </div>
     </div>
@@ -54,7 +58,11 @@
 <div class="movies-grid">
     <div th:each="trendingMovie : ${trendingMovies}" class="movie-card">
         <a th:href="@{'/details/' + ${trendingMovie.title}}">
-            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${trendingMovie.posterPath}}"  th:alt="${trendingMovie.title}" class="movie-poster">
+            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${trendingMovie.posterPath}}"
+                 th:alt="${trendingMovie.title}"
+                 class="movie-poster"
+                 onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';"
+            >
         </a>
     </div>
 </div>
@@ -73,7 +81,11 @@
 <div class="movies-grid">
     <div th:each="upcomingMovie : ${upcomingMovies}" class="movie-card">
         <a th:href="@{'/details/'+${upcomingMovie.title}}">
-            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${upcomingMovie.posterPath}}"  th:alt="${upcomingMovie.title}" class="movie-poster">
+            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${upcomingMovie.posterPath}}"
+                 th:alt="${upcomingMovie.title}"
+                 class="movie-poster"
+                 onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';"
+            >
         </a>
     </div>
 </div>

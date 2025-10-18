@@ -12,6 +12,7 @@ import project.movieslist.services.ClientService;
 import project.movieslist.services.MovieService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -21,12 +22,14 @@ public class ClientController {
     ClientService clientService;
     @Autowired
     MovieService movieService;
+    @Autowired
+    private ClientRepository clientRepository;
 
     @PostMapping("/addtowatched")
     public Client addWatchedMovie(@RequestParam String title, @RequestParam(required = false) Double rating,
                                   @RequestParam(required = false) String comment, Authentication authentication) {
         String username=authentication.getName();
-        return clientService.addMovieToWatchedListByTitle(username,title,rating,comment);
+        return clientService.addMovieToWatchedListByTitle(username,title);
     }
     @DeleteMapping("/removefromwatched/{title}")
     public Client removeWatchedMovie(@PathVariable String title, Authentication auth) {
@@ -70,6 +73,10 @@ public class ClientController {
         review1.setAuthorPicture(client.getProfilePicture());
         review1.setComment(review.getComment());
         review1.setRating(review.getRating());
+        Map<String, Double> ratings=client.getMovieRatings();
+        ratings.put(title,review1.getRating());
+        client.setMovieRatings(ratings);
+        clientRepository.save(client);
         return movieService.addReviewToMovie(movie,review1);
     }
     @PostMapping("/addpicture")

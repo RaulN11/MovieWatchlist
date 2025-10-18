@@ -14,6 +14,7 @@ import project.movieslist.services.ClientService;
 import project.movieslist.services.MovieService;
 import project.movieslist.services.TMDbService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,17 +93,49 @@ public class ViewController {
         return "moviedetails";
     }
 
-    @GetMapping("/watched")
-    public String watchedMovies(Model model,HttpServletRequest request, Authentication auth) {
+    @GetMapping("/watched/{filter}")
+    public String watchedMovies(Model model,HttpServletRequest request, Authentication auth, @PathVariable String filter){
         String username=auth.getName();
         Optional<Client>clientOpt=clientService.getUserByUsername(username);
         Client client=clientOpt.get();
         var movies=clientService.getWatchedMoviesByUsername(username);
-        model.addAttribute("movies", movies);
+        switch (filter){
+            case "all":
+                model.addAttribute("movies", movies);
+                break;
+            case "liked":
+                List<Movie> liked=new ArrayList<>();
+                for(Movie movie:movies){
+                    if(client.getLikedMovies().contains(movie)){
+                        liked.add(movie);
+                    }
+                }
+                model.addAttribute("movies", liked);
+                break;
+            case "highest":
+                movies=movies.stream()
+                        .sorted((m1,m2)->{
+                            Double rating1=client.getMovieRating(m1);
+                            Double rating2=client.getMovieRating(m2);
+                            return Double.compare(rating2,rating1);
+                        })
+                        .toList();
+                model.addAttribute("movies", movies);
+                break;
+            case "lowest":
+                movies=movies.stream()
+                        .sorted((m1,m2)->{
+                            Double rating1=client.getMovieRating(m1);
+                            Double rating2=client.getMovieRating(m2);
+                            return Double.compare(rating1,rating2);
+                        })
+                        .toList();
+                model.addAttribute("movies", movies);
+                break;
+        }
         model.addAttribute("client",client);
         return "diary";
     }
-
     @GetMapping("/watchlist")
     public String watchlistMovies(Model model, HttpServletRequest request, Authentication auth) {
         String username=auth.getName();

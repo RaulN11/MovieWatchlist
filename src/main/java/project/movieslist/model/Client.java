@@ -27,6 +27,7 @@ public class Client implements UserDetails {
     private List<Movie> likedMovies=new ArrayList<>();
     private List<String> following=new ArrayList<>();
     private List<String> followers=new ArrayList<>();
+    private Map<String, Double>movieRatings=new HashMap<>();
     private String verificationToken;
     private boolean isVerified;
     private String resetToken;
@@ -63,6 +64,9 @@ public class Client implements UserDetails {
 
     public enum UserRole {
         ROLE_ADMIN, ROLE_CLIENT
+    }
+    public Double getMovieRating(Movie movie){
+        return movieRatings.getOrDefault(movie.getTitle(),0.0);
     }
 
 }

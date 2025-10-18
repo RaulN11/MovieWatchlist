@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log In</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="login-container">
+    <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+    <p class="sub-title">Welcome back to your cinematic journey</p>
+    <div class="content">
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginUsername">Username</label>
+                <input type="text" id="loginUsername" name="username" placeholder="Enter your username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="btn">Log In</button>
+        </form>
+        <div class="footer">
+            <p>Don't have an account? <a href="/req/signup">Sign Up</a> </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

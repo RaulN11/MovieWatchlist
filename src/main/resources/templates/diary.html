@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <script src="/js/diary.js" defer></script>
 </head>
 <body>
@@ -19,7 +20,7 @@
     </a>
     <div class="left-side">
         <div class="nav-links">
-            <a href="/watched">DIARY</a>
+            <a href="/watched/all">DIARY</a>
             <a href="/watchlist">WATCHLIST</a>
             <a href="/chat">INBOX</a>
         </div>
@@ -28,16 +29,29 @@
             <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
         </button>
         <a href="/yourprofile">
-            <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
+            <img th:src="${client.profilePicture}"
+                 alt="Profile Picture"
+                 class="profile-pic"
+                 onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+            >
         </a>
     </div>
+</div>
+<p class="title">Your diary</p>
+<p class="sub-title">Movies you've watched recently</p>
+<div class="buttons">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Liked</button>
+    <button class="filter-btn">Highest Rating</button>
+    <button class="filter-btn">Lowest Rating</button>
 </div>
 <div class="movie-grid">
    <div th:each="movie:${movies}" class="movie-card">
        <a th:href="@{'/details/' + ${movie.title}}">
            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
                 alt="Movie poster"
-                class="movie-poster">
+                class="movie-poster"
+                onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';" >
        </a>
        <div class="texts">
            <p class="movie-title" th:text="${movie.title}"></p>

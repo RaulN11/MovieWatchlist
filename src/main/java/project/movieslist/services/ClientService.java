@@ -1,17 +1,12 @@
 package project.movieslist.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.movieslist.model.Client;
 import project.movieslist.model.Movie;
-import project.movieslist.model.Review;
 import project.movieslist.repositories.ClientRepository;
 import project.movieslist.repositories.MovieRepository;
 import project.movieslist.security.ClientSecurity;
@@ -42,7 +37,7 @@ public class ClientService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public Client addMovieToWatchedListByTitle(String username,String title, Double rating, String comment){
+    public Client addMovieToWatchedListByTitle(String username,String title){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findFirstByTitleIgnoreCase(title)
@@ -51,38 +46,14 @@ public class ClientService implements UserDetailsService {
                     if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
                     return fetched;
                 });
-        Review review=new Review();
-        if(rating!=null)
-        {
-            movie.setRating(rating);
-            review.setRating(rating);
-        }
-        if(comment!=null)
-        {
-            movie.setComment(comment);
-            review.setComment(comment);
-        }
-        if(review.getComment()!=null && review.getRating()!=null){
-            review.setAuthor(username);
-            review.setAuthorPicture(client.getProfilePicture());
-            if(movie.getReviews()==null){
-                List<Review> reviews=new ArrayList<>();
-                reviews.add(review);
-                movie.setReviews(reviews);
-            }
-            else{
-                List<Review> reviews=movie.getReviews();
-                reviews.add(review);
-                movie.setReviews(reviews);
-            }
-            movieRepository.save(movie);
-        }
         List<Movie> watched=client.getWatchedMovies();
         if(watched==null){
             watched=new ArrayList<>();
             client.setWatchedMovies(watched);
         }
         watched.add(movie);
+        movie.setWatchedCount(movie.getWatchedCount()+1);
+        movieRepository.save(movie);
         return clientRepository.save(client);
 
     }
@@ -101,7 +72,9 @@ public class ClientService implements UserDetailsService {
         }else{
             watched.remove(movie);
             client.setWatchedMovies(watched);
+            movie.setWatchedCount(movie.getWatchedCount()-1);
         }
+        movieRepository.save(movie);
         return clientRepository.save(client);
     }
     public Client addMoviesToWatchlistByTitle(String username,String title){
@@ -126,6 +99,7 @@ public class ClientService implements UserDetailsService {
             throw new RuntimeException("Movie is already in the watchlist");
         }
         watchList.add(movie);
+        movieRepository.save(movie);
         return clientRepository.save(client);
 
     }
@@ -145,6 +119,7 @@ public class ClientService implements UserDetailsService {
             watchlist.remove(movie);
             client.setWatchList(watchlist);
         }
+        movieRepository.save(movie);
         return clientRepository.save(client);
     }
     public Client addMovieToLikedByTitle(String username,String title){
@@ -165,6 +140,7 @@ public class ClientService implements UserDetailsService {
             throw new RuntimeException("Movie is already in the liked list");
         }
         liked.add(movie);
+        movie.setLikedCount(movie.getLikedCount()+1);
         movieRepository.save(movie);
         return clientRepository.save(client);
     }
@@ -183,7 +159,9 @@ public class ClientService implements UserDetailsService {
         }else{
             liked.remove(movie);
             client.setLikedMovies(liked);
+            movie.setLikedCount(movie.getLikedCount()-1);
         }
+        movieRepository.save(movie);
         return clientRepository.save(client);
     }
     public List<Movie> getWatchedMoviesByUsername(String username){

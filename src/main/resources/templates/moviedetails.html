@@ -18,7 +18,7 @@
     </a>
     <div class="left-side">
         <div class="nav-links">
-            <a href="/watched">DIARY</a>
+            <a href="/watched/all">DIARY</a>
             <a href="/watchlist">WATCHLIST</a>
             <a href="/chat">INBOX</a>
         </div>
@@ -28,15 +28,29 @@
         </a>
         <div th:if="${client!=null}">
             <a href="/yourprofile">
-                <img th:src="${client.profilePicture}"alt="Profile Picture" class="profile-pic">
+                <img th:src="${client.profilePicture}"
+                     alt="Profile Picture"
+                     class="profile-pic"
+                     onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+                >
             </a>
         </div>
     </div>
 </div>
 <div class="movie-details">
-    <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
-         alt="Movie Poster"
-         class="movie-poster">
+    <div class="poster-area">
+        <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
+             alt="Movie Poster"
+             class="movie-poster"
+             onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';"
+        >
+        <div class="watched-stats">
+            <i class="fa-regular fa-eye" style="color: #710a42;"> <span th:text="${movie.watchedCount}"></span></i>
+            <i class="fa-regular fa-heart" style="color: #710a42;"> <span th:text="${movie.likedCount}"></span></i>
+            <i class="fa-regular fa-star" style="color: #710a42;"><span th:text="${movie.ratingSum/movie.ratingCount}"></span></i>
+
+        </div>
+    </div>
     <div class="text-details">
         <p class="title">
             <span th:text="${movie.title}"></span>
@@ -46,7 +60,7 @@
         <p class="director" th:text="${movie.director}"></p>
         <p class="details">
             &#x2022; <span th:text="${movie.genre}"></span>
-            <span class="time">&#x2022;1:48h</span>
+            &#x2022; <span th:text="${movie.runtime}" class="time"></span>
         </p>
         <p class="overview-top">Overview</p>
         <p class="overview-text" th:text="${movie.overview}"></p>
@@ -85,7 +99,9 @@
                  @{'https://image.tmdb.org/t/p/w780/' + ${actor.picture}} :
                  @{'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}"
                  alt="Actor Poster"
-                 class="actor-poster">
+                 class="actor-poster"
+                onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+            >
             <p class="actor-name" th:text="${actor.fullName}">Actor Name</p>
         </div>
     </div>
@@ -95,7 +111,11 @@
     <hr class="separator">
     <hr class="separator2">
     <div class="review-card" th:each="review:${reviews}">
-        <img th:src="${review.authorPicture}" class="review-pic">
+        <img th:src="${review.authorPicture}"
+             alt="user pic"
+             class="review-pic"
+            onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+        >
         <div class="review-text">
             <p class="review-author">Review by <strong th:text="${review.author}"></strong></p>
             <p class="review-grade"><span th:text="${review.rating}"></span>/10.0</p>

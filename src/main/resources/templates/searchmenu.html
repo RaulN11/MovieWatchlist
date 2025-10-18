@@ -20,7 +20,7 @@
     </a>
     <div class="left-side">
         <div class="nav-links">
-            <a href="/watched">DIARY</a>
+            <a href="/watched/all">DIARY</a>
             <a href="/watchlist">WATCHLIST</a>
             <a href="/chat">INBOX</a>
         </div>
@@ -29,7 +29,11 @@
             <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
         </button>
         <a href="/yourprofile">
-            <img th:src="${client.profilePicture}" alt="Profile Picture" class="profile-pic">
+            <img th:src="${client.profilePicture}"
+                 alt="Profile Picture"
+                 class="profile-pic"
+                 onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+            >
         </a>
     </div>
 </div>

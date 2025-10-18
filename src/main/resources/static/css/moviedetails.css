@@ -2,14 +2,28 @@
     background-color: #1a1a2e;
     display: grid;
     grid-template-columns: 400px 1fr;
-    height: 500px;
+    height: 600px;
     align-items: start;
+}
+.poster-area{
+    display: flex;
+    flex-direction: column;
+    margin-left: 60px;
+    align-items: center;
 }
 .movie-poster {
     width: 300px;
-    margin-left: 50px;
     margin-top: 30px;
     margin-bottom: 30px;
+}
+.watched-stats{
+    display: flex;
+    gap:50px;
+    flex-direction: row;
+    justify-items: center;
+}
+.watched-stats .fa-regular{
+    font-size: 18px;
 }
 .title {
     font-family: Oswald, serif;

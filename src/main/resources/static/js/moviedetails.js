@@ -4,11 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'watched-button', addUrl: '/client/addtowatched?title=', removeUrl: '/client/removefromwatched/' },
         { id: 'watchlist-button', addUrl: '/client/addtowatchlist/', removeUrl: '/client/removefromwatchlist/' }
     ];
+
     const modal = document.getElementById('review-modal');
     const closeBtn = document.querySelector('.close-btn');
     const cancelBtn = document.getElementById('cancel');
     const saveBtn = document.getElementById('save');
-    const textarea = document.querySelector('.review-text');
+    const reviewTextarea = document.getElementById('review-area');
+    const ratingInput = document.getElementById('rating-area');
+
     if (modal) {
         modal.style.display = 'none';
     }
@@ -43,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         modal.style.display = 'flex';
                         document.body.style.overflow = 'hidden';
                     }
-
                 } else {
                     btn.dataset.state = 'inactive';
                     icon.style.color = 'white';
@@ -54,22 +56,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
     const closeModal = () => {
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
-        textarea.value = '';
+        if (reviewTextarea) reviewTextarea.value = '';
+        if (ratingInput) ratingInput.value = '';
     };
+
     closeBtn?.addEventListener('click', closeModal);
     cancelBtn?.addEventListener('click', closeModal);
+
     window.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
+
     saveBtn?.addEventListener('click', async () => {
-        const reviewText = textarea.value.trim();
-        const ratingInput = document.getElementById('rating-area');
-        const rating = ratingInput.value.trim();
+        const reviewText = reviewTextarea?.value.trim();
+        const rating = ratingInput?.value.trim();
         const watchedBtn = document.getElementById('watched-button');
-        const movieTitle = watchedBtn.dataset.title;
+        const movieTitle = watchedBtn?.dataset.title;
+
         if (!reviewText && !rating) {
             closeModal();
             return;
