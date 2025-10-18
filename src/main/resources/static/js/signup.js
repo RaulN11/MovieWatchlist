@@ -1,25 +1,64 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const signupForm = document.querySelector('section');
-    signupForm.style.opacity = 0;
+document.getElementById('signupForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-    setTimeout(() => {
-        signupForm.style.transition = 'opacity 1s ease-in-out';
-        signupForm.style.opacity = 1;
-    }, 500);
+    const username = document.getElementById('signupUsername').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
 
-    const signupButton = document.querySelector('button');
-    signupButton.addEventListener('click', function () {
-        const emailInput = document.querySelector('input[type="email"]');
-        const passwordInput = document.querySelector('input[type="password"]');
-        const confirmPasswordInput = document.querySelector('input[type="password"][name="confirm-password"]');
-        const isValid = emailInput.checkValidity() && passwordInput.checkValidity() && confirmPasswordInput.checkValidity();
+    // Validation
+    if (!username || !email || !password || !confirmPassword) {
+        alert('Please fill in all fields.');
+        return;
+    }
 
-        if (!isValid) {
-            signupForm.classList.add('shake');
+    if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+    }
 
-            setTimeout(() => {
-                signupForm.classList.remove('shake');
-            }, 1000);
-        }
-    });
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters long.');
+        return;
+    }
+
+    const data = {
+        username: username,
+        email: email,
+        password: password,
+    };
+
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing up...';
+
+    fetch('/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.text().then(text => {
+                    if (text.includes('Verification Email Resent')) {
+                        alert('A verification email has been resent. Please check your inbox.');
+                    } else {
+                        alert('Registration successful! Please check your email to verify your account.');
+                    }
+                    window.location.href = '/login';
+                });
+            } else {
+                return response.text().then(text => {
+                    throw new Error(text || 'Registration failed');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message || 'An error occurred during registration. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign Up';
+        });
 });

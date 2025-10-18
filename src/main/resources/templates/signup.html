@@ -2,83 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Signup Form</title>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/signup.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <title>Sign Up</title>
 </head>
 <body>
-<section>
-    <form id="signupForm">
-        <h1>Sign Up</h1>
-        <div class="inputbox">
-            <ion-icon name="person-outline"></ion-icon>
-            <input type="text" id="username" name="username" required>
-            <label for="">Name</label>
-        </div>
-        <div class="inputbox">
-            <ion-icon name="mail-outline"></ion-icon>
-            <input type="email" id="email" name="email" required>
-            <label for="">Email</label>
-        </div>
-        <div class="inputbox">
-            <ion-icon name="lock-closed-outline"></ion-icon>
-            <input type="password" id="password" name="password" required>
-            <label for="">Password</label>
-        </div>
-        <div class="inputbox">
-            <ion-icon name="lock-closed-outline"></ion-icon>
-            <input type="password" id="passwordcon" name="passwordcon" required>
-            <label for="">Confirm Password</label>
-        </div>
-        <button type="submit">Sign Up</button>
-        <div class="register">
-            <p>Already have an account? <a href="/login">Log In</a></p>
-        </div>
-    </form>
-</section>
+<div class="signup-container">
+    <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+    <p class="sub-title">Deep dive in the world of film</p>
+    <div class="content">
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="signupUsername">Username</label>
+                <input type="text" id="signupUsername" name="username" placeholder="Choose a username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="signupEmail">Email</label>
+                <input type="email" id="signupEmail" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="signupPassword">Password</label>
+                <input type="password" id="signupPassword" name="password" placeholder="Create a password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="signupConfirmPassword">Confirm Password</label>
+                <input type="password" id="signupConfirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+            </div>
+
+            <button type="submit" class="btn">Sign Up</button>
+
+            <div class="footer">
+                <p>Already have an account? <a href="/login">Log In</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/signup.js"></script>
 </body>
 </html>
-<script>
-    document.getElementById('signupForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
-
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('passwordcon').value;
-        const email = document.getElementById('email').value;
-
-        if (password !== confirmPassword) {
-            alert('Passwords do not match!');
-            return;
-        }
-
-        const data = {
-            username: username,
-            email: email,
-            password: password,
-            role: 'ROLE_ADMIN',
-            dateOfBirth: null
-        };
-
-        fetch('/req/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('Registration successful! Redirecting to login...');
-                    window.location.href = '/login';
-                } else {
-                    alert('Registration failed! Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred during registration.');
-            });
-    });
-</script>

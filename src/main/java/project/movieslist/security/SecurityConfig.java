@@ -28,6 +28,7 @@ import project.movieslist.services.ClientService;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SecurityConfig {
     private final ClientService clientService;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return clientService;
@@ -45,6 +46,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return (HttpServletRequest request, HttpServletResponse response,
@@ -59,6 +61,7 @@ public class SecurityConfig {
             response.sendRedirect("/login?error=true");
         };
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -66,13 +69,14 @@ public class SecurityConfig {
                 .formLogin(httpForm -> {
                     httpForm.loginPage("/login").permitAll();
                     httpForm.defaultSuccessUrl("/homepage");
+                    httpForm.failureHandler(authenticationFailureHandler());
                 })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers(
                             "/login",
                             "/signup",
-                            "/req/**",
+                            "/signup/verify",
                             "/css/**",
                             "/js/**",
                             "/ws/**",
