@@ -10,8 +10,11 @@ import project.movieslist.model.Movie;
 import project.movieslist.repositories.ClientRepository;
 import project.movieslist.repositories.MovieRepository;
 import project.movieslist.security.ClientSecurity;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -53,6 +56,8 @@ public class ClientService implements UserDetailsService {
         }
         watched.add(movie);
         movie.setWatchedCount(movie.getWatchedCount()+1);
+        Map<String, LocalDate> times=client.getMovieDates();
+        times.put(movie.getTitle(),LocalDate.now());
         movieRepository.save(movie);
         return clientRepository.save(client);
 
@@ -74,6 +79,8 @@ public class ClientService implements UserDetailsService {
             client.setWatchedMovies(watched);
             movie.setWatchedCount(movie.getWatchedCount()-1);
         }
+        Map<String, LocalDate> times=client.getMovieDates();
+        times.remove(movie.getTitle());
         movieRepository.save(movie);
         return clientRepository.save(client);
     }
@@ -218,19 +225,19 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client1);
     }
     public Client addProfilePicture(Client client,String url){
-        client.setProfilePicture(url);
+        client.setProfilePicture(url.isEmpty() ? null:url);
         return clientRepository.save(client);
     }
     public Client addBio(Client client, String bio){
-        client.setBio(bio);
+        client.setBio(bio.isEmpty() ? null:bio);
         return clientRepository.save(client);
     }
     public Client addCity(Client client, String city){
-        client.setCity(city);
+        client.setCity(city.isEmpty() ? null:city);
         return clientRepository.save(client);
     }
     public Client addCountry(Client client, String country){
-        client.setCountry(country);
+        client.setCountry(country.isEmpty() ? null:country);
         return clientRepository.save(client);
     }
 }

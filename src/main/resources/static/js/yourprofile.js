@@ -16,6 +16,7 @@ function openEditModal() {
 function closeEditModal() {
     document.getElementById('edit-modal').style.display = 'none';
 }
+
 window.onclick = function(event) {
     const modal = document.getElementById('edit-modal');
     if (event.target === modal) {
@@ -30,37 +31,47 @@ async function saveProfile() {
     const profilePic = document.getElementById('profilePicInput').value.trim();
 
     try {
-        if (bio) {
-            await fetch('/client/addbio', {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain' },
-                body: bio
-            });
-            document.getElementById('bioText').textContent = bio;
+        await fetch('/client/addbio', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: bio
+        });
+        const bioEl = document.getElementById('bioText');
+        bioEl.textContent = bio || 'Always in need of something to watch.';
+
+        if (!bio) {
+            bioEl.style.fontStyle = 'italic';
+            bioEl.style.opacity = '0.6';
+        } else {
+            bioEl.style.fontStyle = 'normal';
+            bioEl.style.opacity = '1';
         }
-        if (city) {
-            await fetch('/client/addcity', {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain' },
-                body: city
-            });
-        }
-        if (country) {
-            await fetch('/client/addcountry', {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain' },
-                body: country
-            });
-        }
+        await fetch('/client/addcity', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: city
+        });
+        await fetch('/client/addcountry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: country
+        });
         const locationEl = document.getElementById('locationText');
+        const locationIcon = locationEl?.parentElement;
+
         if (city && country) {
             locationEl.textContent = `${city}, ${country}`;
+            if (locationIcon) locationIcon.style.display = 'flex';
         } else if (city) {
             locationEl.textContent = city;
+            if (locationIcon) locationIcon.style.display = 'flex';
         } else if (country) {
             locationEl.textContent = country;
+            if (locationIcon) locationIcon.style.display = 'flex';
+        } else {
+            // Both are empty - hide the entire location line
+            if (locationIcon) locationIcon.style.display = 'none';
         }
-
         if (profilePic) {
             await fetch('/client/addpicture', {
                 method: 'POST',
@@ -75,6 +86,7 @@ async function saveProfile() {
         }
 
         closeEditModal();
+
     } catch (error) {
         console.error('Error updating profile:', error);
         alert('Failed to update profile. Please try again.');

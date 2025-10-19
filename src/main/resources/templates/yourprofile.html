@@ -38,14 +38,16 @@
          onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
     <p class="username" th:text="${client.username}"></p>
     <p class="bio" id="bioText" th:text="${client.bio}">Always in need of something to watch.</p>
-    <i class="fa-solid fa-location-dot" style="color: #710a42;">
-      <span class="detail" id="locationText" th:text="${client.city + ', ' + client.country}">Aiud, Romania</span>
+    <i th:if="${client.city!=null || client.country!=null}" class="fa-solid fa-location-dot" style="color: #710a42;">
+      <span class="detail" id="locationText" th:text="${client.city + ', ' + client.country}"></span>
     </i>
-    <i class="fa-brands fa-instagram" style="color: #710a42;">
-      <span class="detail" th:text="${client.instagram}">raullllll</span>
+    <i th:if="${client.instagram!=null}" class="fa-brands fa-instagram" style="color: #710a42;">
+      <span class="detail" th:text="${client.instagram}"></span>
     </i>
     <i class="fa-solid fa-calendar" style="color: #710a42;">
-      <span class="detail" th:text="${client.joinedDate}">12.03.2024</span>
+      <span class="detail" th:text="${#temporals.day(client.joinedDate)}"></span>
+      <span class="detail" th:text="${#temporals.monthNameShort(client.joinedDate)}"></span>
+      <span class="detail" th:text="${#temporals.year(client.joinedDate)}"></span>
     </i>
   </div>
   <div class="follow-stats">

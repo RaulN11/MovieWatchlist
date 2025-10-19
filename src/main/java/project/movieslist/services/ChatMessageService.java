@@ -6,6 +6,7 @@ import project.movieslist.model.ChatMessage;
 import project.movieslist.repositories.ChatMessageRepository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 @RequiredArgsConstructor
 @Service
@@ -29,7 +30,7 @@ public class ChatMessageService {
                 List<ChatMessage> reverseMessages = repository.findByChatId(reverseChatId.get());
                 messages.addAll(reverseMessages);
             }
-            messages.sort((m1, m2) -> m1.getTimestamp().compareTo(m2.getTimestamp()));
+            messages.sort(Comparator.comparing(ChatMessage::getTimestamp));
             return messages;
         } catch (Exception e) {
             return new ArrayList<>();

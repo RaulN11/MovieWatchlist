@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Getter
@@ -28,6 +29,7 @@ public class Client implements UserDetails {
     private List<String> following=new ArrayList<>();
     private List<String> followers=new ArrayList<>();
     private Map<String, Double>movieRatings=new HashMap<>();
+    private Map<String, LocalDate>movieDates=new HashMap<>();
     private String verificationToken;
     private boolean isVerified;
     private String resetToken;

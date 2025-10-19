@@ -59,9 +59,9 @@
            <p class="movie-year" th:text="${movie.year}"></p>
        </div>
         <div class="date">
-            <p class="day">18</p>
-            <p class="month">Dec</p>
-            <p class="year">2025</p>
+            <p th:text="${#temporals.day(client.movieDates.get(movie.title))}" class="day"></p>
+            <p th:text="${#temporals.monthNameShort(client.movieDates.get(movie.title))}" class="month"></p>
+            <p th:text="${#temporals.year(client.movieDates.get(movie.title))}" class="year"></p>
         </div>
        <i th:if="${client.likedMovies.contains(movie)}" class="fa-solid fa-heart" style="color: #710a42;"></i>
    </div>

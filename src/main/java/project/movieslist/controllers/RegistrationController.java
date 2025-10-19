@@ -13,6 +13,8 @@ import project.movieslist.repositories.ClientRepository;
 import project.movieslist.services.EmailService;
 import project.movieslist.util.JWTUtil;
 
+import java.time.LocalDate;
+
 @RestController
 public class RegistrationController {
     @Autowired
@@ -36,6 +38,7 @@ public class RegistrationController {
             }
         }
         client.setPassword(passwordEncoder.encode(client.getPassword()));
+        client.setJoinedDate(LocalDate.now());
         String verificationToken=JWTUtil.generateToken(client.getEmail());
         client.setVerificationToken(verificationToken);
         clientRepository.save(client);
