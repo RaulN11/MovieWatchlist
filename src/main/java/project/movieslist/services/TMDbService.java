@@ -20,19 +20,7 @@ public class TMDbService {
     private final WebClient webClient;
     private final TMDbConfig tmDbConfig;
 
-    private Map<String, Object> fetchMovieDetails(Integer movieId) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/movie/{id}")
-                        .queryParam("api_key", tmDbConfig.getApiKey())
-                        .queryParam("append_to_response", "credits")
-                        .build(movieId))
-                .retrieve()
-                .bodyToMono(Map.class)
-                .block();
-    }
-
-    private Movie mapToMovie(Map<String, Object> movieData, boolean fetchDetails) {
+    private Movie mapToMovie(Map<String, Object> movieData) {
         Movie movie = new Movie();
         movie.setTid((Integer) movieData.get("id"));
         movie.setTitle((String) movieData.get("title"));
@@ -46,10 +34,8 @@ public class TMDbService {
         }
         movie.setYear(year);
 
-        Map<String, Object> details = fetchDetails ? fetchMovieDetails((Integer) movieData.get("id")) : movieData;
-
         String director = "";
-        Map<String, Object> credits = (Map<String, Object>) details.get("credits");
+        Map<String, Object> credits = (Map<String, Object>) movieData.get("credits");
         if (credits != null) {
             List<Map<String, Object>> crew = (List<Map<String, Object>>) credits.get("crew");
             if (crew != null) {
@@ -61,13 +47,13 @@ public class TMDbService {
             }
             List<Map<String, Object>> cast = (List<Map<String, Object>>) credits.get("cast");
             if (cast != null) {
-                List<Actor> actors=cast.stream()
+                List<Actor> actors = cast.stream()
                         .limit(10)
-                        .map(c->{
-                            Actor actor=new Actor();
-                            actor.setId((Integer)c.get("id"));
-                            actor.setFullName((String)c.get("name"));
-                            actor.setPicture((String)c.get("profile_path"));
+                        .map(c -> {
+                            Actor actor = new Actor();
+                            actor.setId((Integer) c.get("id"));
+                            actor.setFullName((String) c.get("name"));
+                            actor.setPicture((String) c.get("profile_path"));
                             return actor;
                         })
                         .collect(Collectors.toList());
@@ -76,7 +62,7 @@ public class TMDbService {
         }
         movie.setDirector(director);
 
-        List<Map<String, Object>> genres = (List<Map<String, Object>>) details.get("genres");
+        List<Map<String, Object>> genres = (List<Map<String, Object>>) movieData.get("genres");
         if (genres != null) {
             String genreNames = genres.stream()
                     .map(g -> g.get("name").toString())
@@ -85,7 +71,8 @@ public class TMDbService {
         } else {
             movie.setGenre("Unknown");
         }
-        Object runtimeObj = details.get("runtime");
+
+        Object runtimeObj = movieData.get("runtime");
         if (runtimeObj instanceof Number) {
             int totalMinutes = ((Number) runtimeObj).intValue();
             int hours = totalMinutes / 60;
@@ -94,8 +81,9 @@ public class TMDbService {
         } else {
             movie.setRuntime("Unknown");
         }
-        movie.setPosterPath((String) details.getOrDefault("poster_path", ""));
-        movie.setOverview((String)details.getOrDefault("overview", ""));
+
+        movie.setPosterPath((String) movieData.getOrDefault("poster_path", ""));
+        movie.setOverview((String) movieData.getOrDefault("overview", ""));
         return movie;
     }
 
@@ -113,73 +101,119 @@ public class TMDbService {
         List<Movie> movies = new ArrayList<>();
 
         for (Map<String, Object> result : results) {
-            Movie movie = mapToMovie(result, true);
+            Integer movieId = (Integer) result.get("id");
+            Map<String, Object> fullDetails = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/movie/{id}")
+                            .queryParam("api_key", tmDbConfig.getApiKey())
+                            .queryParam("append_to_response", "credits")
+                            .build(movieId))
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+
+            Movie movie = mapToMovie(fullDetails);
             movies.add(movie);
         }
         return movies;
     }
-    public List<Movie> fetchMoviesByTitle(String title) {
-        Map<String,Object> response=webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/search/movie")
-                        .queryParam("api_key",tmDbConfig.getApiKey())
-                        .queryParam("query", "{title}")
-                        .build(title))
-                .retrieve()
-                .bodyToMono(Map.class)
-                .block();
-        var results=(List<Map<String,Object>>)response.get("results");
-        if (results.isEmpty()) return null;
-        List<Movie> movies=new ArrayList<>();
-        for(Map<String, Object> result:results){
-            movies.add(mapToMovie(result,true));
-        }
-        return movies;
 
-    }
-    public Movie fetchMovieByTid(String tid) {
+    public List<Movie> fetchMoviesByTitle(String title) {
         Map<String, Object> response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/search/movie")
                         .queryParam("api_key", tmDbConfig.getApiKey())
-                        .queryParam("query", "{tid}")
-                        .build(tid))
+                        .queryParam("query", title)
+                        .build())
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
 
         var results = (List<Map<String, Object>>) response.get("results");
         if (results.isEmpty()) return null;
-        return mapToMovie(results.get(0), true);
+
+        List<Movie> movies = new ArrayList<>();
+        for (Map<String, Object> result : results) {
+            Integer movieId = (Integer) result.get("id");
+            Map<String, Object> fullDetails = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/movie/{id}")
+                            .queryParam("api_key", tmDbConfig.getApiKey())
+                            .queryParam("append_to_response", "credits")
+                            .build(movieId))
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+
+            movies.add(mapToMovie(fullDetails));
+        }
+        return movies;
     }
+
+    public Movie fetchMovieByTid(String tid) {
+        try {
+            Map<String, Object> response = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/movie/{id}")
+                            .queryParam("api_key", tmDbConfig.getApiKey())
+                            .queryParam("append_to_response", "credits")
+                            .build(tid))
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+
+            return mapToMovie(response);
+        } catch (Exception e) {
+            System.err.println("Error fetching movie by ID: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<Movie> fetchMovieByActorName(String actorName) {
-        List<Actor> actors=fetchActorsByName(actorName);
-        Actor actor=actors.get(0);
-        String actorId=actor.getId().toString();
-        Map<String, Object> response=webClient.get()
-                .uri(uriBuilder ->uriBuilder
+        List<Actor> actors = fetchActorsByName(actorName);
+        Actor actor = actors.get(0);
+        String actorId = actor.getId().toString();
+
+        Map<String, Object> response = webClient.get()
+                .uri(uriBuilder -> uriBuilder
                         .path("/person/{id}/movie_credits")
                         .queryParam("api_key", tmDbConfig.getApiKey())
                         .build(actorId))
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
-        List<Map<String,Object>> cast=(List<Map<String, Object>>) response.get("cast");
+
+        List<Map<String, Object>> cast = (List<Map<String, Object>>) response.get("cast");
         if (cast == null) {
             return List.of();
         }
+
         return cast.stream()
-                .map(movieData->mapToMovie(movieData, false))
+                .map(movieData -> {
+                    Integer movieId = (Integer) movieData.get("id");
+                    Map<String, Object> fullDetails = webClient.get()
+                            .uri(uriBuilder -> uriBuilder
+                                    .path("/movie/{id}")
+                                    .queryParam("api_key", tmDbConfig.getApiKey())
+                                    .queryParam("append_to_response", "credits")
+                                    .build(movieId))
+                            .retrieve()
+                            .bodyToMono(Map.class)
+                            .block();
+                    return mapToMovie(fullDetails);
+                })
                 .sorted(Comparator.comparing(Movie::getYear).reversed())
                 .collect(Collectors.toList());
     }
-    public Movie fetchAndSaveMovieByTid(String tid){
-        Movie movie= fetchMovieByTid(tid);
-        if(movie!=null && !movieService.movieExists(movie)){
+
+    public Movie fetchAndSaveMovieByTid(String tid) {
+        Movie movie = fetchMovieByTid(tid);
+        if (movie != null && !movieService.movieExists(movie)) {
             movieService.addMovie(movie);
         }
         return movie;
     }
+
     public List<Movie> getTrendingMovies() {
         return fetchMoviesFromEndpoint("/movie/popular");
     }
@@ -187,8 +221,9 @@ public class TMDbService {
     public List<Movie> getUpcomingMovies() {
         return fetchMoviesFromEndpoint("/movie/upcoming");
     }
-    public List<Actor> fetchActorsByName(String name){
-        Map<String,Object> response=webClient.get()
+
+    public List<Actor> fetchActorsByName(String name) {
+        Map<String, Object> response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/search/person")
                         .queryParam("api_key", tmDbConfig.getApiKey())
@@ -197,14 +232,16 @@ public class TMDbService {
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
+
         List<Map<String, Object>> results = (List<Map<String, Object>>) response.get("results");
         if (results.isEmpty()) return null;
+
         List<Actor> actors = new ArrayList<>();
         for (Map<String, Object> result : results) {
-            Actor actor=new Actor();
-            actor.setId((Integer)result.get("id"));
-            actor.setFullName((String)result.get("name"));
-            actor.setPicture((String)result.get("profile_path"));
+            Actor actor = new Actor();
+            actor.setId((Integer) result.get("id"));
+            actor.setFullName((String) result.get("name"));
+            actor.setPicture((String) result.get("profile_path"));
             actors.add(actor);
         }
         return actors;

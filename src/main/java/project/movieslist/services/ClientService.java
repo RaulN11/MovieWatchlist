@@ -40,12 +40,12 @@ public class ClientService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public Client addMovieToWatchedListByTitle(String username,String id){
+    public Client addMovieToWatched(String username, String tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
-        Movie movie=movieRepository.findById(id)
+        Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(() -> {
-                    Movie fetched = tmDbService.fetchAndSaveMovieByTid(id);
+                    Movie fetched = tmDbService.fetchAndSaveMovieByTid(tid);
                     if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
                     return fetched;
                 });
@@ -62,12 +62,12 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
 
     }
-    public Client removeMovieFromWatchedListByTitle(String username,String id){
+    public Client removeMovieFromWatched(String username, String tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
-        Movie movie=movieRepository.findById(id)
+        Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(() -> {
-                    Movie fetched = tmDbService.fetchMovieByTid(id);
+                    Movie fetched = tmDbService.fetchMovieByTid(tid);
                     if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
                     return fetched;
                 });
@@ -84,12 +84,12 @@ public class ClientService implements UserDetailsService {
         movieRepository.save(movie);
         return clientRepository.save(client);
     }
-    public Client addMoviesToWatchlistByTitle(String username,String id){
+    public Client addMoviesToWatchlist(String username, String tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
-        Movie movie=movieRepository.findById(id)
+        Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(()->{
-                    Movie fetched = tmDbService.fetchAndSaveMovieByTid(id);
+                    Movie fetched = tmDbService.fetchAndSaveMovieByTid(tid);
                     if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
                     return fetched;
                 });
@@ -110,12 +110,12 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
 
     }
-    public Client removeMovieFromWatchlistListByTitle(String username,String id){
+    public Client removeMovieFromWatchlist(String username, String tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
-        Movie movie=movieRepository.findById(id)
+        Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(() -> {
-                    Movie fetched = tmDbService.fetchMovieByTid(id);
+                    Movie fetched = tmDbService.fetchMovieByTid(tid);
                     if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
                     return fetched;
                 });
@@ -129,12 +129,12 @@ public class ClientService implements UserDetailsService {
         movieRepository.save(movie);
         return clientRepository.save(client);
     }
-    public Client addMovieToLikedByTitle(String username,String id){
+    public Client addMovieToLiked(String username, String tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
-        Movie movie=movieRepository.findById(id)
+        Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(()->{
-                    Movie fetched = tmDbService.fetchAndSaveMovieByTid(id);
+                    Movie fetched = tmDbService.fetchAndSaveMovieByTid(tid);
                     if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
                     return fetched;
                 });
@@ -151,12 +151,12 @@ public class ClientService implements UserDetailsService {
         movieRepository.save(movie);
         return clientRepository.save(client);
     }
-    public Client removeMovieFromLikedListByTitle(String username,String id){
+    public Client removeMovieFromLiked(String username, String tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
-        Movie movie=movieRepository.findFirstByTitleIgnoreCase(id)
+        Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(() -> {
-                    Movie fetched = tmDbService.fetchMovieByTid(id);
+                    Movie fetched = tmDbService.fetchMovieByTid(tid);
                     if (fetched == null) throw new RuntimeException("Movie not found in TMDb");
                     return fetched;
                 });

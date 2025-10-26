@@ -11,7 +11,6 @@ import project.movieslist.repositories.ClientRepository;
 import project.movieslist.services.ClientService;
 import project.movieslist.services.MovieService;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,35 +25,35 @@ public class ClientController {
     private ClientRepository clientRepository;
 
     @PostMapping("/addtowatched")
-    public Client addWatchedMovie(@RequestParam String title, @RequestParam(required = false) Double rating,
+    public Client addWatchedMovie(@RequestParam String tid, @RequestParam(required = false) Double rating,
                                   @RequestParam(required = false) String comment, Authentication authentication) {
         String username=authentication.getName();
-        return clientService.addMovieToWatchedListByTitle(username,title);
+        return clientService.addMovieToWatched(username,tid);
     }
-    @DeleteMapping("/removefromwatched/{title}")
-    public Client removeWatchedMovie(@PathVariable String title, Authentication auth) {
+    @DeleteMapping("/removefromwatched/{tid}")
+    public Client removeWatchedMovie(@PathVariable String tid, Authentication auth) {
         String username=auth.getName();
-        return clientService.removeMovieFromWatchedListByTitle(username,title);
+        return clientService.removeMovieFromWatched(username,tid);
     }
-    @PostMapping("/addtowatchlist/{title}")
-    public Client addToWatchlist(@PathVariable String title, Authentication auth) {
+    @PostMapping("/addtowatchlist/{tid}")
+    public Client addToWatchlist(@PathVariable String tid, Authentication auth) {
         String username=auth.getName();
-        return clientService.addMoviesToWatchlistByTitle(username,title);
+        return clientService.addMoviesToWatchlist(username, tid);
     }
-    @DeleteMapping("/removefromwatchlist/{title}")
-    public Client removeFromWatchlist(@PathVariable String title, Authentication auth) {
+    @DeleteMapping("/removefromwatchlist/{tid}")
+    public Client removeFromWatchlist(@PathVariable String tid, Authentication auth) {
         String username=auth.getName();
-        return clientService.removeMovieFromWatchlistListByTitle(username,title);
+        return clientService.removeMovieFromWatchlist(username, tid);
     }
-    @PostMapping("/addtoliked/{title}")
-    public Client addToLikedMovie(@PathVariable String title, Authentication auth) {
+    @PostMapping("/addtoliked/{tid}")
+    public Client addToLikedMovie(@PathVariable String tid, Authentication auth) {
         String username = auth.getName();
-        return clientService.addMovieToLikedByTitle(username, title);
+        return clientService.addMovieToLiked(username, tid);
     }
-    @DeleteMapping("/removefromliked/{title}")
-    public Client removeFromLikedMovie(@PathVariable String title, Authentication auth) {
+    @DeleteMapping("/removefromliked/{tid}")
+    public Client removeFromLikedMovie(@PathVariable String tid, Authentication auth) {
         String username=auth.getName();
-        return clientService.removeMovieFromLikedListByTitle(username, title);
+        return clientService.removeMovieFromLiked(username, tid);
     }
     @PostMapping("/follow/{username}")
     public Client follow(@PathVariable String username, Authentication auth) {
