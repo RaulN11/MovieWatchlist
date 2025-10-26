@@ -82,7 +82,8 @@ public class SecurityConfig {
                             "/ws/**",
                             "/homepage",
                             "/details/**",
-                            "/searchMenu/**"
+                            "/searchMenu/**",
+                            "/moviesbyactor/**"
                     ).permitAll();
                     registry.requestMatchers(
                             "/watched",

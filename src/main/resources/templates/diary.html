@@ -47,7 +47,7 @@
 </div>
 <div class="movie-grid">
    <div th:each="movie:${movies}" class="movie-card">
-       <a th:href="@{'/details/' + ${movie.title}}">
+       <a th:href="@{'/details/' + ${movie.tid}}">
            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
                 alt="Movie poster"
                 class="movie-poster"

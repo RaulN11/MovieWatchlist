@@ -57,7 +57,7 @@
 </p>
 <div class="movies-grid">
     <div th:each="trendingMovie : ${trendingMovies}" class="movie-card">
-        <a th:href="@{'/details/' + ${trendingMovie.title}}">
+        <a th:href="@{'/details/' + ${trendingMovie.tid}}">
             <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${trendingMovie.posterPath}}"
                  th:alt="${trendingMovie.title}"
                  class="movie-poster"
@@ -80,7 +80,7 @@
     <span class="pink">Coming</span> soon</p>
 <div class="movies-grid">
     <div th:each="upcomingMovie : ${upcomingMovies}" class="movie-card">
-        <a th:href="@{'/details/'+${upcomingMovie.title}}">
+        <a th:href="@{'/details/'+${upcomingMovie.tid}}">
             <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${upcomingMovie.posterPath}}"
                  th:alt="${upcomingMovie.title}"
                  class="movie-poster"

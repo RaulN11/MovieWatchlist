@@ -8,6 +8,7 @@ import project.movieslist.model.Actor;
 import project.movieslist.model.Movie;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ public class TMDbService {
 
     private Movie mapToMovie(Map<String, Object> movieData, boolean fetchDetails) {
         Movie movie = new Movie();
+        movie.setTid((Integer) movieData.get("id"));
         movie.setTitle((String) movieData.get("title"));
 
         String releaseDate = (String) movieData.getOrDefault("release_date", "");
@@ -135,13 +137,13 @@ public class TMDbService {
         return movies;
 
     }
-    public Movie fetchMovieByTitle(String title) {
+    public Movie fetchMovieByTid(String tid) {
         Map<String, Object> response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/search/movie")
                         .queryParam("api_key", tmDbConfig.getApiKey())
-                        .queryParam("query", "{title}")
-                        .build(title))
+                        .queryParam("query", "{tid}")
+                        .build(tid))
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
@@ -150,14 +152,34 @@ public class TMDbService {
         if (results.isEmpty()) return null;
         return mapToMovie(results.get(0), true);
     }
-    public Movie fetchAndSaveMovieByTitle(String title) {
-        Movie movie = fetchMovieByTitle(title);
-        if (movie != null && !movieService.movieExists(movie)) {
+    public List<Movie> fetchMovieByActorName(String actorName) {
+        List<Actor> actors=fetchActorsByName(actorName);
+        Actor actor=actors.get(0);
+        String actorId=actor.getId().toString();
+        Map<String, Object> response=webClient.get()
+                .uri(uriBuilder ->uriBuilder
+                        .path("/person/{id}/movie_credits")
+                        .queryParam("api_key", tmDbConfig.getApiKey())
+                        .build(actorId))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+        List<Map<String,Object>> cast=(List<Map<String, Object>>) response.get("cast");
+        if (cast == null) {
+            return List.of();
+        }
+        return cast.stream()
+                .map(movieData->mapToMovie(movieData, false))
+                .sorted(Comparator.comparing(Movie::getYear).reversed())
+                .collect(Collectors.toList());
+    }
+    public Movie fetchAndSaveMovieByTid(String tid){
+        Movie movie= fetchMovieByTid(tid);
+        if(movie!=null && !movieService.movieExists(movie)){
             movieService.addMovie(movie);
         }
         return movie;
     }
-
     public List<Movie> getTrendingMovies() {
         return fetchMoviesFromEndpoint("/movie/popular");
     }

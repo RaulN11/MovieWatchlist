@@ -23,9 +23,9 @@
             <a href="/chat">INBOX</a>
         </div>
         <input class="top-nav" type="text" placeholder="Search here...">
-        <a>
+        <button class="search-button">
             <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
-        </a>
+        </button>
         <div th:if="${client!=null}">
             <a href="/yourprofile">
                 <img th:src="${client.profilePicture}"
@@ -42,13 +42,20 @@
         <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
              alt="Movie Poster"
              class="movie-poster"
-             onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';"
-        >
-        <div class="watched-stats">
-            <i class="fa-regular fa-eye" style="color: #710a42;"> <span th:text="${movie.watchedCount}"></span></i>
-            <i class="fa-regular fa-heart" style="color: #710a42;"> <span th:text="${movie.likedCount}"></span></i>
-            <i class="fa-regular fa-star" style="color: #710a42;"><span th:text="${movie.ratingSum/movie.ratingCount}"></span></i>
-
+             onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';">
+        <div class="stats-overlay">
+            <div class="stat-item">
+                <i class="fa-solid fa-eye"></i>
+                <span class="stat-value">2.4M</span>
+            </div>
+            <div class="stat-item">
+                <i class="fa-solid fa-heart"></i>
+                <span class="stat-value">1.8M</span>
+            </div>
+            <div class="stat-item">
+                <i class="fa-solid fa-star"></i>
+                <span class="stat-value">8.8</span>
+            </div>
         </div>
     </div>
     <div class="text-details">
@@ -59,11 +66,9 @@
 
         <p class="director" th:text="${movie.director}"></p>
         <p class="details">
-            &#x2022; <span th:text="${movie.genre}"></span>
-            &#x2022; <span th:text="${movie.runtime}" class="time"></span>
+            &#x2022; <span th:text="${movie.genre}" class="detail">Sci-Fi, Thriller</span>
+            &#x2022; <span th:text="${movie.runtime}" class="detail">148 min</span>
         </p>
-        <p class="overview-top">Overview</p>
-        <p class="overview-text" th:text="${movie.overview}"></p>
         <div th:if="${client!=null}"class="buttons-grid">
             <div class="button-background"
                  id="like-button"
@@ -71,7 +76,6 @@
                  th:attr="data-state=${liked.contains(movie) ? 'active' : 'inactive'}">
                 <i class="fa-solid fa-heart"
                    th:style="${liked.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
-
             </div>
             <div class="button-background"
                  id="watched-button"
@@ -90,31 +94,31 @@
         </div>
     </div>
 </div>
-<div class="cast">
-    <p class="cast_title">CAST</p>
+<div class="footer-section">
+    <h2 class="section-title">Overview</h2>
+    <p class="overview-text">Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: "inception", the implantation of another person's idea into a target's subconscious.</p>
+    <h2 class="section-title">Cast</h2>
     <hr class="separator">
-    <div class="cast-list">
-        <div class="actor" th:each="actor : ${movie.actors}">
-            <img th:src="${actor.picture} ?
-                 @{'https://image.tmdb.org/t/p/w780/' + ${actor.picture}} :
-                 @{'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}"
-                 alt="Actor Poster"
-                 class="actor-poster"
-                onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
-            >
-            <p class="actor-name" th:text="${actor.fullName}">Actor Name</p>
+        <div class="cast-list">
+            <div class="actor" th:each="actor : ${movie.actors}">
+                <a th:href="'/moviesbyactor/'+${actor.getFullName()}">
+                    <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${actor.picture}}"
+                         alt="Actor Poster"
+                         class="actor-poster"
+                         onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+                    >
+                </a>
+                <p class="actor-name" th:text="${actor.fullName}">Actor Name</p>
+            </div>
         </div>
-    </div>
-</div>
-<div class="reviews">
-    <p class="review-title">Reviews</p>
+    <h2 class="section-title">Reviews</h2>
     <hr class="separator">
     <hr class="separator2">
     <div class="review-card" th:each="review:${reviews}">
         <img th:src="${review.authorPicture}"
              alt="user pic"
              class="review-pic"
-            onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+             onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
         >
         <div class="review-text">
             <p class="review-author">Review by <strong th:text="${review.author}"></strong></p>
@@ -124,27 +128,28 @@
     </div>
 </div>
 <div id="review-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Enter your <span class="pink">review</span></h2>
-            <div class="close-btn">&times;</div>
-        </div>
-        <div class="review-body">
-            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
-                 alt="Movie Poster"
-                 class="review-poster"
-                 onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';"
-            >
-            <div class="review_details">
-                <div class="modal-names">
-                    <p th:text="${movie.title}" class="modal-title"></p>
-                    <p th:text="${movie.year}" class="modal-year"></p>
-                </div>
-                <textarea id="review-area" class="review-textbox" rows="6" placeholder=" Add a review..."></textarea>
-                <textarea id="rating-area" class="rating"  rows="1" placeholder=" Rating"></textarea>
-                <div class="review-buttons">
-                    <button id="cancel" class="cancel-button">Cancel</button>
-                    <button id="save" class="save-button">Save</button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Enter your <span class="pink">review</span></h2>
+                <div class="close-btn">&times;</div>
+            </div>
+            <div class="review-body">
+                <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
+                     alt="Movie Poster"
+                     class="review-poster"
+                     onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';"
+                >
+                <div class="review_details">
+                    <div class="modal-names">
+                        <p th:text="${movie.title}" class="modal-title"></p>
+                        <p th:text="${movie.year}" class="modal-year"></p>
+                    </div>
+                    <textarea id="review-area" class="review-textbox" rows="6" placeholder=" Add a review..."></textarea>
+                    <textarea id="rating-area" class="rating"  rows="1" placeholder=" Rating"></textarea>
+                    <div class="review-buttons">
+                        <button id="cancel" class="cancel-button">Cancel</button>
+                        <button id="save" class="save-button">Save</button>
+                    </div>
                 </div>
             </div>
         </div>

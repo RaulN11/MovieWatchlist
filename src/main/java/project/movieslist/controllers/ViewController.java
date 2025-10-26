@@ -63,18 +63,11 @@ public class ViewController {
         return "homepage";
 
     }
-    @GetMapping("/details/{title}")
-    public String movieDetails(@PathVariable String title, Model model, Authentication auth){
-        var moviesInDb=movieService.getMoviesByTitle(title);
+    @GetMapping("/details/{id}")
+    public String movieDetails(@PathVariable String id, Model model, Authentication auth){
+        var moviesInDb=movieService.getMovieByTid(id);
         Movie movie;
-        if(!moviesInDb.isEmpty()){
-            movie=moviesInDb.get(0);
-        }else{
-            movie= tmDbService.fetchMovieByTitle(title);
-            if(movie==null){
-                throw new RuntimeException("Movie not found");
-            }
-        }
+        movie = moviesInDb.orElseGet(() -> tmDbService.fetchMovieByTid(id));
         if (auth != null) {
             String username=auth.getName();
             Optional<Client>clientOpt=clientService.getUserByUsername(username);
@@ -168,10 +161,12 @@ public class ViewController {
     @GetMapping("/searchMenu/{type}/{searched}")
     public String searchMenu(@PathVariable String searched,@PathVariable String type, Model model, Authentication auth){
         List<Movie>byTitle= tmDbService.fetchMoviesByTitle(searched);
-        String username=auth.getName();
-        Optional<Client>clientOpt=clientService.getUserByUsername(username);
-        Client client=clientOpt.get();
-        model.addAttribute("client",client);
+        if(auth!=null) {
+            String username = auth.getName();
+            Optional<Client> clientOpt = clientService.getUserByUsername(username);
+            Client client = clientOpt.get();
+            model.addAttribute("client", client);
+        }
         switch (type.toLowerCase()){
             case "movies" -> model.addAttribute("movies", tmDbService.fetchMoviesByTitle(searched));
             case "actors" -> model.addAttribute("actors", tmDbService.fetchActorsByName(searched));
@@ -180,5 +175,19 @@ public class ViewController {
 
         return "searchmenu";
     }
+    @GetMapping("/moviesbyactor/{actorName}")
+    public String showMoviesByActor(@PathVariable String actorName, Authentication authentication,Model model){
+        if(authentication!=null){
+            String username=authentication.getName();
+            Optional<Client>clientOpt=clientService.getUserByUsername(username);
+            Client client=clientOpt.get();
+            model.addAttribute("client",client);
+        }
+        List<Movie> movies=tmDbService.fetchMovieByActorName(actorName);
+        model.addAttribute("movies", movies);
+        return "moviesbyactor";
+
+    }
+
 
 }

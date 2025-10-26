@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/moviesbyactor.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <script src="/js/moviesbyactor.js" defer></script>
+    <title>Title</title>
+</head>
+<body>
+<div class="top-container">
+  <a href="/homepage">
+    <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+  </a>
+  <div class="left-side">
+    <div class="nav-links">
+      <a href="/watched/all">DIARY</a>
+      <a href="/watchlist">WATCHLIST</a>
+      <a href="/chat">INBOX</a>
+    </div>
+    <input class="top-nav" type="text" placeholder="Search here...">
+    <button class="search-button">
+      <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+    </button>
+    <div th:if="${client!=null}">
+      <a href="/yourprofile">
+        <img th:src="${client.profilePicture}"
+             alt="Profile Picture"
+             class="profile-pic"
+             onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+        >
+      </a>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div th:each="movie:${movies}" class="movie-card">
+    <div th:text="${movie.title}+' ('+${movie.year}+') '" class="tooltip">Text</div>
+    <a th:href="'/details/'+${movie.tid}">
+      <img th:src="@{'https://image.tmdb.org/t/p/w780'+${movie.posterPath}}"
+           alt="Movie Poster"
+           class="movie-poster"
+           onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';">
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

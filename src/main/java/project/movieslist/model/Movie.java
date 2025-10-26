@@ -15,6 +15,7 @@ import java.util.List;
 public class Movie{
     @Id
     private String id;
+    private Integer tid;
     private String title;
     private String director;
     private String genre;
