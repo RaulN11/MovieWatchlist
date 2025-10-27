@@ -12,10 +12,7 @@ import project.movieslist.repositories.MovieRepository;
 import project.movieslist.security.ClientSecurity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,11 +53,17 @@ public class ClientService implements UserDetailsService {
         }
         watched.add(movie);
         movie.setWatchedCount(movie.getWatchedCount()+1);
+
+        // FIX: Initialize movieDates if null
         Map<String, LocalDate> times=client.getMovieDates();
+        if(times == null) {
+            times = new HashMap<>();
+            client.setMovieDates(times);
+        }
         times.put(movie.getTitle(),LocalDate.now());
+
         movieRepository.save(movie);
         return clientRepository.save(client);
-
     }
     public Client removeMovieFromWatched(String username, Integer tid){
         Client client=clientRepository.findByUsername(username)
@@ -80,7 +83,10 @@ public class ClientService implements UserDetailsService {
             movie.setWatchedCount(movie.getWatchedCount()-1);
         }
         Map<String, LocalDate> times=client.getMovieDates();
-        times.remove(movie.getTitle());
+        if(times != null) {
+            times.remove(movie.getTitle());
+        }
+
         movieRepository.save(movie);
         return clientRepository.save(client);
     }

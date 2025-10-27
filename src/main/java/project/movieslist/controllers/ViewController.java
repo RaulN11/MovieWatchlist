@@ -70,8 +70,10 @@ public class ViewController {
         movie = moviesInDb.orElseGet(() -> tmDbService.fetchMovieByTid(tid));
         if (auth != null) {
             String username=auth.getName();
+            System.out.println("DEBUG: Authenticated user: " + username);
             Optional<Client>clientOpt=clientService.getUserByUsername(username);
             Client client = clientOpt.get();
+            System.out.println("DEBUG: Client found: " + (client != null));
             List<Movie> likedMovies=client.getLikedMovies()!=null ? client.getLikedMovies(): List.of();
             List<Movie> watchedMovies=client.getWatchedMovies()!=null ? client.getWatchedMovies(): List.of();
             List<Movie> watchlist = client.getWatchList() != null ? client.getWatchList() : List.of();

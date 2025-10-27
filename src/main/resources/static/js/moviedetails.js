@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = [
-        { id: 'like-button', addUrl: '/client/addtoliked?tid=', removeUrl: '/client/removefromliked?tid=' },
-        { id: 'watched-button', addUrl: '/client/addtowatched?tid=', removeUrl: '/client/removefromwatched?tid=' },
-        { id: 'watchlist-button', addUrl: '/client/addtowatchlist/', removeUrl: '/client/removefromwatchlist?tid=' }
+        { id: 'like-button', addUrl: '/client/addtoliked/', removeUrl: '/client/removefromliked/' },
+        { id: 'watched-button', addUrl: '/client/addtowatched/', removeUrl: '/client/removefromwatched/' },
+        { id: 'watchlist-button', addUrl: '/client/addtowatchlist/', removeUrl: '/client/removefromwatchlist/' }
     ];
 
     const modal = document.getElementById('review-modal');
@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const tid = btn.dataset.tid;
             const state = btn.dataset.state;
             const url = state === 'inactive'
-                ? btnConfig.addUrl + encodeURIComponent(tid)
-                : btnConfig.removeUrl + encodeURIComponent(tid);
+                ? btnConfig.addUrl + tid
+                : btnConfig.removeUrl + tid;
             const method = state === 'inactive' ? 'POST' : 'DELETE';
 
             try {
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch(`/client/addreview/${encodeURIComponent(movieTid)}`, {
+            const response = await fetch(`/client/addreview/${movieTid}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

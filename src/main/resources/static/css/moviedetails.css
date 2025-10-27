@@ -199,9 +199,10 @@
     overflow-wrap: break-word;
 }
 .reviews {
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
-    background-color: #1a1a2e;
+    gap:40px;
     align-items: center;
 }
 .review-title {
@@ -220,8 +221,7 @@
     align-self: center;
 }
 .review-card {
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin: 0 auto;
     display: flex;
     flex-direction: row;
     width: 700px;
@@ -234,7 +234,6 @@
 .review-text {
     display: flex;
     flex-direction: column;
-    background-color: #1a1a2e;
 }
 .review-author {
     margin-top: 0;

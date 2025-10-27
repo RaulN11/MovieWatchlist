@@ -22,7 +22,7 @@ public class Client implements UserDetails {
     private String username;
     private String password;
     private String email;
-    private UserRole role;
+    private UserRole role=UserRole.ROLE_CLIENT;
     private List<Movie> watchedMovies=new ArrayList<>();
     private List<Movie> watchList=new ArrayList<>();
     private List<Movie> likedMovies=new ArrayList<>();

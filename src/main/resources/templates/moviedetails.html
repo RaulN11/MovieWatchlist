@@ -116,17 +116,18 @@
         </div>
     <h2 class="section-title">Reviews</h2>
     <hr class="separator">
-    <hr class="separator2">
-    <div class="review-card" th:each="review:${reviews}">
-        <img th:src="${review.authorPicture}"
-             alt="user pic"
-             class="review-pic"
-             onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
-        >
-        <div class="review-text">
-            <p class="review-author">Review by <strong th:text="${review.author}"></strong></p>
-            <p class="review-grade"><span th:text="${review.rating}"></span>/10.0</p>
-            <p class="review-comment" th:text="${review.comment}"></p>
+    <div class="reviews">
+        <div class="review-card" th:each="review:${reviews}">
+            <img th:src="${review.authorPicture}"
+                 alt="user pic"
+                 class="review-pic"
+                 onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+            >
+            <div class="review-text">
+                <p class="review-author">Review by <strong th:text="${review.author}"></strong></p>
+                <p class="review-grade"><span th:text="${review.rating}"></span>/10.0</p>
+                <p class="review-comment" th:text="${review.comment}"></p>
+            </div>
         </div>
     </div>
 </div>
