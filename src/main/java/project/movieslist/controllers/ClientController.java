@@ -24,8 +24,8 @@ public class ClientController {
     @Autowired
     private ClientRepository clientRepository;
 
-    @PostMapping("/addtowatched")
-    public Client addWatchedMovie(@RequestParam Integer tid, @RequestParam(required = false) Double rating,
+    @PostMapping("/addtowatched/{tid}")
+    public Client addWatchedMovie(@PathVariable Integer tid, @RequestParam(required = false) Double rating,
                                   @RequestParam(required = false) String comment, Authentication authentication) {
         String username=authentication.getName();
         return clientService.addMovieToWatched(username,tid);
