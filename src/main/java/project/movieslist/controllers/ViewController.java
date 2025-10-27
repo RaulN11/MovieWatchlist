@@ -63,11 +63,11 @@ public class ViewController {
         return "homepage";
 
     }
-    @GetMapping("/details/{id}")
-    public String movieDetails(@PathVariable String id, Model model, Authentication auth){
-        var moviesInDb=movieService.getMovieByTid(id);
+    @GetMapping("/details/{tid}")
+    public String movieDetails(@PathVariable Integer tid, Model model, Authentication auth){
+        var moviesInDb=movieService.getMovieByTid(tid);
         Movie movie;
-        movie = moviesInDb.orElseGet(() -> tmDbService.fetchMovieByTid(id));
+        movie = moviesInDb.orElseGet(() -> tmDbService.fetchMovieByTid(tid));
         if (auth != null) {
             String username=auth.getName();
             Optional<Client>clientOpt=clientService.getUserByUsername(username);

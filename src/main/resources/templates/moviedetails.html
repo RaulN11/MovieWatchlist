@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-    <script src="/js/moviedetails.js"></script>
 </head>
 <body>
 <div class="top-container">
@@ -37,7 +36,8 @@
         </div>
     </div>
 </div>
-<div class="movie-details">
+<div class="movie-details"
+     th:attr="style='--backdrop-url: url(https://image.tmdb.org/t/p/original/' + ${movie.backdropPath} + ');'">
     <div class="poster-area">
         <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
              alt="Movie Poster"
@@ -66,37 +66,40 @@
 
         <p class="director" th:text="${movie.director}"></p>
         <p class="details">
-            &#x2022; <span th:text="${movie.genre}" class="detail">Sci-Fi, Thriller</span>
-            &#x2022; <span th:text="${movie.runtime}" class="detail">148 min</span>
+            &#x2022; <span th:text="${movie.genre}" class="detail"></span>
+            &#x2022; <span th:text="${movie.runtime}" class="detail"></span>
         </p>
         <div th:if="${client!=null}"class="buttons-grid">
             <div class="button-background"
                  id="like-button"
+                 th:data-tid="${movie.tid}"
                  th:data-title="${movie.title}"
                  th:attr="data-state=${liked.contains(movie) ? 'active' : 'inactive'}">
                 <i class="fa-solid fa-heart"
-                   th:style="${liked.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
+                   th:style="${liked.contains(movie)} ? 'color:#710a42;' : 'color:white;'"></i>
             </div>
             <div class="button-background"
                  id="watched-button"
+                 th:data-tid="${movie.tid}"
                  th:data-title="${movie.title}"
                  th:attr="data-state=${watched.contains(movie) ? 'active' : 'inactive'}">
                 <i class="fa-solid fa-circle-check"
-                   th:style="${watched.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
+                   th:style="${watched.contains(movie)} ? 'color:#710a42;' : 'color:white;'"></i>
             </div>
             <div class="button-background"
                  id="watchlist-button"
+                 th:data-tid="${movie.tid}"
                  th:data-title="${movie.title}"
                  th:attr="data-state=${watchlist.contains(movie) ? 'active' : 'inactive'}">
                 <i class="fa-solid fa-eye"
-                   th:style="${watchlist.contains(movie)} ? 'color:white;' : 'color:#710a42;'"></i>
+                   th:style="${watchlist.contains(movie)} ? 'color:#710a42;' : 'color:white;'"></i>
             </div>
         </div>
     </div>
 </div>
 <div class="footer-section">
     <h2 class="section-title">Overview</h2>
-    <p class="overview-text">Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: "inception", the implantation of another person's idea into a target's subconscious.</p>
+    <p th:text="${movie.overview}" class="overview-text"></p>
     <h2 class="section-title">Cast</h2>
     <hr class="separator">
         <div class="cast-list">
@@ -156,4 +159,5 @@
     </div>
 </div>
 </body>
+<script src="/js/moviedetails.js"></script>
 </html>

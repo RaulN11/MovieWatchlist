@@ -1,7 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const searchButton = document.querySelector(".search-button");
+
+    searchButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        let query = document.querySelector(".top-nav").value.trim();
+        console.log(query);
+        if (query) {
+            window.location.href = `/searchMenu/movies/${encodeURIComponent(query)}`;
+        }
+    });
+
     const buttons = [
         { id: 'like-button', addUrl: '/client/addtoliked/', removeUrl: '/client/removefromliked/' },
-        { id: 'watched-button', addUrl: '/client/addtowatched?title=', removeUrl: '/client/removefromwatched/' },
+        { id: 'watched-button', addUrl: '/client/addtowatched?tid=', removeUrl: '/client/removefromwatched/' },
         { id: 'watchlist-button', addUrl: '/client/addtowatchlist/', removeUrl: '/client/removefromwatchlist/' }
     ];
 
@@ -12,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reviewTextarea = document.getElementById('review-area');
     const ratingInput = document.getElementById('rating-area');
 
+    // Initialize modal as hidden
     if (modal) {
         modal.style.display = 'none';
     }
@@ -19,17 +31,31 @@ document.addEventListener('DOMContentLoaded', () => {
     buttons.forEach(btnConfig => {
         const btn = document.getElementById(btnConfig.id);
         if (!btn) return;
+
         const icon = btn.querySelector('i');
+        // Set initial color based on state
         icon.style.color = btn.dataset.state === 'active' ? '#710a42' : 'white';
 
         btn.addEventListener('click', async (e) => {
             e.preventDefault();
-            const title = btn.dataset.title;
-            const state = btn.dataset.state;
-            const url = state === 'inactive'
-                ? btnConfig.addUrl + encodeURIComponent(title)
-                : btnConfig.removeUrl + encodeURIComponent(title);
-            const method = state === 'inactive' ? 'POST' : 'DELETE';
+
+            const tid = btn.dataset.tid;
+            const currentState = btn.dataset.state;
+            const isActivating = currentState === 'inactive';
+
+            // For watched button being activated, show modal FIRST
+            if (btnConfig.id === 'watched-button' && isActivating) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                // Don't make the API call yet - wait for modal save
+                return;
+            }
+
+            // For all other cases, make the API call
+            const url = isActivating
+                ? btnConfig.addUrl + encodeURIComponent(tid)
+                : btnConfig.removeUrl + encodeURIComponent(tid);
+            const method = isActivating ? 'POST' : 'DELETE';
 
             try {
                 const response = await fetch(url, {
@@ -39,27 +65,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (!response.ok) throw new Error('Network error');
 
-                if (state === 'inactive') {
+                // Update state and color immediately after successful response
+                if (isActivating) {
                     btn.dataset.state = 'active';
                     icon.style.color = '#710a42';
-                    if (btnConfig.id === 'watched-button') {
-                        modal.style.display = 'flex';
-                        document.body.style.overflow = 'hidden';
-                    }
                 } else {
                     btn.dataset.state = 'inactive';
                     icon.style.color = 'white';
                 }
 
             } catch (err) {
-                console.error(err);
+                console.error('Error:', err);
+                alert('An error occurred. Please try again.');
             }
         });
     });
 
     const closeModal = () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
         if (reviewTextarea) reviewTextarea.value = '';
         if (ratingInput) ratingInput.value = '';
     };
@@ -75,34 +101,48 @@ document.addEventListener('DOMContentLoaded', () => {
         const reviewText = reviewTextarea?.value.trim();
         const rating = ratingInput?.value.trim();
         const watchedBtn = document.getElementById('watched-button');
-        const movieTitle = watchedBtn?.dataset.title;
+        const movieTid = watchedBtn?.dataset.tid;
+        const icon = watchedBtn?.querySelector('i');
 
-        if (!reviewText && !rating) {
-            closeModal();
-            return;
-        }
-
+        // First, add to watched list
         try {
-            const response = await fetch(`/client/addreview/${encodeURIComponent(movieTitle)}`, {
+            const watchedResponse = await fetch(`/client/addtowatched?tid=${encodeURIComponent(movieTid)}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    comment: reviewText,
-                    rating: rating ? parseFloat(rating) : null
-                })
+                headers: { 'Content-Type': 'application/json' }
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to save review');
+            if (!watchedResponse.ok) {
+                throw new Error('Failed to add to watched list');
             }
 
-            console.log('Review saved successfully');
+            // Update button state
+            watchedBtn.dataset.state = 'active';
+            if (icon) icon.style.color = '#710a42';
+
+            // If there's a review, save it
+            if (reviewText || rating) {
+                const reviewResponse = await fetch(`/client/addreview/${encodeURIComponent(movieTid)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        comment: reviewText,
+                        rating: rating ? parseFloat(rating) : null
+                    })
+                });
+
+                if (!reviewResponse.ok) {
+                    throw new Error('Failed to save review');
+                }
+
+                console.log('Review saved successfully');
+            }
+
             closeModal();
             location.reload();
 
         } catch (err) {
-            console.error('Error saving review:', err);
-            alert('Failed to save review. Please try again.');
+            console.error('Error:', err);
+            alert('Failed to save. Please try again.');
         }
     });
 });

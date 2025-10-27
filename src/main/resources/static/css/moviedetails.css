@@ -1,13 +1,27 @@
 .movie-details {
-    background-color: #1a1a2e;
+    background-image: var(--backdrop-url, none);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: grid;
     grid-template-columns: 400px 1fr;
-    height: 600px;
+    height: 100vh;
     align-items: start;
-
+    position: relative;
+}
+.movie-details::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to right, rgba(26, 26, 46, 0.95) 0%, rgba(26, 26, 46, 0.7) 50%, rgba(26, 26, 46, 0.85) 100%);
+    z-index: 0;
 }
 .poster-area{
     position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     margin-left: 60px;
@@ -31,6 +45,7 @@
     border-radius: 25px;
     backdrop-filter: blur(10px);
     border: 2px solid rgba(113, 10, 66, 0.3);
+    z-index: 2;
 }
 
 .stat-item {
@@ -51,6 +66,8 @@
 }
 .text-details{
     margin-left: 30px;
+    position: relative;
+    z-index: 1;
 }
 .title {
     font-family: Oswald, serif;

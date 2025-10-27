@@ -25,33 +25,33 @@ public class ClientController {
     private ClientRepository clientRepository;
 
     @PostMapping("/addtowatched")
-    public Client addWatchedMovie(@RequestParam String tid, @RequestParam(required = false) Double rating,
+    public Client addWatchedMovie(@RequestParam Integer tid, @RequestParam(required = false) Double rating,
                                   @RequestParam(required = false) String comment, Authentication authentication) {
         String username=authentication.getName();
         return clientService.addMovieToWatched(username,tid);
     }
     @DeleteMapping("/removefromwatched/{tid}")
-    public Client removeWatchedMovie(@PathVariable String tid, Authentication auth) {
+    public Client removeWatchedMovie(@PathVariable Integer tid, Authentication auth) {
         String username=auth.getName();
         return clientService.removeMovieFromWatched(username,tid);
     }
     @PostMapping("/addtowatchlist/{tid}")
-    public Client addToWatchlist(@PathVariable String tid, Authentication auth) {
+    public Client addToWatchlist(@PathVariable Integer tid, Authentication auth) {
         String username=auth.getName();
         return clientService.addMoviesToWatchlist(username, tid);
     }
     @DeleteMapping("/removefromwatchlist/{tid}")
-    public Client removeFromWatchlist(@PathVariable String tid, Authentication auth) {
+    public Client removeFromWatchlist(@PathVariable Integer tid, Authentication auth) {
         String username=auth.getName();
         return clientService.removeMovieFromWatchlist(username, tid);
     }
     @PostMapping("/addtoliked/{tid}")
-    public Client addToLikedMovie(@PathVariable String tid, Authentication auth) {
+    public Client addToLikedMovie(@PathVariable Integer tid, Authentication auth) {
         String username = auth.getName();
         return clientService.addMovieToLiked(username, tid);
     }
     @DeleteMapping("/removefromliked/{tid}")
-    public Client removeFromLikedMovie(@PathVariable String tid, Authentication auth) {
+    public Client removeFromLikedMovie(@PathVariable Integer tid, Authentication auth) {
         String username=auth.getName();
         return clientService.removeMovieFromLiked(username, tid);
     }
@@ -60,23 +60,26 @@ public class ClientController {
         String username1 = auth.getName();
         return clientService.addToFollowing(username1,username);
     }
-    @PostMapping("/addreview/{title}")
-    public Movie addReview(@RequestBody Review review,@PathVariable String title, Authentication auth) {
-        Optional<Movie> optMovie=movieService.findFirstByTitle(title);
-        Movie movie=optMovie.orElse(null);
-        String username=auth.getName();
-        Optional<Client> optClient=clientService.getUserByUsername(username);
-        Client client=optClient.orElse(null);
-        Review review1=new Review();
+    @PostMapping("/addreview/{tid}")
+    public Movie addReview(@RequestBody Review review, @PathVariable Integer tid, Authentication auth) {
+        Optional<Movie> optMovie = movieService.getMovieByTid(tid);
+        Movie movie = optMovie.orElseThrow(() -> new RuntimeException("Movie not found"));
+        String username = auth.getName();
+        Optional<Client> optClient = clientService.getUserByUsername(username);
+        Client client = optClient.orElseThrow(() -> new RuntimeException("Client not found"));
+
+        Review review1 = new Review();
         review1.setAuthor(client.getUsername());
         review1.setAuthorPicture(client.getProfilePicture());
         review1.setComment(review.getComment());
         review1.setRating(review.getRating());
-        Map<String, Double> ratings=client.getMovieRatings();
-        ratings.put(title,review1.getRating());
+
+        Map<String, Double> ratings = client.getMovieRatings();
+        ratings.put(movie.getTitle(), review1.getRating());
         client.setMovieRatings(ratings);
         clientRepository.save(client);
-        return movieService.addReviewToMovie(movie,review1);
+
+        return movieService.addReviewToMovie(movie, review1);
     }
     @PostMapping("/addpicture")
     public Client addProfilePicture(@RequestBody String url, Authentication auth) {

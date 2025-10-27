@@ -40,7 +40,7 @@ public class ClientService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public Client addMovieToWatched(String username, String tid){
+    public Client addMovieToWatched(String username, Integer tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findMovieByTid(tid)
@@ -62,7 +62,7 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
 
     }
-    public Client removeMovieFromWatched(String username, String tid){
+    public Client removeMovieFromWatched(String username, Integer tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findMovieByTid(tid)
@@ -84,7 +84,7 @@ public class ClientService implements UserDetailsService {
         movieRepository.save(movie);
         return clientRepository.save(client);
     }
-    public Client addMoviesToWatchlist(String username, String tid){
+    public Client addMoviesToWatchlist(String username, Integer tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findMovieByTid(tid)
@@ -110,7 +110,7 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
 
     }
-    public Client removeMovieFromWatchlist(String username, String tid){
+    public Client removeMovieFromWatchlist(String username, Integer tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findMovieByTid(tid)
@@ -129,7 +129,7 @@ public class ClientService implements UserDetailsService {
         movieRepository.save(movie);
         return clientRepository.save(client);
     }
-    public Client addMovieToLiked(String username, String tid){
+    public Client addMovieToLiked(String username, Integer tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findMovieByTid(tid)
@@ -151,7 +151,7 @@ public class ClientService implements UserDetailsService {
         movieRepository.save(movie);
         return clientRepository.save(client);
     }
-    public Client removeMovieFromLiked(String username, String tid){
+    public Client removeMovieFromLiked(String username, Integer tid){
         Client client=clientRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Movie movie=movieRepository.findMovieByTid(tid)

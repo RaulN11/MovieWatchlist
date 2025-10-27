@@ -15,7 +15,7 @@ public class MovieService {
     public Movie addMovie(Movie movie) {
         return movieRepository.save(movie);
     }
-    public Optional<Movie> getMovieByTid(String tid) {
+    public Optional<Movie> getMovieByTid(Integer tid) {
         return movieRepository.findMovieByTid(tid);
     }
     public boolean movieExists(Movie movie) {

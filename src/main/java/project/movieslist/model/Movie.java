@@ -20,6 +20,8 @@ public class Movie{
     private String director;
     private String genre;
     private String posterPath;
+    private String backdropPath;
+    private Double popularity;
     private String overview;
     private int year;
     private String  runtime;

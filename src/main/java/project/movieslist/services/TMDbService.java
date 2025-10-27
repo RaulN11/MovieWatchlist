@@ -81,8 +81,9 @@ public class TMDbService {
         } else {
             movie.setRuntime("Unknown");
         }
-
         movie.setPosterPath((String) movieData.getOrDefault("poster_path", ""));
+        movie.setBackdropPath((String) movieData.getOrDefault("backdrop_path", ""));
+        movie.setPopularity((Double) movieData.getOrDefault("popularity", 0));
         movie.setOverview((String) movieData.getOrDefault("overview", ""));
         return movie;
     }
@@ -147,10 +148,13 @@ public class TMDbService {
 
             movies.add(mapToMovie(fullDetails));
         }
+        movies=movies.stream()
+                .sorted(Comparator.comparing(Movie::getPopularity).reversed())
+                .collect(Collectors.toList());
         return movies;
     }
 
-    public Movie fetchMovieByTid(String tid) {
+    public Movie fetchMovieByTid(Integer tid) {
         try {
             Map<String, Object> response = webClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -206,7 +210,7 @@ public class TMDbService {
                 .collect(Collectors.toList());
     }
 
-    public Movie fetchAndSaveMovieByTid(String tid) {
+    public Movie fetchAndSaveMovieByTid(Integer tid) {
         Movie movie = fetchMovieByTid(tid);
         if (movie != null && !movieService.movieExists(movie)) {
             movieService.addMovie(movie);
