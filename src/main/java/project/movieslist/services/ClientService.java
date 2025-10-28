@@ -12,6 +12,7 @@ import project.movieslist.repositories.MovieRepository;
 import project.movieslist.security.ClientSecurity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,14 +54,12 @@ public class ClientService implements UserDetailsService {
         }
         watched.add(movie);
         movie.setWatchedCount(movie.getWatchedCount()+1);
-
-        // FIX: Initialize movieDates if null
-        Map<String, LocalDate> times=client.getMovieDates();
+        Map<Integer, LocalDateTime> times=client.getMovieDates();
         if(times == null) {
             times = new HashMap<>();
             client.setMovieDates(times);
         }
-        times.put(movie.getTitle(),LocalDate.now());
+        times.put(movie.getTid(),LocalDateTime.now());
 
         movieRepository.save(movie);
         return clientRepository.save(client);
@@ -82,9 +81,9 @@ public class ClientService implements UserDetailsService {
             client.setWatchedMovies(watched);
             movie.setWatchedCount(movie.getWatchedCount()-1);
         }
-        Map<String, LocalDate> times=client.getMovieDates();
+        Map<Integer, LocalDateTime> times=client.getMovieDates();
         if(times != null) {
-            times.remove(movie.getTitle());
+            times.remove(movie.getTid());
         }
 
         movieRepository.save(movie);

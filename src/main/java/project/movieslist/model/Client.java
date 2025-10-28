@@ -29,7 +29,7 @@ public class Client implements UserDetails {
     private List<String> following=new ArrayList<>();
     private List<String> followers=new ArrayList<>();
     private Map<String, Double>movieRatings=new HashMap<>();
-    private Map<String, LocalDate>movieDates=new HashMap<>();
+    private Map<Integer, LocalDateTime>movieDates=new HashMap<>();
     private String verificationToken;
     private boolean isVerified;
     private String resetToken;

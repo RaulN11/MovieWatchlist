@@ -14,9 +14,10 @@ import project.movieslist.services.ClientService;
 import project.movieslist.services.MovieService;
 import project.movieslist.services.TMDbService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class ViewController {
@@ -70,10 +71,8 @@ public class ViewController {
         movie = moviesInDb.orElseGet(() -> tmDbService.fetchMovieByTid(tid));
         if (auth != null) {
             String username=auth.getName();
-            System.out.println("DEBUG: Authenticated user: " + username);
             Optional<Client>clientOpt=clientService.getUserByUsername(username);
             Client client = clientOpt.get();
-            System.out.println("DEBUG: Client found: " + (client != null));
             List<Movie> likedMovies=client.getLikedMovies()!=null ? client.getLikedMovies(): List.of();
             List<Movie> watchedMovies=client.getWatchedMovies()!=null ? client.getWatchedMovies(): List.of();
             List<Movie> watchlist = client.getWatchList() != null ? client.getWatchList() : List.of();
@@ -157,6 +156,17 @@ public class ViewController {
         String username=auth.getName();
         Optional<Client> clientOpt=clientService.getUserByUsername(username);
         Client client=clientOpt.get();
+        Map<Integer, LocalDateTime> dates=client.getMovieDates();
+        List<Integer> recentTid=dates.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Integer, LocalDateTime>comparingByValue().reversed())
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .toList();
+        List<Movie> recentMovies=recentTid.stream()
+                        .map(tid->movieService.getMovieByTid(tid).orElse(null))
+                        .toList();
+        model.addAttribute("recentMovies",recentMovies);
         model.addAttribute("client",client);
         return "yourprofile";
     }

@@ -46,15 +46,15 @@
         <div class="stats-overlay">
             <div class="stat-item">
                 <i class="fa-solid fa-eye"></i>
-                <span class="stat-value">2.4M</span>
+                <span th:text="${movie.watchedCount}" class="stat-value"></span>
             </div>
             <div class="stat-item">
                 <i class="fa-solid fa-heart"></i>
-                <span class="stat-value">1.8M</span>
+                <span th:text="${movie.likedCount}" class="stat-value"></span>
             </div>
             <div class="stat-item">
                 <i class="fa-solid fa-star"></i>
-                <span class="stat-value">8.8</span>
+                <span th:text="${#numbers.formatDecimal(movie.ratingSum/movie.ratingCount,1,2)}" class="stat-value"></span>
             </div>
         </div>
     </div>

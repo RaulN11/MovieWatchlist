@@ -37,7 +37,7 @@
          class="profile-picture"
          onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
     <p class="username" th:text="${client.username}"></p>
-    <p class="bio" id="bioText" th:text="${client.bio}">Always in need of something to watch.</p>
+    <p class="bio" id="bioText" th:text="${client.bio}">.</p>
     <i th:if="${client.city!=null || client.country!=null}" class="fa-solid fa-location-dot" style="color: #710a42;">
       <span class="detail" id="locationText" th:text="${client.city + ', ' + client.country}"></span>
     </i>
@@ -61,7 +61,7 @@
       <span class="follow-label">Following</span>
     </div>
   </div>
-  <div class="favouritemovies">
+  <div class="favourite-movies">
     <p class="title">Your <span class="pink">favourite</span> movies</p>
     <div class="movies">
       <img src="https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="1st" class="movie">
@@ -82,6 +82,16 @@
     <div class="stat">
       <p th:text="${client.watchList.size()}" class="pink"></p>
       <p class="stat-text">TO WATCH</p>
+    </div>
+  </div>
+  <div class="recent-activity">
+    <p class="title">Recent <span class="pink">activity</span> </p>
+    <div class="movies">
+      <img th:each="movie : ${recentMovies}"
+           th:src="${'https://image.tmdb.org/t/p/w780' + movie.posterPath}"
+           th:alt="${movie.title}"
+           class="movie"
+           onerror="this.onerror=null; this.src='https://via.placeholder.com/150x225?text=No+Image';">
     </div>
   </div>
 </div>

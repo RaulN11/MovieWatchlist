@@ -5,9 +5,10 @@
     background-repeat: no-repeat;
     display: grid;
     grid-template-columns: 400px 1fr;
-    height: 100vh;
+    height: 78vh;
     align-items: start;
     position: relative;
+    margin-bottom: 0;
 }
 .movie-details::before {
     content: '';
@@ -130,7 +131,7 @@
 .footer-section{
     max-width: 1400px;
     margin-left: 30px;
-    padding: 80px 60px;
+    padding: 0  60px 60px 60px;
 }
 .section-title {
     font-family: Oswald, serif;
@@ -181,15 +182,27 @@
     margin-left: 40px;
     margin-top: 30px;
     align-items: center;
+    transition: transform 0.3s ease;
+}
+.actor:hover {
+    transform: translateY(-5px);
 }
 .actor-poster {
-    height: 80px;
+    height: 100px;
     width: 80px;
     object-fit: cover;
-    border-radius: 40px;
+    border-radius: 5px;
+    border: 2px solid rgba(113, 10, 66, 0.3);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+.actor:hover .actor-poster {
+    border-color: #710a42;
+    box-shadow: 0 8px 25px rgba(113, 10, 66, 0.4);
 }
 .actor-name {
     color: #838f9a;
+    margin-top: 0;
     font-family: Oswald, serif;
     font-size: 18px;
     font-weight: lighter;

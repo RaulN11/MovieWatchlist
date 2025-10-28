@@ -96,7 +96,7 @@
     height: 30px;
     background: rgba(131, 143, 154, 0.3);
 }
-.favouritemovies{
+.favourite-movies{
     margin-top: 40px;
     justify-items: center;
 }
@@ -148,6 +148,10 @@
 }
 .stat-text{
     font-size: 16px;
+}
+.recent-activity{
+    margin-top: 40px;
+    justify-items: center;
 }
 p{
     margin-top:10px;
