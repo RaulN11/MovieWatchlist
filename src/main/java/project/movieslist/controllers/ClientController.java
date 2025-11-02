@@ -60,13 +60,9 @@ public class ClientController {
         String username1 = auth.getName();
         Optional<Client> authenticatedClientOpt = clientService.getUserByUsername(username1);
         Client authenticatedClient = authenticatedClientOpt.orElseThrow(() -> new RuntimeException("Authenticated client not found"));
-
-        // Check if already following
         if (authenticatedClient.getFollowing().contains(username)) {
-            // Unfollow
             return clientService.removeFromFollowing(username1, username);
         } else {
-            // Follow
             return clientService.addToFollowing(username1, username);
         }
     }

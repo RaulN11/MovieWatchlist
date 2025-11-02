@@ -11,8 +11,6 @@ searchButton.addEventListener("click", (e) => {
 const setActiveButton = () => {
     const currentPath = window.location.pathname;
     const filterBtns = document.querySelectorAll('.filter-btn');
-
-    // Extract filter from URL (e.g., /watched/liked -> 'liked')
     const pathParts = currentPath.split('/');
     const currentFilter = pathParts[pathParts.length - 1] || 'all';
 
@@ -37,7 +35,6 @@ const setActiveButton = () => {
                 filterParam = 'all';
         }
 
-        // Set active class if this button matches the current filter
         if (filterParam === currentFilter) {
             btn.classList.add('active');
         } else {
@@ -46,10 +43,8 @@ const setActiveButton = () => {
     });
 };
 
-// Set active button on page load
 setActiveButton();
 
-// Handle filter button clicks
 const filterBtns = document.querySelectorAll('.filter-btn');
 filterBtns.forEach(btn => {
     btn.addEventListener('click', function() {

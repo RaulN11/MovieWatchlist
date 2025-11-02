@@ -134,20 +134,37 @@ public class ViewController {
         Optional<Client>clientOpt=clientService.getUserByUsername(username);
         Client client=clientOpt.get();
         var movies=clientService.getWatchlistByUsername(username);
-        model.addAttribute("movies", movies);
-        model.addAttribute("client",client);
-        return "diary";
-    }
+        int totalMinutes = 0;
+        for (Movie movie : movies) {
+            String runtimeStr = movie.getRuntime();
+            if (runtimeStr == null || runtimeStr.equalsIgnoreCase("Unknown")) {
+                continue;
+            }
+            try {
+                int hours = 0;
+                int minutes = 0;
 
-    @GetMapping("/liked")
-    public String likedMovies(Model model, HttpServletRequest request, Authentication auth) {
-        String username=auth.getName();
-        Optional<Client>clientOpt=clientService.getUserByUsername(username);
-        Client client=clientOpt.get();
-        var movies=clientService.getLikedByUsername(username);
+                if (runtimeStr.contains("h")) {
+                    String[] parts = runtimeStr.split("h");
+                    hours = Integer.parseInt(parts[0].trim());
+
+                    if (parts.length > 1 && parts[1].contains("m")) {
+                        minutes = Integer.parseInt(parts[1].replace("m", "").trim());
+                    }
+                } else if (runtimeStr.contains("m")) {
+                    minutes = Integer.parseInt(runtimeStr.replace("m", "").trim());
+                }
+
+                totalMinutes += (hours * 60 + minutes);
+            } catch (Exception e) {
+
+            }
+        }
+        int totalHours=totalMinutes/60;
+        model.addAttribute("runtime", totalHours);
         model.addAttribute("movies", movies);
         model.addAttribute("client",client);
-        return "diary";
+        return "watchlist";
     }
     @GetMapping("/profile/{id}")
     public String profile(Model model, Authentication auth, @PathVariable String id) {

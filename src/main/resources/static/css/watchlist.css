@@ -1,0 +1,66 @@
+.title {
+    font-family: Oswald, sans-serif;
+    color:#710a42;
+    text-align: left;
+    font-size: 50px;
+    margin-left: 60px;
+    font-weight: 700;
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+.sub-title{
+    text-align: left;
+    font-family: Oswald,sans-serif;
+    margin-left: 60px;
+    color: rgb(155, 161, 166);
+    margin-top: 0;
+    font-size: 24px;
+}
+.count-container{
+    display: flex;
+    flex-direction: row;
+    margin-left: 60px;
+    gap: 100px;
+    background: rgba(113, 10, 66, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(113, 10, 66, 0.2);
+    width: 400px;
+    justify-content: center;
+}
+.counts{
+    justify-items: center;
+}
+.number{
+    font-size: 40px;
+    color: #710a42;
+    font-family: Oswald, sans-serif;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+.text{
+    font-family: Oswald,sans-serif;
+    font-size: 18px;
+    color: rgb(155, 161, 166);
+    text-transform: uppercase;
+}
+.movie-grid{
+    display: grid;
+    margin-left: 60px;
+    margin-top: 40px;
+    width: 80%;
+    grid-template-columns: repeat(7, 180px);
+    grid-gap: 30px;
+}
+.movie-poster{
+    height: 260px;
+    width: 180px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    transition:  border 0.3s ease;
+    margin-bottom: 20px;
+}
+.movie-poster:hover{
+    border-color: white;
+}

@@ -24,7 +24,7 @@ public class Movie{
     private Double popularity;
     private String overview;
     private int year;
-    private String  runtime;
+    private String runtime;
     private int watchedCount;
     private int likedCount;
     private int ratingCount;

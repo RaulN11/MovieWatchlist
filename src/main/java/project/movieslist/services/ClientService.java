@@ -55,6 +55,10 @@ public class ClientService implements UserDetailsService {
             client.setWatchedMovies(watched);
         }
         watched.add(movie);
+        List<Movie>watchlist=client.getWatchList();
+        if(watchlist.contains(movie)){
+            watchlist.remove(movie);
+        }
         movie.setWatchedCount(movie.getWatchedCount()+1);
         Map<Integer, LocalDateTime> times=client.getMovieDates();
         if(times == null) {

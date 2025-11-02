@@ -268,7 +268,7 @@
     margin-top: 0;
 }
 .modal {
-    display: flex;
+    display: none;
     flex-direction: row;
     position: fixed;
     z-index: 2000;

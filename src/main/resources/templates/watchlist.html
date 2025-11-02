@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Watchlist</title>
+    <link rel="stylesheet" href="/css/watchlist.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cossette+Titre:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <script src="/js/watchlist.js" defer></script>
+</head>
+<body>
+<div class="top-container">
+    <a href="/homepage">
+        <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+    </a>
+    <div class="left-side">
+        <div class="nav-links">
+            <a href="/watched/all">DIARY</a>
+            <a href="/watchlist">WATCHLIST</a>
+            <a href="/chat">INBOX</a>
+        </div>
+        <input class="top-nav" type="text" placeholder="Search here...">
+        <button class="search-button">
+            <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+        </button>
+        <a th:href="'/profile/'+ ${client.id}">
+            <img th:src="${client.profilePicture}"
+                 alt="Profile Picture"
+                 class="profile-pic"
+                 onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';"
+            >
+        </a>
+    </div>
+</div>
+<p class="title">Your watchlist</p>
+<p class="sub-title">Movies you're planning to watch</p>
+<div class="count-container">
+    <div class="counts">
+        <p th:text="${movies.size()}" class="number"></p>
+        <p class="text">Total Movies</p>
+    </div>
+    <div class="counts">
+        <p th:text="${runtime}+'h'" class="number"></p>
+        <p class="text">Est. Runtime</p>
+    </div>
+</div>
+<div class="movie-grid">
+    <div th:each="movie:${movies}" class="movie-poster">
+        <a th:href="@{'/details/' + ${movie.tid}}">
+            <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}" alt="picture" class="movie-poster">
+        </a>
+    </div>
+
+</div>
+</body>
+</html>
