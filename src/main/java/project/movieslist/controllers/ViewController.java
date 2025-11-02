@@ -14,10 +14,8 @@ import project.movieslist.services.ClientService;
 import project.movieslist.services.MovieService;
 import project.movieslist.services.TMDbService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 public class ViewController {
@@ -151,11 +149,10 @@ public class ViewController {
         model.addAttribute("client",client);
         return "diary";
     }
-    @GetMapping("/yourprofile")
-    public String profile(Model model, Authentication auth) {
-        String username=auth.getName();
-        Optional<Client> clientOpt=clientService.getUserByUsername(username);
-        Client client=clientOpt.get();
+    @GetMapping("/profile/{id}")
+    public String profile(Model model, Authentication auth, @PathVariable String id) {
+        Optional<Client> clientOpt1=clientService.getUserById(id);
+        Client client=clientOpt1.get();
         Map<Integer, LocalDateTime> dates=client.getMovieDates();
         List<Integer> recentTid=dates.entrySet()
                 .stream()
@@ -166,9 +163,14 @@ public class ViewController {
         List<Movie> recentMovies=recentTid.stream()
                         .map(tid->movieService.getMovieByTid(tid).orElse(null))
                         .toList();
+
+        String username=auth.getName();
+        Optional<Client> clientOpt=clientService.getUserByUsername(username);
+        Client authenticatedClient =clientOpt.get();
         model.addAttribute("recentMovies",recentMovies);
-        model.addAttribute("client",client);
-        return "yourprofile";
+        model.addAttribute("authenticatedClient", authenticatedClient);
+        model.addAttribute("client", client);
+        return "profile";
     }
     @GetMapping("/searchMenu/{type}/{searched}")
     public String searchMenu(@PathVariable String searched,@PathVariable String type, Model model, Authentication auth){

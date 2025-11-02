@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Your Profile</title>
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/yourprofile.css">
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/css/profile.css">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <script src="/js/yourprofile.js" defer></script>
+  <script src="/js/profile.js" defer></script>
 </head>
 <body>
 <div class="top-container">
@@ -50,6 +50,7 @@
       <span class="detail" th:text="${#temporals.year(client.joinedDate)}"></span>
     </i>
   </div>
+  <button th:if="${client.id!=authenticatedClient.id}" class="follow-button">Follow</button>
   <div class="follow-stats">
     <div class="follow-item">
       <span th:text="${client.followers.size()}" class="follow-number"></span>

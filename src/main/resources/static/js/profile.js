@@ -8,6 +8,12 @@ searchButton.addEventListener("click", (e) => {
         window.location.href = `/searchMenu/movies/${encodeURIComponent(query)}`;
     }
 });
+const followButton=document.querySelector(".follow-button")
+followButton.addEventListener("click",(e)=>{
+    e.preventDefault();
+
+
+})
 function openEditModal() {
     const modal = document.getElementById('edit-modal');
     modal.style.display = 'block';

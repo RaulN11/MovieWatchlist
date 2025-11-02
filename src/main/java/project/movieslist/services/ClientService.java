@@ -31,7 +31,9 @@ public class ClientService implements UserDetailsService {
     public Optional<Client> getUserByUsername(String username){
         return clientRepository.findByUsername(username);
     }
-
+    public Optional<Client> getUserById(String id){
+        return clientRepository.findById(id);
+    }
     public List<String> getAllUsernames() {
         return clientRepository.findAll().stream()
                 .map(Client::getUsername)
