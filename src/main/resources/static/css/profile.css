@@ -68,6 +68,10 @@
     margin-top: 2px;
     border-radius: 25px;
 }
+.follow-button:hover{
+    box-shadow: 0 8px 20px rgba(113, 10, 66, 0.2);
+    color: white;
+}
 .follow-stats {
     display: flex;
     align-items: center;
@@ -169,6 +173,28 @@
 p{
     margin-top:10px;
     margin-bottom: 10px;
+}
+.logout-button{
+    width: 200px;
+    height: 50px;
+    align-self: center;
+    justify-self: center;
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+    border: #710a42 1px solid;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(131, 143, 154, 0.7);
+    margin-top: 2px;
+    border-radius: 25px;
+}
+.logout-button:hover{
+    box-shadow: 0 8px 20px rgba(113, 10, 66, 0.2);
+    color: white;
+}
+.logout-form{
+    align-self: center;
+    margin-bottom: 20px;
 }
 .edit-profile-btn{
     position: absolute;

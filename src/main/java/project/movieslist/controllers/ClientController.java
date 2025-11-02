@@ -58,7 +58,17 @@ public class ClientController {
     @PostMapping("/follow/{username}")
     public Client follow(@PathVariable String username, Authentication auth) {
         String username1 = auth.getName();
-        return clientService.addToFollowing(username1,username);
+        Optional<Client> authenticatedClientOpt = clientService.getUserByUsername(username1);
+        Client authenticatedClient = authenticatedClientOpt.orElseThrow(() -> new RuntimeException("Authenticated client not found"));
+
+        // Check if already following
+        if (authenticatedClient.getFollowing().contains(username)) {
+            // Unfollow
+            return clientService.removeFromFollowing(username1, username);
+        } else {
+            // Follow
+            return clientService.addToFollowing(username1, username);
+        }
     }
     @PostMapping("/addreview/{tid}")
     public Movie addReview(@RequestBody Review review, @PathVariable Integer tid, Authentication auth) {

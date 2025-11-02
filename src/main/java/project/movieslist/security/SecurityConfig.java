@@ -71,6 +71,13 @@ public class SecurityConfig {
                     httpForm.defaultSuccessUrl("/homepage");
                     httpForm.failureHandler(authenticationFailureHandler());
                 })
+                .logout(logout-> {
+                    logout.logoutUrl("/logout");
+                    logout.logoutSuccessUrl("/homepage");
+                    logout.invalidateHttpSession(true);
+                    logout.deleteCookies("JSESSIONID");
+                    logout.permitAll();
+                })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers(

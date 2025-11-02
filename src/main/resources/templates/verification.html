@@ -119,7 +119,6 @@
   <p class="title"><span class="first-word">Seen</span><span class="second-word">It</span></p>
 
   <div class="verification-box">
-    <!-- Success State -->
     <div th:if="${success}">
       <div class="success-icon">✓</div>
       <h1>Email Verified!</h1>
@@ -129,7 +128,6 @@
       </div>
     </div>
 
-    <!-- Error State -->
     <div th:if="${error}">
       <div class="error-icon">✗</div>
       <h1>Verification Failed</h1>

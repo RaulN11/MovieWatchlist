@@ -161,8 +161,9 @@ public class ViewController {
                 .map(Map.Entry::getKey)
                 .toList();
         List<Movie> recentMovies=recentTid.stream()
-                        .map(tid->movieService.getMovieByTid(tid).orElse(null))
-                        .toList();
+                .map(tid->movieService.getMovieByTid(tid).orElse(null))
+                .filter(movie -> movie != null)
+                .toList();
 
         String username=auth.getName();
         Optional<Client> clientOpt=clientService.getUserByUsername(username);

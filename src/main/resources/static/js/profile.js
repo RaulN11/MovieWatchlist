@@ -8,12 +8,61 @@ searchButton.addEventListener("click", (e) => {
         window.location.href = `/searchMenu/movies/${encodeURIComponent(query)}`;
     }
 });
-const followButton=document.querySelector(".follow-button")
-followButton.addEventListener("click",(e)=>{
-    e.preventDefault();
+const followButton = document.querySelector(".follow-button");
 
+if (followButton) {
+    // Get the profile user's username from the page
+    const profileUsername = document.querySelector('.username').textContent.trim();
 
-})
+    // Check current follow state from button text
+    const isFollowing = followButton.textContent.trim() === 'Following';
+
+    followButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch(`/client/follow/${profileUsername}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update follow status');
+            }
+
+            // Toggle button state
+            if (followButton.textContent.trim() === 'Following') {
+                followButton.textContent = 'Follow';
+                followButton.style.background = 'linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%)';
+                followButton.style.borderColor = '#710a42';
+                followButton.style.color = 'rgba(131, 143, 154, 0.7)';
+
+                // Update follower count
+                const followerCount = document.querySelector('.follow-number');
+                if (followerCount) {
+                    followerCount.textContent = parseInt(followerCount.textContent) - 1;
+                }
+            } else {
+                followButton.textContent = 'Following';
+                followButton.style.background = '#710a42';
+                followButton.style.borderColor = '#710a42';
+                followButton.style.color = 'white';
+
+                // Update follower count
+                const followerCount = document.querySelector('.follow-number');
+                if (followerCount) {
+                    followerCount.textContent = parseInt(followerCount.textContent) + 1;
+                }
+            }
+
+        } catch (error) {
+            console.error('Error updating follow status:', error);
+            alert('Failed to update follow status. Please try again.');
+        }
+    });
+}
 function openEditModal() {
     const modal = document.getElementById('edit-modal');
     modal.style.display = 'block';

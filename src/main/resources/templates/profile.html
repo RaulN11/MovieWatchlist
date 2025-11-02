@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Your Profile</title>
-  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/css/common.css">
   <link rel="stylesheet" href="/css/profile.css">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -28,7 +28,7 @@
 </div>
 <div class="profile-body">
   <div class="profile-details">
-    <button class="edit-profile-btn" onclick="openEditModal()">
+    <button th:if="${client.id==authenticatedClient.id}" class="edit-profile-btn" onclick="openEditModal()">
       <i class="fa-solid fa-pen" style="color: white;"></i>
     </button>
     <img id="profilePicture"
@@ -50,7 +50,12 @@
       <span class="detail" th:text="${#temporals.year(client.joinedDate)}"></span>
     </i>
   </div>
-  <button th:if="${client.id!=authenticatedClient.id}" class="follow-button">Follow</button>
+  <button th:if="${client.id!=authenticatedClient.id}"
+          class="follow-button"
+          th:text="${authenticatedClient.following.contains(client.username) ? 'Following' : 'Follow'}"
+          th:style="${authenticatedClient.following.contains(client.username) ? 'background: #710a42; border-color: #710a42; color: white;' : ''}">
+    Follow
+  </button>
   <div class="follow-stats">
     <div class="follow-item">
       <span th:text="${client.followers.size()}" class="follow-number"></span>
@@ -95,6 +100,11 @@
            onerror="this.onerror=null; this.src='https://via.placeholder.com/150x225?text=No+Image';">
     </div>
   </div>
+  <form action="/logout" method="post" class="logout-form">
+    <button th:if="${client.id==authenticatedClient.id}" type="submit" class="logout-button">
+      Log Out
+    </button>
+  </form>
 </div>
 <div id="edit-modal" class="modal">
   <div class="modal-content">

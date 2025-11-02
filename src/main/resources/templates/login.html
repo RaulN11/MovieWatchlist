@@ -13,7 +13,6 @@
     <p class="sub-title">Welcome back to your cinematic journey</p>
     <div class="content">
         <form action="/login" method="post">
-            <!-- Error message display -->
             <div th:if="${param.error}" class="error-message">
                 <p th:text="${session.error != null ? session.error : 'Invalid username or password'}"></p>
             </div>

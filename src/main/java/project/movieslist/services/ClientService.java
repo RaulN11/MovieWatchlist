@@ -231,6 +231,26 @@ public class ClientService implements UserDetailsService {
         clientRepository.save(client2);
         return clientRepository.save(client1);
     }
+
+    public Client removeFromFollowing(String c1, String c2) {
+        Client client1 = clientRepository.findByUsername(c1)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+        Client client2 = clientRepository.findByUsername(c2)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        List<String> followingC1 = client1.getFollowing();
+        if (followingC1 != null) {
+            followingC1.remove(client2.getUsername());
+        }
+
+        List<String> followersc2 = client2.getFollowers();
+        if (followersc2 != null) {
+            followersc2.remove(client1.getUsername());
+        }
+
+        clientRepository.save(client2);
+        return clientRepository.save(client1);
+    }
     public Client addProfilePicture(Client client,String url){
         client.setProfilePicture(url.isEmpty() ? null:url);
         return clientRepository.save(client);

@@ -29,7 +29,7 @@
             <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
         </button>
         <div th:if="${client!=null}">
-            <a href="/yourprofile">
+            <a th:href="'/profile/'+ ${client.id}">
                 <img th:src="${client.profilePicture}"
                      alt="Profile Picture"
                      class="profile-pic"
