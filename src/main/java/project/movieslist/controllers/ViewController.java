@@ -3,6 +3,7 @@ package project.movieslist.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -220,6 +221,19 @@ public class ViewController {
         return "moviesbyactor";
 
     }
-
+    @GetMapping("/chat")
+    public String chat(Model model, Authentication auth){
+        String username=auth.getName();
+        Optional<Client> clientOpt=clientService.getUserByUsername(username);
+        Client client=clientOpt.get();
+        model.addAttribute("client", client);
+        List<String> followingNamesList=client.getFollowing();
+        List<Client> followingList=new ArrayList<>();
+        for(String name: followingNamesList) {
+            followingList.add(clientService.getUserByUsername(name).get());
+        }
+        model.addAttribute("followingList", followingList);
+        return "chat1";
+    }
 
 }

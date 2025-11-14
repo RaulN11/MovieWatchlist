@@ -100,7 +100,8 @@ public class SecurityConfig {
                             "/client/**",
                             "/chat",
                             "/messages/**",
-                            "/users"
+                            "/users",
+                            "/chat"
                     ).authenticated();
                     registry.anyRequest().authenticated();
                 })

@@ -136,3 +136,8 @@ a {
     width: 100%;
     border: none;
 }
+#chat-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}

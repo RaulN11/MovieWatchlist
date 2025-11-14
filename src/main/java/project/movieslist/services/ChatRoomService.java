@@ -2,49 +2,40 @@ package project.movieslist.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import project.movieslist.repositories.ChatRoomRepository;
 import project.movieslist.model.ChatRoom;
+import project.movieslist.repositories.ChatRoomRepository;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
-
     private final ChatRoomRepository chatRoomRepository;
-    public Optional<String> getChatRoomId(String sender, String receiver, boolean createNewRoomIfNotExists){
-        return chatRoomRepository
-                .findBySenderAndReceiver(sender, receiver)
+    public Optional<String> getChatroomId(String senderName, String receiverName, Boolean newIfNotExists) {
+        return chatRoomRepository.findBySenderNameAndReceiverName(senderName, receiverName)
                 .map(ChatRoom::getChatId)
-                .or(() -> {
-                    if(createNewRoomIfNotExists) {
-                        var chatId = createChatId(sender, receiver);
+                .or(()->{
+                   if (newIfNotExists){
+                        var chatId= createChatId(senderName, receiverName);
                         return Optional.of(chatId);
-                    }
-                    return  Optional.empty();
+                   }
+                   return Optional.empty();
                 });
     }
-
-    private String createChatId(String sender, String receiver) {
-        var chatId = String.format("%s_%s", sender, receiver);
-        ChatRoom senderRecipient = ChatRoom
-                .builder()
+    private String createChatId(String senderName, String receiverName) {
+        var chatId=String.format("%s_%s", senderName, receiverName);
+        ChatRoom senderReceiver=ChatRoom.builder()
                 .chatId(chatId)
-                .sender(sender)
-                .receiver(receiver)
+                .senderName(senderName)
+                .receiverName(receiverName)
                 .build();
-
-        ChatRoom recipientSender = ChatRoom
-                .builder()
+        ChatRoom receiverSender=ChatRoom.builder()
                 .chatId(chatId)
-                .sender(receiver)
-                .receiver(sender)
+                .senderName(receiverName)
+                .receiverName(senderName)
                 .build();
-
-        chatRoomRepository.save(senderRecipient);
-        chatRoomRepository.save(recipientSender);
-
+        chatRoomRepository.save(senderReceiver);
+        chatRoomRepository.save(receiverSender);
         return chatId;
     }
 }
-

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/chat1.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <title>Chat</title>
+</head>
+<body>
+<div class="top-container">
+    <a href="/homepage">
+        <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+    </a>
+    <div class="left-side">
+        <div class="nav-links">
+            <a href="/watched/all">DIARY</a>
+            <a href="/watchlist">WATCHLIST</a>
+            <a href="/chat">INBOX</a>
+        </div>
+        <input class="top-nav" type="text" placeholder="Search here...">
+        <button class="search-button">
+            <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+        </button>
+        <a th:href="'/profile/'+ ${client.id}">
+            <img th:src="${client.profilePicture}" alt="Profile Picture" class="profile-pic"
+                 onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
+        </a>
+    </div>
+</div>
+
+<div class="chat-page">
+    <div class="users-window">
+        <div class="messages-title">
+            <p class="title">Messages</p>
+            <p class="status">Online</p>
+        </div>
+        <div th:if="${followingList!=null}" th:each="followingUser:${followingList}" class="user">
+            <img th:src="${folowingUser.profilePicture}" alt="profile" class="small-profile">
+            <div class="name-and-status">
+                <p th:text="${followingUser.username}" class="small-name">Bianca</p>
+                <p class="small-status">Last seen 2h ago</p>
+            </div>
+        </div>
+    </div>
+    <div class="chat-window">
+        <div id="placeholder" class="placeholder-message">
+            <p>Start chatting with your friends!</p>
+        </div>
+        <div id="chat-content" style="display: none">
+            <div class="chatting-user">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc83EeOpsb582CkGfNCPHq0aCU7j7dA6Belw&s" alt="profile pic" class="chatting-user-pic">
+                <p class="chatting-user-name">Bianca</p>
+            </div>
+            <div class="chat-texts">
+            </div>
+            <div class="message-footer">
+                <input  type="text" class="message-field" placeholder="Enter your text here:">
+                <button class="send-button" id="send-button">
+                    <i class="fa-solid fa-paper-plane" style="color: #0f0f1e;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/js/chat1.js" defer></script>
+</html>

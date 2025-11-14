@@ -1,0 +1,203 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.chat-page{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    width: 100%;
+    height: calc(100vh - 70px);
+}
+.users-window{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 300px;
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+    overflow-y: auto;
+    border-right: #838f9a 1px solid;
+}
+.chat-window{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-items: center;
+}
+.chatting-user{
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+    min-width: 100%;
+    border-bottom: #838f9a 1px solid;
+}
+.chatting-user-pic{
+    margin: 30px;
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius: 30px;
+}
+.chatting-user-name{
+    margin-top: 50px;
+}
+.chat-texts{
+    display: flex;
+    flex: 1;
+    background: #1c1c33;
+    overflow-y: auto;
+}
+.chat-texts::-webkit-scrollbar,
+.users-window::-webkit-scrollbar{
+    display: none;
+}
+.user{
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    gap: 25px;
+    margin: 5px;
+    background: rgba(113, 10, 66, 0.1);
+    border: #710a42 1px solid;
+    transition: 0.2s ease-in;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.user:hover {
+    background: rgba(113, 10, 66, 0.2);
+    border-color: rgba(113, 10, 66, 0.4);
+}
+
+.user.active {
+    background: rgba(113, 10, 66, 0.3);
+    border-color: #710a42;
+}
+
+.small-profile{
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    object-fit: cover;
+}
+.messages-title{
+    display: flex;
+    flex-direction: column;
+    border-bottom: #838f9a 1px solid;
+    height: 100px;
+    padding-left: 20px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+}
+.title{
+    font-family: Oswald, sans-serif;
+    color: #710a42;
+    font-size: 36px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.status{
+    font-family: Oswald, sans-serif;
+    color: #838f9a;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.name-and-status{
+    display: flex;
+    flex-direction: column;
+}
+.small-name{
+    font-family: Oswald, sans-serif;
+    color: #dde8f1;
+    font-size: 24px;
+    margin: 0;
+}
+.small-status{
+    font-family: Oswald, sans-serif;
+    color: #838f9a;
+    margin: 0;
+    font-size: 16px;
+}
+.chatting-user-name{
+    font-family: Oswald, sans-serif;
+    font-size: 40px;
+    margin-top: 28px;
+    margin-bottom: 0;
+    height: 80px;
+}
+.message-footer {
+    padding: 20px;
+    background: rgba(15, 15, 30, 0.6);
+    border-top: 1px solid rgba(131, 143, 154, 0.1);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.message-field {
+    flex: 1;
+    padding: 12px 20px;
+    background: rgba(131, 143, 154, 0.1);
+    border: 1px solid rgba(113, 10, 66, 0.3);
+    border-radius: 25px;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+
+}
+
+.message-field:focus {
+    outline: none;
+    border-color: #710a42;
+    background: rgba(131, 143, 154, 0.15);
+}
+
+.message-field::placeholder {
+    color: rgba(131, 143, 154, 0.5);
+    font-size: 14px;
+}
+
+.message-field:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.send-button {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #710a42;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.send-button:hover:not(:disabled) {
+    background: #8f0d52;
+    transform: scale(1.05);
+}
+
+.send-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.placeholder-message{
+    font-family: Oswald,sans-serif;
+    font-size: 50px;
+    letter-spacing: 1px;
+    color: white;
+    text-transform: uppercase;
+    align-content: center;
+    justify-items: center;
+    height: 100%;
+    width: 100%;
+}
