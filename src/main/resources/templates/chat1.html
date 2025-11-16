@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/chat1.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/chat1.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -39,7 +39,7 @@
             <p class="status">Online</p>
         </div>
         <div th:if="${followingList!=null}" th:each="followingUser:${followingList}" class="user">
-            <img th:src="${folowingUser.profilePicture}" alt="profile" class="small-profile">
+            <img th:src="${followingUser.profilePicture}" alt="profile" class="small-profile">
             <div class="name-and-status">
                 <p th:text="${followingUser.username}" class="small-name">Bianca</p>
                 <p class="small-status">Last seen 2h ago</p>
@@ -67,5 +67,10 @@
     </div>
 </div>
 </body>
-<script src="/js/chat1.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script>
+    const currentSender = "[[${client.username}]]";
+</script>
+<script src="/static/js/chat1.js"></script>
 </html>

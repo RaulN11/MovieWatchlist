@@ -45,20 +45,18 @@ public class ViewController {
             Client client = clientOpt.get();
             model.addAttribute("client", client);
         }
-        List<Movie> top6Upcoming =tmDbService.getUpcomingMovies()
+        List<Movie> topUpcoming =tmDbService.getUpcomingMovies()
                 .stream()
-                .limit(6)
                 .toList();
-        var upcomingTitles = top6Upcoming.stream()
+        var upcomingTitles = topUpcoming.stream()
                 .map(Movie::getTitle)
                 .toList();
-        List<Movie> top6Trending =tmDbService.getTrendingMovies()
+        List<Movie> topTrending =tmDbService.getTrendingMovies()
                 .stream()
                 .filter(movie -> !upcomingTitles.contains(movie.getTitle()))
-                .limit(6)
                 .toList();
-        model.addAttribute("trendingMovies", top6Trending);
-        model.addAttribute("upcomingMovies", top6Upcoming);
+        model.addAttribute("trendingMovies", topTrending);
+        model.addAttribute("upcomingMovies", topUpcoming);
         model.addAttribute("currentPath", request.getRequestURI());
         return "homepage";
 
