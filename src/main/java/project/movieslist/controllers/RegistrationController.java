@@ -24,7 +24,7 @@ public class RegistrationController {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping(value = "/signup")
+    @PostMapping( "/signup")
     public ResponseEntity<String> createClient(@RequestBody Client client) {
         Client existingClient=clientRepository.findByEmail(client.getEmail());
         if(existingClient!=null) {

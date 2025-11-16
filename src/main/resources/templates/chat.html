@@ -2,44 +2,78 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Movie Chat</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/chat.css">
-    <script th:inline="javascript">
-        window.currentUser = /*[[${currentUser}]]*/ null;
-    </script>
-    <script src="/js/chat.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <title>Chat</title>
 </head>
 <body>
-<div class="chat-container">
-    <div class="chat-header">
-        <a href="/allmovies" class="back-button">← Back to Movies</a>
-        <h2>Movie Chat System</h2>
-        <span id="currentUserDisplay">Welcome, <span th:text="${currentUser}"></span></span>
+<div class="top-container">
+    <a href="/homepage">
+        <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+    </a>
+    <div class="left-side">
+        <div class="nav-links">
+            <a href="/watched/all">DIARY</a>
+            <a href="/watchlist">WATCHLIST</a>
+            <a href="/chat">INBOX</a>
+        </div>
+        <input class="top-nav" type="text" placeholder="Search here...">
+        <button class="search-button">
+            <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+        </button>
+        <a th:href="'/profile/'+ ${client.id}">
+            <img th:src="${client.profilePicture}" alt="Profile Picture" class="profile-pic"
+                 onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
+        </a>
     </div>
+</div>
 
-    <div class="status" id="connectionStatus">
-        <span class="disconnected">Connecting...</span>
-    </div>
-
-    <div class="users-section">
-        <label for="userSelect">Select user to chat with:</label>
-        <select id="userSelect" class="user-select">
-            <option value="">Choose a user...</option>
-        </select>
-    </div>
-
-    <div class="messages-container" id="messagesContainer">
-        <div style="text-align: center; color: #666; margin-top: 50px;">
-            Select a user to start chatting
+<div class="chat-page">
+    <div class="users-window">
+        <div class="messages-title">
+            <p class="title">Messages</p>
+            <p class="status">Online</p>
+        </div>
+        <div th:if="${followingList!=null}" th:each="followingUser:${followingList}" class="user">
+            <img th:src="${followingUser.profilePicture}" alt="profile" class="small-profile"
+                 onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
+            <div class="name-and-status">
+                <p th:text="${followingUser.username}" class="small-name">Bianca</p>
+                <p class="small-status">Last seen 2h ago</p>
+            </div>
         </div>
     </div>
-
-    <div class="message-input">
-        <input type="text" id="messageInput" placeholder="Type your message..." disabled/>
-        <button onclick="sendMessage()" id="sendButton" disabled>Send</button>
+    <div class="chat-window">
+        <div id="placeholder" class="placeholder-message">
+            <p>Start chatting with your friends!</p>
+        </div>
+        <div id="chat-content" style="display: none">
+            <div class="chatting-user">
+                <img src="" alt="profile pic" class="chatting-user-pic"
+                     onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
+                <p class="chatting-user-name"></p>
+            </div>
+            <div class="chat-texts">
+            </div>
+            <div class="message-footer">
+                <input  type="text" class="message-field" placeholder="Enter your text here:">
+                <button class="send-button" id="send-button">
+                    <i class="fa-solid fa-paper-plane" style="color: #0f0f1e;"></i>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script th:inline="javascript">
+    window.currentSender = /*[[${client.username}]]*/ null;
+    console.log("Current sender:", window.currentSender); // Debug log
+</script>
+<script src="/js/chat.js"></script>
 </html>

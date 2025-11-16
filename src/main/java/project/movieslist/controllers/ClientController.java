@@ -55,9 +55,12 @@ public class ClientController {
         String username=auth.getName();
         return clientService.removeMovieFromLiked(username, tid);
     }
-    @PostMapping("/follow/{username}")
-    public Client follow(@PathVariable String username, Authentication auth) {
+    @PostMapping("/followorunfollow/{username}")
+    public Client followOrUnfollow(@PathVariable String username, Authentication auth) {
         String username1 = auth.getName();
+        if(username.equals(username1)) {
+            throw new RuntimeException("Can not follow yourself");
+        }
         Optional<Client> authenticatedClientOpt = clientService.getUserByUsername(username1);
         Client authenticatedClient = authenticatedClientOpt.orElseThrow(() -> new RuntimeException("Authenticated client not found"));
         if (authenticatedClient.getFollowing().contains(username)) {

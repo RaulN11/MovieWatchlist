@@ -1,206 +1,97 @@
+const users = document.querySelectorAll(".user");
+const placeholder = document.getElementById("placeholder");
+const chatContent = document.getElementById("chat-content");
 let stompClient = null;
-let currentUser = window.currentUser;
-let selectedUser = null;
-
+let currentReceiver = null;
+let currentSender = window.currentSender;
 
 function connect() {
-    if (!currentUser) {
-        console.error('No current user found');
-        updateConnectionStatus(false);
-        return;
-    }
-
     const socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
+    stompClient.connect({}, () => {
+        console.log("WebSocket connected");
 
-    stompClient.connect({}, function(frame) {
-        updateConnectionStatus(true);
-        stompClient.subscribe('/user/queue/messages', function(message) {
+        // Subscribe to incoming messages
+        stompClient.subscribe(`/user/${currentSender}/queue/messages`, (message) => {
             try {
                 const chatNotification = JSON.parse(message.body);
-                if (chatNotification.sender !== currentUser) {
-                    if (selectedUser === chatNotification.sender) {
-                        displayMessage(chatNotification.sender, chatNotification.content, false);
-                    } else {
-                        showNewMessageNotification(chatNotification.sender);
-                    }
+                console.log("Received message:", chatNotification);
+                if (chatNotification.senderName === currentReceiver) {
+                    displayIncomingMessage(chatNotification);
                 }
             } catch (e) {
                 console.error('Error parsing message:', e);
             }
         });
-
-
-        stompClient.subscribe('/topic/public', function(message) {
-        });
-
-        loadUsers();
-    }, function(error) {
-        updateConnectionStatus(false);
-        setTimeout(connect, 5000);
     });
 }
+connect();
 
-function updateConnectionStatus(connected) {
-    const statusElement = document.getElementById('connectionStatus');
-    statusElement.innerHTML = connected
-        ? '<span class="connected">✓ Connected</span>'
-        : '<span class="disconnected">✗ Disconnected - Retrying...</span>';
+users.forEach(user => {
+    user.addEventListener("click", () => {
+        placeholder.style.display = "none";
+        chatContent.style.display = "flex";
+        chatContent.style.flexDirection = "column";
+        users.forEach(u => u.classList.remove("active"));
+        user.classList.add("active");
+        const name = user.querySelector(".small-name").textContent;
+        currentReceiver = name;
+        document.querySelector(".chatting-user-name").textContent = name;
+        const profilePic = user.querySelector(".small-profile").src;
+        document.querySelector(".chatting-user-pic").src = profilePic;
+        loadChatHistory(currentSender, currentReceiver);
+    });
+});
+
+function setupSendMessage() {
+    const sendButton = document.getElementById("send-button");
+    const messageField = document.querySelector(".message-field");
+    sendButton.addEventListener("click", () => {
+        const content = messageField.value.trim();
+        if (content === "" || !currentReceiver) return;
+        const chatMessage = {
+            senderName: currentSender,
+            receiverName: currentReceiver,
+            content: content
+        };
+        displayOutgoingMessage(chatMessage);
+        stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+        messageField.value = "";
+    });
+}
+setupSendMessage();
+
+function displayIncomingMessage(message) {
+    if (message.senderName !== currentReceiver) return;
+    const chatTexts = document.querySelector(".chat-texts");
+    const msgDiv = document.createElement("div");
+    msgDiv.classList.add("message", "incoming-message");
+    msgDiv.textContent = message.content;
+    chatTexts.appendChild(msgDiv);
+    chatTexts.scrollTop = chatTexts.scrollHeight;
 }
 
-function showNewMessageNotification(sender) {
+function displayOutgoingMessage(message) {
+    const chatTexts = document.querySelector(".chat-texts");
+    const msgDiv = document.createElement("div");
+    msgDiv.classList.add("message", "outgoing-message");
+    msgDiv.textContent = message.content;
+    chatTexts.appendChild(msgDiv);
+    chatTexts.scrollTop = chatTexts.scrollHeight;
 }
 
-async function loadUsers() {
-    try {
-        const response = await fetch('/users');
-        if (!response.ok) {
-            throw new Error('Failed to load users');
-        }
-
-        const users = await response.json();
-
-        const userSelect = document.getElementById('userSelect');
-        userSelect.innerHTML = '<option value="">Choose a user...</option>';
-
-        users.forEach(username => {
-            if (username !== currentUser) {
-                const option = document.createElement('option');
-                option.value = username;
-                option.textContent = username;
-                userSelect.appendChild(option);
-            }
-        });
-    } catch (error) {
-        console.error('Error loading users:', error);
-    }
-}
-
-function onUserSelect() {
-    const userSelect = document.getElementById('userSelect');
-    selectedUser = userSelect.value;
-    const messageInput = document.getElementById('messageInput');
-    const sendButton = document.getElementById('sendButton');
-    if (selectedUser) {
-        messageInput.disabled = false;
-        sendButton.disabled = false;
-        messageInput.focus();
-        loadChatHistory();
-    } else {
-        messageInput.disabled = true;
-        sendButton.disabled = true;
-        document.getElementById('messagesContainer').innerHTML =
-            '<div style="text-align: center; color: #666; margin-top: 50px;">Select a user to start chatting</div>';
-    }
-}
-
-async function loadChatHistory() {
-    if (!selectedUser) return;
-
-    try {
-        const response = await fetch(`/messages/${currentUser}/${selectedUser}`);
-
-        if (!response.ok) {
-            throw new Error('Failed to load chat history');
-        }
-
-        const messages = await response.json();
-
-        const messagesContainer = document.getElementById('messagesContainer');
-        messagesContainer.innerHTML = '';
-
-        if (messages.length === 0) {
-            messagesContainer.innerHTML = '<div style="text-align: center; color: #666;">No messages yet. Start the conversation!</div>';
-        } else {
-            messages.forEach(message => {
-                displayMessage(message.sender, message.content, message.sender === currentUser);
+function loadChatHistory(sender, receiver) {
+    fetch(`/messages/${sender}/${receiver}`)
+        .then(res => res.json())
+        .then(messages => {
+            const chatTexts = document.querySelector(".chat-texts");
+            chatTexts.innerHTML = "";
+            messages.forEach(msg => {
+                if (msg.senderName === sender) {
+                    displayOutgoingMessage(msg);
+                } else {
+                    displayIncomingMessage(msg);
+                }
             });
-        }
-
-        scrollToBottom();
-    } catch (error) {
-        console.error('Error loading chat history:', error);
-    }
-}
-
-function displayMessage(sender, content, isSent) {
-    const messagesContainer = document.getElementById('messagesContainer');
-
-    if (messagesContainer.innerHTML.includes('No messages yet') || messagesContainer.innerHTML.includes('Select a user')) {
-        messagesContainer.innerHTML = '';
-    }
-
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
-
-    const senderDiv = document.createElement('div');
-    senderDiv.className = 'message-sender';
-    senderDiv.textContent = isSent ? 'You' : sender;
-
-    const contentDiv = document.createElement('div');
-    contentDiv.textContent = content;
-
-    messageDiv.appendChild(senderDiv);
-    messageDiv.appendChild(contentDiv);
-    messagesContainer.appendChild(messageDiv);
-
-    scrollToBottom();
-}
-
-function sendMessage() {
-    const messageInput = document.getElementById('messageInput');
-    const content = messageInput.value.trim();
-
-    if (!content || !selectedUser || !stompClient || !currentUser) {
-        console.error('Cannot send message:', {
-            content: !!content,
-            selectedUser: !!selectedUser,
-            stompClient: !!stompClient,
-            currentUser: !!currentUser
         });
-        return;
-    }
-
-    const chatMessage = {
-        sender: currentUser,
-        receiver: selectedUser,
-        content: content,
-        timestamp: new Date().toISOString()
-    };
-
-    try {
-        stompClient.send('/app/chat', {}, JSON.stringify(chatMessage));
-        displayMessage(currentUser, content, true);
-        messageInput.value = '';
-    } catch (error) {
-        console.error('Error sending message:', error);
-    }
 }
-
-function scrollToBottom() {
-    const messagesContainer = document.getElementById('messagesContainer');
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
-
-document.getElementById('userSelect').addEventListener('change', onUserSelect);
-
-document.getElementById('messageInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    if (currentUser) {
-        connect();
-    } else {
-        console.error('No current user available');
-        updateConnectionStatus(false);
-    }
-});
-window.addEventListener('beforeunload', function() {
-    if (stompClient) {
-        stompClient.disconnect();
-    }
-});

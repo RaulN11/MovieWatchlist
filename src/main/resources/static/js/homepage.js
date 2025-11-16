@@ -13,5 +13,5 @@ loginButton.addEventListener("click", (e)=>{
     window.location.href='/login';
 })
 registerButton.addEventListener("click", (e)=>{
-    window.location.href='/req/signup';
+    window.location.href='/signup';
 })
