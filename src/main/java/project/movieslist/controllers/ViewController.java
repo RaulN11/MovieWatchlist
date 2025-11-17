@@ -200,6 +200,7 @@ public class ViewController {
         switch (type.toLowerCase()){
             case "movies" -> model.addAttribute("movies", tmDbService.fetchMoviesByTitle(searched));
             case "actors" -> model.addAttribute("actors", tmDbService.fetchActorsByName(searched));
+            case "directors" -> model.addAttribute("directors", tmDbService.fetchDirectorsByName(searched));
         }
         model.addAttribute("searched", searched);
 

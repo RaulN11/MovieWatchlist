@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import project.movieslist.configurations.TMDbConfig;
 import project.movieslist.model.Actor;
+import project.movieslist.model.Director;
 import project.movieslist.model.Movie;
 
 import java.util.ArrayList;
@@ -244,6 +245,8 @@ public class TMDbService {
         for (Map<String, Object> result : results) {
             Integer actorId=(Integer)result.get("id");
             Map<String, Object> details=fetchActorDetails(actorId);
+            String knownForDepart=(String)details.get("known_for_department");
+            if(!knownForDepart.equalsIgnoreCase("Acting")) continue;
             Actor actor = new Actor();
             actor.setId((Integer) result.get("id"));
             actor.setFullName((String) result.get("name"));
@@ -266,6 +269,49 @@ public class TMDbService {
                         .path("/person/{id}")
                         .queryParam("api_key",tmDbConfig.getApiKey())
                         .build(actorId))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+    }
+    public List<Director> fetchDirectorsByName(String name) {
+        Map<String, Object> response=webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/search/person")
+                        .queryParam("api_key", tmDbConfig.getApiKey())
+                        .queryParam("query",name)
+                        .build())
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+        List<Map<String, Object>> results = (List<Map<String, Object>>) response.get("results");
+        if (results.isEmpty()) return null;
+        List<Director> directors = new ArrayList<>();
+        for (Map<String, Object> result : results) {
+            Integer directorId=(Integer)result.get("id");
+            Map<String,Object> details=fetchDirectorDetails(directorId);
+            String knownForDepart=(String)details.get("known_for_department");
+            if(!knownForDepart.equalsIgnoreCase("Directing")) continue;
+            Director director = new Director();
+            director.setId((Integer) result.get("id"));
+            director.setFullName((String) result.get("name"));
+            director.setPicture((String) result.get("profile_path"));
+            director.setBirthDate((String) details.getOrDefault("birthday", null));
+            director.setBirthPlace((String) details.getOrDefault("place_of_birth", null));
+            director.setPopularity((Double) details.getOrDefault("popularity", 0));
+            directors.add(director);
+        }
+        List<Director> sortedDirectors=directors.stream()
+                .sorted(Comparator.comparing(Director::getPopularity).reversed())
+                .limit(15)
+                .collect(Collectors.toList());
+        return sortedDirectors;
+    }
+    public Map<String, Object> fetchDirectorDetails(Integer directorId){
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/person/{id}")
+                        .queryParam("api_key", tmDbConfig.getApiKey())
+                        .build(directorId))
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();

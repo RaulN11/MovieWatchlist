@@ -96,7 +96,7 @@
     box-shadow: 0 4px 15px rgba(113, 10, 66, 0.3);
 }
 
-.movie-result-info {
+.result-info{
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -145,19 +145,14 @@
     color: #4444ba;
     margin-top: 5px;
 }
-.actor-result-birthdate{
+.result-birthdate{
     font-family: 'Oswald', sans-serif;
     font-size: 18px;
     color: #838f9a;
     font-style: italic;
 }
-.actor-result-movies{
-    font-family: 'Oswald', sans-serif;
-    font-size: 16px;
-    color: #4444ba;
-    margin-top: 5px;
-}
-.actor-result-birthplace{
+
+.result-birthplace{
     font-family: 'Oswald', sans-serif;
     font-size: 14px;
     color: rgba(131, 143, 154, 0.8);
