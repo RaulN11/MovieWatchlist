@@ -11,4 +11,8 @@ public class Actor {
     private Integer id;
     private String fullName;
     private String picture;
+    private String birthDate;
+    private Double popularity;
+    private String birthPlace;
+
 }

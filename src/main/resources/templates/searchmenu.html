@@ -9,8 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cossette+Titre:wght@400;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
-    <script src="/js/searchmenu.js" defer></script>
     <title>Title</title>
 </head>
 <body>
@@ -39,45 +39,55 @@
         </div>
     </div>
 </div>
-<div class="containers">
-    <div class="results">
-        <p class="texts">SHOWING RESULTS FOR:</p>
-        <p class="result_text" th:text="${searched}"></p>
-        <div th:if="${movies!=null}" th:each="movie: ${movies}" class="result_container">
-            <hr class="separator">
-            <a th:href="@{'/details/' + ${movie.tid}}">
-                <div class="result">
-                    <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
-                         alt="Movie Poster"
-                         class="result_picture"
-                         onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';">
-                    <p th:text="${movie.title}" class="result_title"></p>
-                    <p th:text="${movie.year}" class="result_year"></p>
+<p class="title">RESULTS FOR <span th:text="${searched}" class="pink"></span></p>
+    <div class="filters-box">
+        <div class="filter-title">SEARCH IN</div>
+        <a th:href="@{'/searchMenu/movies/' + ${searched}}"
+           th:class="'filter-option' + (${type} == 'movies' ? ' active' : '')">
+            <div>MOVIES</div>
+        </a>
+
+        <a th:href="@{'/searchMenu/actors/' + ${searched}}"
+           th:class="'filter-option' + (${type} == 'actors' ? ' active' : '')">
+            <div>ACTORS</div>
+        </a>
+
+        <a th:href="@{'/searchMenu/directors/' + ${searched}}"
+           th:class="'filter-option' + (${type} == 'directors' ? ' active' : '')">
+            <div>DIRECTORS</div>
+        </a>
+
+        <a th:href="@{'/searchMenu/users/' + ${searched}}"
+           th:class="'filter-option' + (${type} == 'users' ? ' active' : '')">
+            <div>USERS</div>
+        </a>
+
+    </div>
+    <div class="results-container">
+        <div th:if="${movies != null}" th:each="movie:${movies}" class="result-card">
+            <img th:src="@{'https://image.tmdb.org/t/p/w780'+${movie.posterPath}}" alt="poster" class="result-poster"
+                 onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s';">
+            <div class="movie-result-info">
+                <p th:text="${movie.title}" class="result-title"></p>
+                <div class="result-meta">
+                    <span th:text="${movie.year}" class="movie-result-year"></span>
+                    <span th:text="${movie.genre}" class="movie-result-genre"></span>
                 </div>
-            </a>
+                <p class="movie-result-director">Directed by <span th:text="${movie.director}"></span></p>
+            </div>
         </div>
-        <div th:if="${actors!=null}" th:each="actor: ${actors}" class="result_container">
-            <hr class="separator">
-                <a th:href="'/moviesbyactor/'+${actor.getFullName()}">
-                    <div class="result">
-                        <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${actor.picture}}"
-                             alt="Actor Picture"
-                             class="result_picture"
-                             onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s';">
-                        <p th:text="${actor.fullName}" class="result_title"></p>
-                    </div>
-                </a>
+        <div th:if="${actors != null}" th:each="actor:${actors}" class="result-card">
+            <img th:src="@{'https://image.tmdb.org/t/p/w780'+${actor.picture}}" alt="poster" class="result-poster"
+                 onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s';">
+            <div class="actor-result-info">
+                <p th:text="${actor.fullName}" class="result-title"></p>
+                <div class="result-meta">
+                    <span th:text="${actor.birthDate}" class="actor-result-birthdate"></span>
+                    <span th:text="${actor.birthPlace}" class="actor-result-birthplace"></span>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="filters">
-        <p class="texts">SEARCH FOR:</p>
-        <a th:href="@{'/searchMenu/movies/' + ${searched}}"><p class="option">Movies</p></a>
-        <a th:href="@{'/searchMenu/actors/' + ${searched}}"><p class="option">Actors</p></a>
-        <p class="option">Directors</p>
-        <p class="option">Users</p>
-    </div>
-</div>
-
-
 </body>
+<script src="/js/searchmenu.js" defer></script>
 </html>

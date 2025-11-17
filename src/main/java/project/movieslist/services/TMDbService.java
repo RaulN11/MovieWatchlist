@@ -242,12 +242,32 @@ public class TMDbService {
 
         List<Actor> actors = new ArrayList<>();
         for (Map<String, Object> result : results) {
+            Integer actorId=(Integer)result.get("id");
+            Map<String, Object> details=fetchActorDetails(actorId);
             Actor actor = new Actor();
             actor.setId((Integer) result.get("id"));
             actor.setFullName((String) result.get("name"));
             actor.setPicture((String) result.get("profile_path"));
+            actor.setBirthDate((String) details.getOrDefault("birthday", null));
+            actor.setPopularity((Double) details.getOrDefault("popularity", 0));
+            actor.setBirthPlace((String) details.getOrDefault("place_of_birth", null));
             actors.add(actor);
         }
-        return actors;
+        List<Actor> sortedActors=actors.stream()
+                .sorted(Comparator.comparing(Actor::getPopularity).reversed())
+                .limit(15)
+                .collect(Collectors.toList());
+
+        return sortedActors;
+    }
+    public Map<String, Object> fetchActorDetails(Integer actorId){
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/person/{id}")
+                        .queryParam("api_key",tmDbConfig.getApiKey())
+                        .build(actorId))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
     }
 }
