@@ -224,3 +224,7 @@ html, body {
     background-color: #838f9a;
     align-self: flex-start;
 }
+.fa-circle, .fa-circle-dot{
+    font-size: 10px;
+    transform: translateY(-2px);
+}

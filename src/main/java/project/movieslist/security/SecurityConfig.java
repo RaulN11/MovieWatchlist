@@ -21,6 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import project.movieslist.services.ClientService;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
@@ -61,6 +64,15 @@ public class SecurityConfig {
             response.sendRedirect("/login?error=true");
         };
     }
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -78,6 +90,10 @@ public class SecurityConfig {
                     logout.deleteCookies("JSESSIONID");
                     logout.permitAll();
                 })
+                .sessionManagement(session-> session
+                    .maximumSessions(1)
+                    .sessionRegistry(sessionRegistry())
+                )
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers(

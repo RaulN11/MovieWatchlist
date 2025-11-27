@@ -42,8 +42,17 @@
             <img th:src="${followingUser.profilePicture}" alt="profile" class="small-profile"
                  onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
             <div class="name-and-status">
-                <p th:text="${followingUser.username}" class="small-name">Bianca</p>
-                <p class="small-status">Last seen 2h ago</p>
+                <p th:text="${followingUser.username}" class="small-name"></p>
+
+                <span th:if="${followingUser.status == T(project.movieslist.model.Client$UserStatus).ONLINE}">
+                    <i class="fa-solid fa-circle" style="color: #63f03d;"></i>
+                    <span class="small-status" style="color: #4CAF50;">Online</span>
+                </span>
+
+                <span th:if="${followingUser.status != T(project.movieslist.model.Client$UserStatus).ONLINE}">
+                    <i class="fa-solid fa-circle-dot" style="color: #909192;"></i>
+                    <span class="small-status" style="color: #838f9a;">Offline</span>
+                </span>
             </div>
         </div>
     </div>
@@ -73,7 +82,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script th:inline="javascript">
     window.currentSender = /*[[${client.username}]]*/ null;
-    console.log("Current sender:", window.currentSender); // Debug log
+    console.log("Current sender:", window.currentSender);
 </script>
 <script src="/js/chat.js"></script>
 </html>

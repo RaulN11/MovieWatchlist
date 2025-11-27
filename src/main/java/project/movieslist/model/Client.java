@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -39,6 +40,7 @@ public class Client implements UserDetails {
     private String country;
     private String instagram;
     private LocalDate joinedDate;
+    private UserStatus status=UserStatus.OFFLINE;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.toString()));
@@ -70,5 +72,9 @@ public class Client implements UserDetails {
     public Double getMovieRating(Movie movie){
         return movieRatings.getOrDefault(movie.getTitle(),0.0);
     }
+    public enum UserStatus {
+        ONLINE, OFFLINE
+    }
+
 
 }

@@ -11,7 +11,6 @@ import project.movieslist.repositories.ClientRepository;
 import project.movieslist.repositories.MovieRepository;
 import project.movieslist.security.ClientSecurity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +37,18 @@ public class ClientService implements UserDetailsService {
         return clientRepository.findAll().stream()
                 .map(Client::getUsername)
                 .collect(Collectors.toList());
+    }
+    public void setUserOnline(String username){
+        Optional<Client> clientOpt = clientRepository.findByUsername(username);
+        Client client = clientOpt.orElseThrow(()->new UsernameNotFoundException("Username not found!"));
+        client.setStatus(Client.UserStatus.ONLINE);
+        clientRepository.save(client);
+    }
+    public void setUserOffline(String username){
+        Optional<Client> clientOpt = clientRepository.findByUsername(username);
+        Client client = clientOpt.orElseThrow(()->new UsernameNotFoundException("Username not found!"));
+        client.setStatus(Client.UserStatus.OFFLINE);
+        clientRepository.save(client);
     }
 
     public Client addMovieToWatched(String username, Integer tid){
