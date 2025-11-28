@@ -233,5 +233,4 @@ public class ViewController {
         model.addAttribute("followingList", followingList);
         return "chat";
     }
-
 }
