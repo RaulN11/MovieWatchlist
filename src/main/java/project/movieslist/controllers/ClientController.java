@@ -1,5 +1,6 @@
 package project.movieslist.controllers;
 
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.security.core.Authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,12 @@ import project.movieslist.model.Client;
 import project.movieslist.model.Movie;
 import project.movieslist.model.Review;
 import project.movieslist.repositories.ClientRepository;
+import project.movieslist.services.AIService;
 import project.movieslist.services.ClientService;
 import project.movieslist.services.MovieService;
+import project.movieslist.services.TMDbService;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,12 +22,15 @@ import java.util.Optional;
 @RequestMapping("/client")
 public class ClientController {
     @Autowired
-    ClientService clientService;
+    private ClientService clientService;
     @Autowired
-    MovieService movieService;
+    private MovieService movieService;
     @Autowired
     private ClientRepository clientRepository;
-
+    @Autowired
+    private AIService aiService;
+    @Autowired
+    private TMDbService tmDbService;
     @PostMapping("/addtowatched/{tid}")
     public Client addWatchedMovie(@PathVariable Integer tid, @RequestParam(required = false) Double rating,
                                   @RequestParam(required = false) String comment, Authentication authentication) {
@@ -118,5 +125,22 @@ public class ClientController {
         Optional<Client> optClient=clientService.getUserByUsername(username);
         Client client=optClient.get();
         return clientService.addCountry(client,country);
+    }
+    @PostMapping("/top3/{place}/{tid}")
+    public Client addToTop3(@PathVariable Integer tid, @PathVariable Integer place, Authentication auth){
+        String username=auth.getName();
+        Optional<Client> optClient=clientService.getUserByUsername(username);
+        Client client=optClient.get();
+        Movie movie=tmDbService.fetchMovieByTid(tid);
+        return clientService.addToTop3(client, movie, place);
+    }
+    @GetMapping("/testai")
+    public String testAi(Authentication auth){
+        String username=auth.getName();
+        Optional<Client> optClient=clientService.getUserByUsername(username);
+        Client client=optClient.get();
+        Map<Integer, Movie> top3= client.getTop3Movies();
+        return aiService.generateRecommendations(top3);
+
     }
 }

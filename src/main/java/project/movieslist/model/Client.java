@@ -27,6 +27,7 @@ public class Client implements UserDetails {
     private List<Movie> watchedMovies=new ArrayList<>();
     private List<Movie> watchList=new ArrayList<>();
     private List<Movie> likedMovies=new ArrayList<>();
+    private Map<Integer,Movie> top3Movies=new HashMap<>(3);
     private List<String> following=new ArrayList<>();
     private List<String> followers=new ArrayList<>();
     private Map<String, Double>movieRatings=new HashMap<>();

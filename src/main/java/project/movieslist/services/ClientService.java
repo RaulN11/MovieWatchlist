@@ -282,4 +282,16 @@ public class ClientService implements UserDetailsService {
         client.setCountry(country.isEmpty() ? null:country);
         return clientRepository.save(client);
     }
+    public Client addToTop3(Client client, Movie movie, Integer place){
+        Map<Integer,Movie> top3=client.getTop3Movies();
+        if(top3.isEmpty()){
+            top3=new HashMap<>();
+        }
+        if(place>3 || place<1){
+            throw new RuntimeException("Not a valid place");
+        }
+        top3.put(place, movie);
+        client.setTop3Movies(top3);
+        return clientRepository.save(client);
+    }
 }
