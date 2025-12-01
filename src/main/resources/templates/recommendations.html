@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Recommendations - SeenIt</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/recommendations.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="top-container">
+    <a href="/homepage">
+        <p><span class="first-word">Seen</span><span class="second-word">It</span></p>
+    </a>
+    <div class="left-side">
+        <div class="nav-links">
+            <a href="/watched/all">DIARY</a>
+            <a href="/watchlist">WATCHLIST</a>
+            <a href="/chat">INBOX</a>
+            <a href="/recommendations">RECOMMENDATIONS</a>
+        </div>
+        <input class="top-nav" type="text" placeholder="Search here...">
+        <button class="search-button">
+            <i class="fa-solid fa-magnifying-glass" style="color: #838f9a;"></i>
+        </button>
+        <a th:href="'/profile/'+ ${client.id}">
+            <img th:src="${client.profilePicture}"
+                 alt="Profile Picture"
+                 class="profile-pic"
+                 onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
+        </a>
+    </div>
+</div>
+
+<div class="hero-section">
+    <div class="hero-background"></div>
+    <div class="hero-content">
+        <div class="ai-badge">
+            <i class="fa-solid fa-brain"></i>
+            <span>AI Powered</span>
+        </div>
+        <h1 class="hero-title">Discover Your Next <span class="pink">Favorite</span></h1>
+        <p class="hero-subtitle">Personalized movie recommendations based on your taste</p>
+    </div>
+</div>
+
+<div class="top3-section">
+    <h2 class="section-title">Your Top 3 <span class="pink">Favorites</span></h2>
+    <div th:if="${client.top3Movies != null && !client.top3Movies.isEmpty()}" class="top3-grid">
+        <div th:if="${client.top3Movies.get(1) != null}" class="top3-card">
+            <div class="rank-badge">1</div>
+            <a th:href="@{'/details/' + ${client.top3Movies.get(1).tid}}">
+                <img th:src="@{'https://image.tmdb.org/t/p/w780' + ${client.top3Movies.get(1).posterPath}}"
+                     th:alt="${client.top3Movies.get(1).title}"
+                     class="top3-poster"
+                     onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';">
+            </a>
+            <h3 class="top3-title" th:text="${client.top3Movies.get(1).title}">Movie Title</h3>
+            <p class="top3-year" th:text="${client.top3Movies.get(1).year}">Year</p>
+        </div>
+        <div th:if="${client.top3Movies.get(2) != null}" class="top3-card">
+            <div class="rank-badge">2</div>
+            <a th:href="@{'/details/' + ${client.top3Movies.get(2).tid}}">
+                <img th:src="@{'https://image.tmdb.org/t/p/w780' + ${client.top3Movies.get(2).posterPath}}"
+                     th:alt="${client.top3Movies.get(2).title}"
+                     class="top3-poster"
+                     onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';">
+            </a>
+            <h3 class="top3-title" th:text="${client.top3Movies.get(2).title}">Movie Title</h3>
+            <p class="top3-year" th:text="${client.top3Movies.get(2).year}">Year</p>
+        </div>
+        <div th:if="${client.top3Movies.get(3) != null}" class="top3-card">
+            <div class="rank-badge">3</div>
+            <a th:href="@{'/details/' + ${client.top3Movies.get(3).tid}}">
+                <img th:src="@{'https://image.tmdb.org/t/p/w780' + ${client.top3Movies.get(3).posterPath}}"
+                     th:alt="${client.top3Movies.get(3).title}"
+                     class="top3-poster"
+                     onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';">
+            </a>
+            <h3 class="top3-title" th:text="${client.top3Movies.get(3).title}">Movie Title</h3>
+            <p class="top3-year" th:text="${client.top3Movies.get(3).year}">Year</p>
+        </div>
+    </div>
+    <div th:if="${client.top3Movies == null || client.top3Movies.isEmpty()}" class="empty-top3">
+        <i class="fa-solid fa-star"></i>
+        <p>You haven't selected your top 3 favorite movies yet.</p>
+        <p class="hint">Add them from your profile to get personalized recommendations!</p>
+    </div>
+</div>
+
+<div class="recommendations-section">
+    <div class="rec-header">
+        <h2 class="section-title">AI <span class="pink">Recommendations</span> For You</h2>
+        <button class="generate-btn" onclick="generateRecommendations()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Generate Recommendations</span>
+        </button>
+    </div>
+
+    <div class="loading-indicator" id="loading">
+        <div class="spinner"></div>
+        <p style="color: #838f9a; font-size: 18px;">Analyzing your taste...</p>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+        <i class="fa-solid fa-film"></i>
+        <h3>No Recommendations Yet</h3>
+        <p>Click "Generate Recommendations" to discover movies tailored to your taste</p>
+    </div>
+
+    <div class="rec-grid" id="recGrid" style="display: none;">
+
+    </div>
+</div>
+
+<script src="/js/recommendations.js"></script>
+</body>
+</html>

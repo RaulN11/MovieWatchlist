@@ -1,3 +1,12 @@
+const searchButton = document.querySelector(".search-button");
+
+searchButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    let query = document.querySelector(".top-nav").value.trim();
+    if (query) {
+        window.location.href = `/searchMenu/movies/${encodeURIComponent(query)}`;
+    }
+});
 const users = document.querySelectorAll(".user");
 const placeholder = document.getElementById("placeholder");
 const chatContent = document.getElementById("chat-content");

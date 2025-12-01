@@ -1,6 +1,7 @@
 package project.movieslist.controllers;
 
 import org.checkerframework.checker.units.qual.C;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +69,7 @@ public class ClientController {
         if(username.equals(username1)) {
             throw new RuntimeException("Can not follow yourself");
         }
-        Optional<Client> authenticatedClientOpt = clientService.getUserByUsername(username1);
-        Client authenticatedClient = authenticatedClientOpt.orElseThrow(() -> new RuntimeException("Authenticated client not found"));
+        Client authenticatedClient = clientService.getUserByUsername(username).get();
         if (authenticatedClient.getFollowing().contains(username)) {
             return clientService.removeFromFollowing(username1, username);
         } else {
@@ -81,66 +81,64 @@ public class ClientController {
         Optional<Movie> optMovie = movieService.getMovieByTid(tid);
         Movie movie = optMovie.orElseThrow(() -> new RuntimeException("Movie not found"));
         String username = auth.getName();
-        Optional<Client> optClient = clientService.getUserByUsername(username);
-        Client client = optClient.orElseThrow(() -> new RuntimeException("Client not found"));
-
+        Client client = clientService.getUserByUsername(username).get();
         Review review1 = new Review();
         review1.setAuthor(client.getUsername());
         review1.setAuthorPicture(client.getProfilePicture());
         review1.setComment(review.getComment());
         review1.setRating(review.getRating());
-
         Map<String, Double> ratings = client.getMovieRatings();
         ratings.put(movie.getTitle(), review1.getRating());
         client.setMovieRatings(ratings);
         clientRepository.save(client);
-
         return movieService.addReviewToMovie(movie, review1);
     }
     @PostMapping("/addpicture")
     public Client addProfilePicture(@RequestBody String url, Authentication auth) {
         String username = auth.getName();
-        Optional<Client> optClient= clientService.getUserByUsername(username);
-        Client client = optClient.get();
+        Client client = clientService.getUserByUsername(username).get();
         return clientService.addProfilePicture(client,url);
     }
     @PostMapping("/addbio")
     public Client addBio(@RequestBody String bio, Authentication auth) {
         String username=auth.getName();
-        Optional<Client> optClient=clientService.getUserByUsername(username);
-        Client client=optClient.get();
+        Client client = clientService.getUserByUsername(username).get();
         return clientService.addBio(client,bio);
 
     }
     @PostMapping("/addcity")
     public Client addCity(@RequestBody String city, Authentication auth) {
         String username=auth.getName();
-        Optional<Client> optClient=clientService.getUserByUsername(username);
-        Client client=optClient.get();
+        Client client = clientService.getUserByUsername(username).get();
         return clientService.addCity(client,city);
     }
     @PostMapping("/addcountry")
     public Client addCountry(@RequestBody String country, Authentication auth) {
         String username=auth.getName();
-        Optional<Client> optClient=clientService.getUserByUsername(username);
-        Client client=optClient.get();
+        Client client = clientService.getUserByUsername(username).get();
         return clientService.addCountry(client,country);
     }
     @PostMapping("/top3/{place}/{tid}")
     public Client addToTop3(@PathVariable Integer tid, @PathVariable Integer place, Authentication auth){
         String username=auth.getName();
-        Optional<Client> optClient=clientService.getUserByUsername(username);
-        Client client=optClient.get();
+        Client client = clientService.getUserByUsername(username).get();
         Movie movie=tmDbService.fetchMovieByTid(tid);
         return clientService.addToTop3(client, movie, place);
     }
     @GetMapping("/testai")
     public String testAi(Authentication auth){
         String username=auth.getName();
-        Optional<Client> optClient=clientService.getUserByUsername(username);
-        Client client=optClient.get();
+        Client client = clientService.getUserByUsername(username).get();
         Map<Integer, Movie> top3= client.getTop3Movies();
         return aiService.generateRecommendations(top3);
+    }
+    @GetMapping("/api/recommendations")
+    public ResponseEntity<List<Movie>> getRecommendations(Authentication auth){
+        String username=auth.getName();
+        Client client = clientService.getUserByUsername(username).get();
+        String aiResponse=aiService.generateRecommendations(client.getTop3Movies());
+        List<Movie> movies= aiService.parseAndFetchMovies(aiResponse);
+        return ResponseEntity.ok(movies);
 
     }
 }

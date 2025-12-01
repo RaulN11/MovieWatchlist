@@ -233,4 +233,11 @@ public class ViewController {
         model.addAttribute("followingList", followingList);
         return "chat";
     }
+    @GetMapping("/recommendations")
+    public String recommendations(Model model, Authentication auth){
+        String username=auth.getName();
+        Client client=clientService.getUserByUsername(username).get();
+        model.addAttribute("client", client);
+        return "recommendations";
+    }
 }

@@ -1,3 +1,12 @@
+const searchButton = document.querySelector(".search-button");
+
+searchButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    let query = document.querySelector(".top-nav").value.trim();
+    if (query) {
+        window.location.href = `/searchMenu/movies/${encodeURIComponent(query)}`;
+    }
+});
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = [
         { id: 'like-button', addUrl: '/client/addtoliked/', removeUrl: '/client/removefromliked/' },
