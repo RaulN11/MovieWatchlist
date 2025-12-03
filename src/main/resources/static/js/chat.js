@@ -1,12 +1,21 @@
 const searchButton = document.querySelector(".search-button");
-
+const searchInput = document.querySelector(".top-nav");
 searchButton.addEventListener("click", (e) => {
     e.preventDefault();
-    let query = document.querySelector(".top-nav").value.trim();
-    if (query) {
-        window.location.href = `/searchMenu/movies/${encodeURIComponent(query)}`;
-    }
+    performSearch();
 });
+searchInput.addEventListener("keypress", (e)=>{
+    if(e.key === "Enter") {
+        e.preventDefault();
+        performSearch();
+    }
+})
+function performSearch(){
+    let query = searchInput.value.trim();
+    if(query){
+        window.location.href= `/searchMenu/movies/${encodeURIComponent(query)}`;
+    }
+}
 const users = document.querySelectorAll(".user");
 const placeholder = document.getElementById("placeholder");
 const chatContent = document.getElementById("chat-content");
@@ -20,7 +29,6 @@ function connect() {
     stompClient.connect({}, () => {
         console.log("WebSocket connected");
 
-        // Subscribe to incoming messages
         stompClient.subscribe(`/user/${currentSender}/queue/messages`, (message) => {
             try {
                 const chatNotification = JSON.parse(message.body);
@@ -55,18 +63,25 @@ users.forEach(user => {
 function setupSendMessage() {
     const sendButton = document.getElementById("send-button");
     const messageField = document.querySelector(".message-field");
-    sendButton.addEventListener("click", () => {
+    sendButton.addEventListener("click", sendMessage);
+    messageField.addEventListener("keypress", (e) => {
+        if(e.key === "Enter"){
+            e.preventDefault();
+            sendMessage();
+        }
+    })
+    function sendMessage(){
         const content = messageField.value.trim();
-        if (content === "" || !currentReceiver) return;
-        const chatMessage = {
-            senderName: currentSender,
-            receiverName: currentReceiver,
-            content: content
+        if(content === "" || !currentReceiver) return;
+        const chatMessage={
+            senderName : currentSender,
+            receiverName : currentReceiver,
+            content : content
         };
         displayOutgoingMessage(chatMessage);
         stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
-        messageField.value = "";
-    });
+        messageField.value="";
+    }
 }
 setupSendMessage();
 

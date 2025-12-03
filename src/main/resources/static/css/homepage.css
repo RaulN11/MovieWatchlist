@@ -4,7 +4,6 @@
     margin-bottom: 80px;
     overflow: hidden;
 }
-
 .welcome-background {
     position: absolute;
     top: 0;
@@ -14,7 +13,6 @@
     background: linear-gradient(135deg, rgba(113, 10, 66, 0.3), rgba(68, 68, 186, 0.3));
     opacity: 0.6;
 }
-
 .welcome-pattern {
     position: absolute;
     top: 0;
@@ -25,7 +23,6 @@
             radial-gradient(circle at 20% 50%, rgba(113, 10, 66, 0.1) 0%, transparent 50%),
             radial-gradient(circle at 80% 80%, rgba(68, 68, 186, 0.1) 0%, transparent 50%);
 }
-
 .welcome-content {
     position: relative;
     z-index: 1;
@@ -34,18 +31,19 @@
     padding: 100px 50px;
     text-align: center;
 }
-
 .welcome-title {
     font-family: 'Oswald', sans-serif;
-    font-size: 72px;
-    color: #fff;
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
     text-transform: uppercase;
-    letter-spacing: 4px;
-    margin-bottom: 20px;
-    animation: fadeInDown 1s ease-out;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, #ffffff 0%, #838f9a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    justify-self: center;
 }
-
 .welcome-subtitle {
     font-family: 'Oswald', sans-serif;
     font-size: 24px;
@@ -53,12 +51,10 @@
     letter-spacing: 2px;
     animation: fadeInUp 1s ease-out 0.3s backwards;
 }
-
 .welcome-subtitle .pink {
     color: #710a42;
     font-weight: 600;
 }
-
 @keyframes fadeInDown {
     from {
         opacity: 0;
@@ -91,132 +87,126 @@
     margin-right: 200px;
     margin-bottom: 0;
 }
-    .movie-poster {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        border-radius: 5px;
-        transition:  border 0.3s ease;
-        border:2px solid transparent;
-    }
-    .movie-poster:hover{
-        border-color: rgb(131, 143, 154);
-    }
-    .movie-card {
-        display: flex;
+.movie-poster {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    transition:  border 0.3s ease;
+    border:2px solid transparent;
+}
+.movie-poster:hover{
+    border-color: rgb(131, 143, 154);
+}
+.movie-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+p {
+    color: white;
+    margin-top: 80px;
+    margin-left: 50px;
+}
+.section-title{
+    font-family: 'Oswald', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffffff 0%, #838f9a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    justify-self: center;
+}
+.pink{
+    color: #710a42;
+    font-family: "Oswald", serif;
+}
+.login-section {
+    background: rgba(113, 10, 66, 0.1);
+    border: 1px solid rgba(113, 10, 66, 0.2);
+    border-radius: 12px;
+    padding: 60px;
+    text-align: center;
+    margin-bottom: 100px;
+}
+.login-section .section-title {
+    justify-content: center;
+    margin-bottom: 30px;
+}
+.button-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+}
+.btn {
+    padding: 12px 40px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border: 2px solid;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Oswald", sans-serif;
+    text-transform: uppercase;
+}
+.login-button {
+    background: #838f9a;
+    border-color: #838f9a;
+    color: #0f0f1e;
+}
+.login-button:hover {
+    background: #9fa1a2;
+    border-color: #9fa1a2;
+    box-shadow: 0 8px 20px rgba(131, 143, 154, 0.2);
+}
+.register-button {
+    background: transparent;
+    border-color: #710a42;
+    color: #710a42;
+}
+.register-button:hover {
+    background: #710a42;
+    color: white;
+    box-shadow: 0 8px 20px rgba(113, 10, 66, 0.2);
+}
+@media (max-width: 768px) {
+    .top-container {
+        padding: 15px 30px;
         flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    p {
-        color: white;
-        margin-top: 80px;
-        margin-left: 50px;
-    }
-    .section-title{
-        color: rgba(255, 255, 255, 0.8);
-        font-family: "Oswald", serif;
-        text-align: center;
-        font-size: 36px;
-        font-weight: 400;
-        letter-spacing: 1px;
-        margin-top: 40px;
-        margin-bottom: 10px;
-        line-height: 1.2;
-        text-transform: uppercase;
-    }
-    .pink{
-        color: #710a42;
-        font-family: "Oswald", serif;
-    }
-    .login-section {
-        background: rgba(113, 10, 66, 0.1);
-        border: 1px solid rgba(113, 10, 66, 0.2);
-        border-radius: 12px;
-        padding: 60px;
-        text-align: center;
-        margin-bottom: 100px;
+        gap: 15px;
     }
 
-    .login-section .section-title {
-        justify-content: center;
-        margin-bottom: 30px;
+    .main-content {
+        padding: 40px 30px;
+    }
+
+    .search-bar input {
+        width: 100px;
+    }
+
+    .movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+    }
+
+    .section-title {
+        font-size: 24px;
+    }
+
+    .login-section {
+        padding: 40px 20px;
     }
 
     .button-group {
-        display: flex;
-        gap: 20px;
-        justify-content: center;
-        margin-top: 30px;
+        flex-direction: column;
     }
-
-    .btn {
-        padding: 12px 40px;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 1px;
-        border: 2px solid;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: "Oswald", sans-serif;
-        text-transform: uppercase;
-    }
-
-    .login-button {
-        background: #838f9a;
-        border-color: #838f9a;
-        color: #0f0f1e;
-    }
-
-    .login-button:hover {
-        background: #9fa1a2;
-        border-color: #9fa1a2;
-        box-shadow: 0 8px 20px rgba(131, 143, 154, 0.2);
-    }
-
-    .register-button {
-        background: transparent;
-        border-color: #710a42;
-        color: #710a42;
-    }
-
-    .register-button:hover {
-        background: #710a42;
-        color: white;
-        box-shadow: 0 8px 20px rgba(113, 10, 66, 0.2);
-    }
-    @media (max-width: 768px) {
-        .top-container {
-            padding: 15px 30px;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .main-content {
-            padding: 40px 30px;
-        }
-
-        .search-bar input {
-            width: 100px;
-        }
-
-        .movies-grid {
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-        }
-
-        .section-title {
-            font-size: 24px;
-        }
-
-        .login-section {
-            padding: 40px 20px;
-        }
-
-        .button-group {
-            flex-direction: column;
-        }
-    }
+}
 

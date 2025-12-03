@@ -38,13 +38,16 @@
         </a>
     </div>
 </div>
-<p class="title">Your diary</p>
-<p class="sub-title">Movies you've watched recently</p>
-<div class="buttons">
-    <button class="filter-btn active">All</button>
-    <button class="filter-btn">Liked</button>
-    <button class="filter-btn">Highest Rating</button>
-    <button class="filter-btn">Lowest Rating</button>
+<div class="hero-section">
+    <div class="hero-background"></div>
+    <p class="title">Your diary</p>
+    <p class="sub-title">Movies you've watched recently</p>
+    <div class="buttons">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Liked</button>
+        <button class="filter-btn">Highest Rating</button>
+        <button class="filter-btn">Lowest Rating</button>
+    </div>
 </div>
 <div class="movie-grid">
    <div th:each="movie:${movies}" class="movie-card">

@@ -93,12 +93,16 @@ html, body {
     padding-bottom: 5px;
 }
 .title{
-    font-family: Oswald, sans-serif;
-    color: #710a42;
-    font-size: 36px;
-    margin: 0;
+    font-family: 'Oswald', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    background: linear-gradient(135deg, #ffffff 0%, #838f9a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
 }
 .status{
     font-family: Oswald, sans-serif;

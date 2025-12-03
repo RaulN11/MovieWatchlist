@@ -235,7 +235,6 @@
 
 .rec-card:hover {
     border-color: #710a42;
-    transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(113, 10, 66, 0.3);
 }
 

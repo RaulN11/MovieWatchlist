@@ -38,16 +38,19 @@
         </a>
     </div>
 </div>
-<p class="title">Your watchlist</p>
-<p class="sub-title">Movies you're planning to watch</p>
-<div class="count-container">
-    <div class="counts">
-        <p th:text="${movies.size()}" class="number"></p>
-        <p class="text">Total Movies</p>
-    </div>
-    <div class="counts">
-        <p th:text="${runtime}+'h'" class="number"></p>
-        <p class="text">Est. Runtime</p>
+<div class="hero-section">
+    <div class="hero-background"></div>
+    <p class="title">Your watchlist</p>
+    <p class="sub-title">Movies you're planning to watch</p>
+    <div class="count-container">
+        <div class="counts">
+            <p th:text="${movies.size()}" class="number"></p>
+            <p class="text">Total Movies</p>
+        </div>
+        <div class="counts">
+            <p th:text="${runtime}+'h'" class="number"></p>
+            <p class="text">Est. Runtime</p>
+        </div>
     </div>
 </div>
 <div class="movie-grid">

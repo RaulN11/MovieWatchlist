@@ -69,7 +69,7 @@
         <div th:if="${movies != null}" th:each="movie:${movies}" class="result-card">
             <a th:href="@{'/details/'+ ${movie.tid}}">
                 <img th:src="@{'https://image.tmdb.org/t/p/w780'+${movie.posterPath}}" alt="poster" class="result-poster"
-                     onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s';">
+                     onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';">
             </a>
             <div class="result-info">
                 <p th:text="${movie.title}" class="result-title"></p>

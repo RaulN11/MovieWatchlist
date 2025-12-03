@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Your Profile</title>
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/profile.css">
+  <link rel="stylesheet" href="/static/css/common.css">
+  <link rel="stylesheet" href="/static/css/profile.css">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <script src="/js/profile.js" defer></script>
+
 </head>
 <body>
 <div class="top-container">
@@ -28,52 +28,58 @@
   </div>
 </div>
 <div class="profile-body">
-  <div class="profile-details">
-    <button th:if="${client.id==authenticatedClient.id}" class="edit-profile-btn" onclick="openEditModal()">
-      <i class="fa-solid fa-pen" style="color: white;"></i>
-    </button>
-    <img id="profilePicture"
-         th:src="${client.profilePicture}"
-         alt="profile pic"
-         class="profile-picture"
-         onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
-    <p class="username" th:text="${client.username}"></p>
-    <p class="bio" id="bioText" th:text="${client.bio}">.</p>
-    <i th:if="${client.city!=null || client.country!=null}" class="fa-solid fa-location-dot" style="color: #710a42;">
-      <span class="detail" id="locationText" th:text="${client.city + ', ' + client.country}"></span>
-    </i>
-    <i th:if="${client.instagram!=null}" class="fa-brands fa-instagram" style="color: #710a42;">
-      <span class="detail" th:text="${client.instagram}"></span>
-    </i>
-    <i class="fa-solid fa-calendar" style="color: #710a42;">
-      <span class="detail" th:text="${#temporals.day(client.joinedDate)}"></span>
-      <span class="detail" th:text="${#temporals.monthNameShort(client.joinedDate)}"></span>
-      <span class="detail" th:text="${#temporals.year(client.joinedDate)}"></span>
-    </i>
-  </div>
-  <button th:if="${client.id!=authenticatedClient.id}"
-          class="follow-button"
-          th:text="${authenticatedClient.following.contains(client.username) ? 'Following' : 'Follow'}"
-          th:style="${authenticatedClient.following.contains(client.username) ? 'background: #710a42; border-color: #710a42; color: white;' : ''}">
-    Follow
-  </button>
-  <div class="follow-stats">
-    <div class="follow-item">
-      <span th:text="${client.followers.size()}" class="follow-number"></span>
-      <span class="follow-label">Followers</span>
+  <div class="hero-section">
+    <div class="hero-background"></div>
+    <div class="profile-details">
+      <button th:if="${client.id==authenticatedClient.id}" class="edit-profile-btn" onclick="openEditModal()">
+        <i class="fa-solid fa-pen" style="color: white;"></i>
+      </button>
+      <img id="profilePicture"
+           th:src="${client.profilePicture}"
+           alt="profile pic"
+           class="profile-picture"
+           onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';">
+      <p class="username" th:text="${client.username}"></p>
+      <p class="bio" id="bioText" th:text="${client.bio}">.</p>
+      <i th:if="${client.city!=null || client.country!=null}" class="fa-solid fa-location-dot" style="color: #710a42;">
+        <span class="detail" id="locationText" th:text="${client.city + ', ' + client.country}"></span>
+      </i>
+      <i th:if="${client.instagram!=null}" class="fa-brands fa-instagram" style="color: #710a42;">
+        <span class="detail" th:text="${client.instagram}"></span>
+      </i>
+      <i class="fa-solid fa-calendar" style="color: #710a42;">
+        <span class="detail" th:text="${#temporals.day(client.joinedDate)}"></span>
+        <span class="detail" th:text="${#temporals.monthNameShort(client.joinedDate)}"></span>
+        <span class="detail" th:text="${#temporals.year(client.joinedDate)}"></span>
+      </i>
     </div>
-    <div class="follow-divider"></div>
-    <div class="follow-item">
-      <span th:text="${client.following.size()}" class="follow-number"></span>
-      <span class="follow-label">Following</span>
+    <div class="follow-section">
+      <button th:if="${client.id!=authenticatedClient.id}"
+              class="follow-button"
+              th:text="${authenticatedClient.following.contains(client.username) ? 'Following' : 'Follow'}"
+              th:style="${authenticatedClient.following.contains(client.username) ? 'background: #710a42; border-color: #710a42; color: white;' : ''}">
+        Follow
+      </button>
+      <div class="follow-stats">
+        <div class="follow-item">
+          <span th:text="${client.followers.size()}" class="follow-number"></span>
+          <span class="follow-label">Followers</span>
+        </div>
+        <div class="follow-divider"></div>
+        <div class="follow-item">
+          <span th:text="${client.following.size()}" class="follow-number"></span>
+          <span class="follow-label">Following</span>
+        </div>
+      </div>
     </div>
+
   </div>
   <div class="favourite-movies">
     <p class="title">Your <span class="pink">favourite</span> movies</p>
     <div class="movies">
-      <img src="https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="1st" class="movie">
-      <img src="https://m.media-amazon.com/images/M/MV5BMTgzMTEwZjQtMjI2NS00NDEwLWFjNWEtNTNlNzdhODBhMDE0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="2nd" class="movie">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcyJYd_sWzQdj87gwIiDRpi6JtzfY6-XLG-w&s" alt="3rd" class="movie">
+      <img src="https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" id="1st" class="movie">
+      <img src="https://m.media-amazon.com/images/M/MV5BMTgzMTEwZjQtMjI2NS00NDEwLWFjNWEtNTNlNzdhODBhMDE0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" id="2nd" class="movie">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcyJYd_sWzQdj87gwIiDRpi6JtzfY6-XLG-w&s" id="3rd" class="movie">
     </div>
   </div>
   <p class="title">Your <span class="pink">stats</span></p>
@@ -141,5 +147,39 @@
     </div>
   </div>
 </div>
+<div id="top3-modal" class="modal1">
+  <div class="top3-modal-content">
+    <div class="modal-header">
+      <p class="modal-title">Select a movie</p>
+      <div class="close-btn" onclick="closeTop3Modal()">&times;</div>
+    </div>
+<!--    <div class="search-section">-->
+<!--      <input class="top3-bar" placeholder="Search for a movie">-->
+<!--      <i class="fa-solid fa-magnifying-glass"></i>-->
+<!--    </div>-->
+    <div class="movie-grid">
+<!--      <img th:each="movie : ${authenticatedClient.watchedMovies}"-->
+<!--           th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"-->
+<!--           class="movie-poster" alt="poster">-->
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
+
+    </div>
+    <div class="modal-buttons">
+      <button class="btn cancel-btn" type="button" onclick="closeTop3Modal()">Cancel</button>
+      <button class="btn save-btn" type="button" onclick="saveTop3()">Save Changes</button>
+    </div>
+  </div>
+</div>
 </body>
+<script src="/static/js/profile.js" defer></script>
 </html>

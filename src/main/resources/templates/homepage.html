@@ -53,9 +53,7 @@
         </p>
     </div>
 </div>
-<p class="section-title">
-    <span class="pink">Trending</span> this week
-</p>
+<p class="section-title">Trending this week</p>
 <div class="movies-grid">
     <div th:each="trendingMovie : ${trendingMovies}" class="movie-card">
         <a th:href="@{'/details/' + ${trendingMovie.tid}}">
@@ -69,9 +67,7 @@
 </div>
 
 <div th:if="${client==null}" class="login-section">
-    <div class="section-title">
-        <span class="pink">New</span> here? Or not <span class="pink">connected</span>?
-    </div>
+    <div class="section-title">New here? Or not connected?</div>
     <div class="button-group">
         <button id="login" class="btn login-button">Log In</button>
         <button id="register" class="btn register-button">Register</button>

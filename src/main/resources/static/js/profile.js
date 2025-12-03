@@ -1,13 +1,21 @@
 const searchButton = document.querySelector(".search-button");
-
+const searchInput = document.querySelector(".top-nav");
 searchButton.addEventListener("click", (e) => {
     e.preventDefault();
-    let query = document.querySelector(".top-nav").value.trim();
-    console.log(query);
-    if (query) {
-        window.location.href = `/searchMenu/movies/${encodeURIComponent(query)}`;
-    }
+    performSearch();
 });
+searchInput.addEventListener("keypress", (e)=>{
+    if(e.key === "Enter") {
+        e.preventDefault();
+        performSearch();
+    }
+})
+function performSearch(){
+    let query = searchInput.value.trim();
+    if(query){
+        window.location.href= `/searchMenu/movies/${encodeURIComponent(query)}`;
+    }
+}
 const followButton = document.querySelector(".follow-button");
 
 if (followButton) {
@@ -124,7 +132,6 @@ async function saveProfile() {
             locationEl.textContent = country;
             if (locationIcon) locationIcon.style.display = 'flex';
         } else {
-            // Both are empty - hide the entire location line
             if (locationIcon) locationIcon.style.display = 'none';
         }
         if (profilePic) {
@@ -147,3 +154,33 @@ async function saveProfile() {
         alert('Failed to update profile. Please try again.');
     }
 }
+
+
+
+const firstPlace = document.getElementById('1st');
+const secondPlace= document.getElementById('2nd');
+const thirdPlace = document.getElementById('3rd');
+firstPlace.addEventListener("click", (e) => {
+    const modal = document.getElementById("top3-modal");
+    modal.style.display = 'flex';
+
+})
+const moviePosters = document.querySelectorAll('.movie-grid .movie-poster');
+function setPosterActive(e){
+    const activePoster=e.currentTarget;
+    moviePosters.forEach(poster => {
+        poster.classList.remove('active');
+    })
+    activePoster.classList.add('active');
+}
+moviePosters.forEach(poster => {
+    poster.addEventListener('click', setPosterActive);
+})
+function closeTop3Modal(){
+    document.getElementById('top3-modal').style.display = 'none';
+    const moviePosters=document.querySelectorAll('.movie-grid .movie-poster');
+    moviePosters.forEach(poster =>{
+        poster.classList.remove('active');
+    })
+}
+function saveTop3

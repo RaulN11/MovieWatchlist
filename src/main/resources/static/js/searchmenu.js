@@ -1,10 +1,18 @@
 const searchButton = document.querySelector(".search-button");
-
+const searchInput = document.querySelector(".top-nav");
 searchButton.addEventListener("click", (e) => {
     e.preventDefault();
-    let query = document.querySelector(".top-nav").value.trim();
-    console.log(query);
-    if (query) {
-        window.location.href = `/searchMenu/movies/${encodeURIComponent(query)}`;
-    }
+    performSearch();
 });
+searchInput.addEventListener("keypress", (e)=>{
+    if(e.key === "Enter") {
+        e.preventDefault();
+        performSearch();
+    }
+})
+function performSearch(){
+   let query = searchInput.value.trim();
+   if(query){
+       window.location.href= `/searchMenu/movies/${encodeURIComponent(query)}`;
+   }
+}

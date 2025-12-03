@@ -1,15 +1,19 @@
 .title{
-    font-family: Oswald, sans-serif;
-    font-size: 48px;
-    text-align: center;
-    color: #838f9a;
-    font-weight:bolder;
+    font-family: 'Oswald', sans-serif;
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    padding-top: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #838f9a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    justify-self: center;
 }
-.pink{
-    color: #710a42;
+.title .pink {
+    -webkit-text-fill-color: #710a42 !important;
+    background: none !important;
 }
 .filters-box{
     display: flex;
