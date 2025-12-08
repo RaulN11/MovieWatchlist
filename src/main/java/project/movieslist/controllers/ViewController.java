@@ -183,9 +183,16 @@ public class ViewController {
         String username=auth.getName();
         Optional<Client> clientOpt=clientService.getUserByUsername(username);
         Client authenticatedClient =clientOpt.get();
+        Map<Integer, Movie> top3 = authenticatedClient.getTop3Movies();
+        Movie first=top3.get(1);
+        Movie second=top3.get(2);
+        Movie third=top3.get(3);
         model.addAttribute("recentMovies",recentMovies);
         model.addAttribute("authenticatedClient", authenticatedClient);
         model.addAttribute("client", client);
+        model.addAttribute("first", first);
+        model.addAttribute("second", second);
+        model.addAttribute("third", third);
         return "profile";
     }
     @GetMapping("/searchMenu/{type}/{searched}")

@@ -156,15 +156,43 @@ async function saveProfile() {
 }
 
 
-
+window.selectedTop3Place = 1;
 const firstPlace = document.getElementById('1st');
 const secondPlace= document.getElementById('2nd');
 const thirdPlace = document.getElementById('3rd');
-firstPlace.addEventListener("click", (e) => {
-    const modal = document.getElementById("top3-modal");
-    modal.style.display = 'flex';
 
-})
+if (firstPlace) {
+    firstPlace.addEventListener("click", (e) => {
+        window.selectedTop3Place = 1;
+        openTop3Modal(1);
+    });
+}
+
+if (secondPlace) {
+    secondPlace.addEventListener("click", (e) => {
+        window.selectedTop3Place = 2;
+        openTop3Modal(2);
+    });
+}
+
+if (thirdPlace) {
+    thirdPlace.addEventListener("click", (e) => {
+        window.selectedTop3Place = 3;
+        openTop3Modal(3);
+    });
+}
+
+function openTop3Modal(place) {
+    const modal = document.getElementById("top3-modal");
+    const placeText = document.getElementById("selectedPlace");
+
+    if (placeText) {
+        placeText.textContent = getOrdinalText(place);
+    }
+
+    modal.style.display = 'flex';
+}
+
 const moviePosters = document.querySelectorAll('.movie-grid .movie-poster');
 function setPosterActive(e){
     const activePoster=e.currentTarget;
@@ -176,6 +204,7 @@ function setPosterActive(e){
 moviePosters.forEach(poster => {
     poster.addEventListener('click', setPosterActive);
 })
+
 function closeTop3Modal(){
     document.getElementById('top3-modal').style.display = 'none';
     const moviePosters=document.querySelectorAll('.movie-grid .movie-poster');
@@ -183,4 +212,45 @@ function closeTop3Modal(){
         poster.classList.remove('active');
     })
 }
-function saveTop3
+async function saveTop3(){
+    const activePoster = document.querySelector('.movie-grid .movie-poster.active');
+    if(!activePoster){
+       return;
+    }
+    const movieTid=activePoster.dataset.tid;
+    const place = window.selectedTop3Place;
+
+    try{
+        const response = await fetch(`/client/top3/${place}/${movieTid}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to save top 3 movie');
+        }
+        const placeElement = document.getElementById(`${place}${getOrdinalSuffix(place)}`);
+        if(placeElement) {
+            placeElement.src = activePoster.src;
+        }
+        closeTop3Modal();
+    }catch (error) {
+        throw new Error('Failed to save top 3 movie');
+    }
+}
+function getOrdinalSuffix(num) {
+    if (num === 1) return 'st';
+    if (num === 2) return 'nd';
+    if (num === 3) return 'rd';
+    return 'th';
+}
+function getOrdinalText(num) {
+    return num + getOrdinalSuffix(num);
+}
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('top3-modal');
+    if (e.target === modal) {
+        closeTop3Modal();
+    }
+});

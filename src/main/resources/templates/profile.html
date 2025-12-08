@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Your Profile</title>
-  <link rel="stylesheet" href="/static/css/common.css">
-  <link rel="stylesheet" href="/static/css/profile.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/profile.css">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -77,9 +77,40 @@
   <div class="favourite-movies">
     <p class="title">Your <span class="pink">favourite</span> movies</p>
     <div class="movies">
-      <img src="https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" id="1st" class="movie">
-      <img src="https://m.media-amazon.com/images/M/MV5BMTgzMTEwZjQtMjI2NS00NDEwLWFjNWEtNTNlNzdhODBhMDE0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" id="2nd" class="movie">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcyJYd_sWzQdj87gwIiDRpi6JtzfY6-XLG-w&s" id="3rd" class="movie">
+      <img th:if="${first != null}"
+           th:src="@{'https://image.tmdb.org/t/p/w780/' + ${first.posterPath}}"
+           class="movie"
+           id="1st"
+           alt="poster">
+
+      <img th:unless="${first != null}"
+           src="https://www.haworth.com/content/dam/surfaces/north-america/trim/smooth/other/6r_10/6r_10.jpg"
+           class="movie"
+           id="1st"
+           alt="placeholder">
+      <img th:if="${second != null}"
+           th:src="@{'https://image.tmdb.org/t/p/w780/' + ${second.posterPath}}"
+           class="movie"
+           id="2nd"
+           alt="poster">
+
+      <img th:unless="${second != null}"
+           src="https://www.haworth.com/content/dam/surfaces/north-america/trim/smooth/other/6r_10/6r_10.jpg"
+           class="movie"
+           id="2nd"
+           alt="placeholder">
+      <img th:if="${third != null}"
+           th:src="@{'https://image.tmdb.org/t/p/w780/' + ${third.posterPath}}"
+           class="movie"
+           id="3rd"
+           alt="poster">
+
+      <img th:unless="${third != null}"
+           src="https://www.haworth.com/content/dam/surfaces/north-america/trim/smooth/other/6r_10/6r_10.jpg"
+           class="movie"
+           id="3rd"
+           alt="placeholder">
+
     </div>
   </div>
   <p class="title">Your <span class="pink">stats</span></p>
@@ -150,29 +181,16 @@
 <div id="top3-modal" class="modal1">
   <div class="top3-modal-content">
     <div class="modal-header">
-      <p class="modal-title">Select a movie</p>
+      <p class="modal-title">Select a movie for <span id="selectedPlace">1st</span> place</p>
       <div class="close-btn" onclick="closeTop3Modal()">&times;</div>
     </div>
-<!--    <div class="search-section">-->
-<!--      <input class="top3-bar" placeholder="Search for a movie">-->
-<!--      <i class="fa-solid fa-magnifying-glass"></i>-->
-<!--    </div>-->
     <div class="movie-grid">
-<!--      <img th:each="movie : ${authenticatedClient.watchedMovies}"-->
-<!--           th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"-->
-<!--           class="movie-poster" alt="poster">-->
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-      <img src="https://upload.wikimedia.org/wikipedia/ro/8/8d/Inception_%28film%29.jpg" alt="poster" class="movie-poster">
-
+      <img th:each="movie : ${authenticatedClient.watchedMovies}"
+           th:src="@{'https://image.tmdb.org/t/p/w780/' + ${movie.posterPath}}"
+           th:data-tid="${movie.tid}"
+           th:alt="${movie.title}"
+           class="movie-poster"
+           onerror="this.onerror=null; this.src='https://www.nicepng.com/png/detail/311-3111609_clapperboard-movie-icon.png';">
     </div>
     <div class="modal-buttons">
       <button class="btn cancel-btn" type="button" onclick="closeTop3Modal()">Cancel</button>
@@ -181,5 +199,5 @@
   </div>
 </div>
 </body>
-<script src="/static/js/profile.js" defer></script>
+<script src="/js/profile.js" defer></script>
 </html>
