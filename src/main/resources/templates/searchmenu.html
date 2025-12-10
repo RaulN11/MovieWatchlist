@@ -80,8 +80,9 @@
                 <p class="movie-result-director">Directed by <span th:text="${movie.director}"></span></p>
             </div>
         </div>
+
         <div th:if="${actors != null}" th:each="actor:${actors}" class="result-card">
-            <a th:href="@{'/moviesbyactor/'+ ${actor.fullName}}">
+            <a th:href="@{'/moviesby/actor/' + ${actor.fullName}}">
                 <img th:src="@{'https://image.tmdb.org/t/p/w780'+${actor.picture}}" alt="poster" class="result-poster"
                      onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s';">
             </a>
@@ -93,14 +94,31 @@
                 </div>
             </div>
         </div>
+
         <div th:if="${directors != null}" th:each="director:${directors}" class="result-card">
-            <img th:src="@{'https://image.tmdb.org/t/p/w780'+${director.picture}}" alt="poster" class="result-poster"
-                onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s';">
+            <a th:href="@{'/moviesby/director/' + ${director.fullName}}">
+                <img th:src="@{'https://image.tmdb.org/t/p/w780'+${director.picture}}" alt="poster" class="result-poster"
+                     onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s';">
+            </a>
             <div class="result-info">
                 <p th:text="${director.fullName}" class="result-title"></p>
                 <div class="result-meta">
                     <span th:if="${director.birthDate != null}" th:text="${director.birthDate}" class="result-birthdate"></span>
                     <span th:if="${director.birthPlace != null}" th:text="${director.birthPlace}" class="result-birthplace"></span>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${users != null}" th:each="user:${users}" class="result-card">
+            <a th:href=" @{'/profile/' + ${user.id}}">
+                <img th:src="${user.profilePicture}" alt="poster" class="result-poster"
+                     onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s';">
+            </a>
+            <div class="result-info">
+                <p th:text="${user.username}" class="result-title"></p>
+                <div class="result-meta">
+                    <span th:if="${user.country != null}" th:text="${user.country}" class="result-birthdate"></span>
+                    <span th:if="${user.city != null}" th:text="${user.city}" class="result-birthplace"></span>
                 </div>
             </div>
         </div>

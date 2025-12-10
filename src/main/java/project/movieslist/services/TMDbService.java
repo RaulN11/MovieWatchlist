@@ -210,6 +210,42 @@ public class TMDbService {
                 .sorted(Comparator.comparing(Movie::getYear).reversed())
                 .collect(Collectors.toList());
     }
+    public List<Movie> fetchMoviesByDirector(String name) {
+        List<Director> directors = fetchDirectorsByName(name);
+        Director director=directors.get(0);
+        String directorId = director.getId().toString();
+
+        Map<String, Object> response = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/person/{id}/movie_credits")
+                        .queryParam("api_key",tmDbConfig.getApiKey())
+                        .build(directorId)
+                )
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+        List<Map<String,Object>> crew=(List<Map<String,Object>>) response.get("crew");
+        if (crew == null) {
+            return List.of();
+        }
+        return crew.stream()
+                .filter(c -> "Director".equals(c.get("job")))
+                .map(movieData -> {
+                    Integer movieId = (Integer) movieData.get("id");
+                    Map<String, Object> fullDetails = webClient.get()
+                            .uri(uriBuilder -> uriBuilder
+                                    .path("/movie/{id}")
+                                    .queryParam("api_key", tmDbConfig.getApiKey())
+                                    .queryParam("append_to_response", "credits")
+                                    .build(movieId))
+                            .retrieve()
+                            .bodyToMono(Map.class)
+                            .block();
+                    return mapToMovie(fullDetails);
+                })
+                .sorted(Comparator.comparing(Movie::getYear).reversed())
+                .collect(Collectors.toList());
+    }
 
     public Movie fetchAndSaveMovieByTid(Integer tid) {
         Movie movie = fetchMovieByTid(tid);
