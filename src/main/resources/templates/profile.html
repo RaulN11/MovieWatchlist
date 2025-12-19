@@ -31,9 +31,6 @@
   <div class="hero-section">
     <div class="hero-background"></div>
     <div class="profile-details">
-      <button th:if="${client.id==authenticatedClient.id}" class="edit-profile-btn" onclick="openEditModal()">
-        <i class="fa-solid fa-pen" style="color: white;"></i>
-      </button>
       <img id="profilePicture"
            th:src="${client.profilePicture}"
            alt="profile pic"
@@ -52,6 +49,9 @@
         <span class="detail" th:text="${#temporals.monthNameShort(client.joinedDate)}"></span>
         <span class="detail" th:text="${#temporals.year(client.joinedDate)}"></span>
       </i>
+      <button th:if="${client.id==authenticatedClient.id}" class="edit-profile-btn" onclick="openEditModal()">
+        <i class="fa-solid fa-pen" style="color: white;"></i>
+      </button>
     </div>
     <div class="follow-section">
       <button th:if="${client.id!=authenticatedClient.id}"
@@ -74,8 +74,10 @@
     </div>
 
   </div>
-  <div class="favourite-movies">
-    <p class="title">Your <span class="pink">favourite</span> movies</p>
+  <div th:if = "${first != null || second != null || third != null}" class="favourite-movies">
+    <p class="title" th:text="${client.id == authenticatedClient.id} ? 'Your ' + 'favourite movies' : 'favourite movies'">
+      Your favourite movies
+    </p>
     <div class="movies">
       <img th:if="${first != null}"
            th:src="@{'https://image.tmdb.org/t/p/w780/' + ${first.posterPath}}"

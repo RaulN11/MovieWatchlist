@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import project.movieslist.event_listeners.CustomLogoutSuccessHandler;
 import project.movieslist.services.ClientService;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
@@ -31,6 +32,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SecurityConfig {
     private final ClientService clientService;
+    private final CustomLogoutSuccessHandler logoutSuccessHandler;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -64,6 +66,7 @@ public class SecurityConfig {
             response.sendRedirect("/login?error=true");
         };
     }
+
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
@@ -85,14 +88,15 @@ public class SecurityConfig {
                 })
                 .logout(logout-> {
                     logout.logoutUrl("/logout");
-                    logout.logoutSuccessUrl("/homepage");
+                    logout.logoutSuccessHandler(logoutSuccessHandler);
                     logout.invalidateHttpSession(true);
                     logout.deleteCookies("JSESSIONID");
                     logout.permitAll();
                 })
                 .sessionManagement(session-> session
-                    .maximumSessions(1)
-                    .sessionRegistry(sessionRegistry())
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                        .sessionRegistry(sessionRegistry())
                 )
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(registry -> {
@@ -106,18 +110,18 @@ public class SecurityConfig {
                             "/homepage",
                             "/details/**",
                             "/searchMenu/**",
-                            "/moviesbyactor/**"
+                            "/moviesby/**"
                     ).permitAll();
                     registry.requestMatchers(
-                            "/watched",
+                            "/watched/**",
                             "/watchlist",
                             "/liked",
-                            "/profile",
+                            "/profile/**",
                             "/client/**",
                             "/chat",
                             "/messages/**",
                             "/users",
-                            "/chat"
+                            "/recommendations"
                     ).authenticated();
                     registry.anyRequest().authenticated();
                 })

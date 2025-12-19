@@ -69,7 +69,7 @@ public class ClientController {
         if(username.equals(username1)) {
             throw new RuntimeException("Can not follow yourself");
         }
-        Client authenticatedClient = clientService.getUserByUsername(username).get();
+        Client authenticatedClient = clientService.getUserByUsername(username1).get();
         if (authenticatedClient.getFollowing().contains(username)) {
             return clientService.removeFromFollowing(username1, username);
         } else {

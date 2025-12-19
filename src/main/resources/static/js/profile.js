@@ -18,12 +18,12 @@ function performSearch(){
 }
 const followButton = document.querySelector(".follow-button");
 
-if (followButton) {
+if (followButton && followButton.textContent.trim() !== 'Edit Profile') {
     const profileUsername = document.querySelector('.username').textContent.trim();
-    const isFollowing = followButton.textContent.trim() === 'Following';
 
     followButton.addEventListener("click", async (e) => {
         e.preventDefault();
+        const currentlyFollowing = followButton.textContent.trim() === 'Following';
 
         try {
             const response = await fetch(`/client/followorunfollow/${profileUsername}`, {
@@ -36,10 +36,12 @@ if (followButton) {
             if (!response.ok) {
                 throw new Error('Failed to update follow status');
             }
-            if (followButton.textContent.trim() === 'Following') {
+
+            if (currentlyFollowing) {
                 followButton.textContent = 'Follow';
                 followButton.style.background = 'linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%)';
                 followButton.style.borderColor = '#710a42';
+                followButton.style.color = 'rgba(131, 143, 154, 0.7)';
                 const followerCount = document.querySelector('.follow-number');
                 if (followerCount) {
                     followerCount.textContent = parseInt(followerCount.textContent) - 1;

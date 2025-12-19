@@ -223,24 +223,26 @@ public class ClientService implements UserDetailsService {
                 .orElseThrow(()->new RuntimeException("Client not found"));
         Client client2=clientRepository.findByUsername(c2)
                 .orElseThrow(()->new RuntimeException("Client not found"));
+
         List<String> followingC1=client1.getFollowing();
         if(followingC1==null){
             followingC1=new ArrayList<>();
-            followingC1.add(client2.getUsername());
             client1.setFollowing(followingC1);
         }
-        else{
+
+        if (!followingC1.contains(client2.getUsername())) {
             followingC1.add(client2.getUsername());
         }
+
         List<String> followersc2=client2.getFollowers();
         if(followersc2==null){
             followersc2=new ArrayList<>();
-            followersc2.add(client1.getUsername());
             client2.setFollowers(followersc2);
         }
-        else{
+        if (!followersc2.contains(client1.getUsername())) {
             followersc2.add(client1.getUsername());
         }
+
         clientRepository.save(client2);
         return clientRepository.save(client1);
     }

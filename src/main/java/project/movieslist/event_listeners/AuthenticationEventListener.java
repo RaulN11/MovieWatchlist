@@ -22,10 +22,14 @@ public class AuthenticationEventListener {
 
     @EventListener
     public void onSessionDestroyed(SessionDestroyedEvent event) {
-        event.getSecurityContexts().forEach(context->{
-            if(context.getAuthentication()!=null){
+        event.getSecurityContexts().forEach(context -> {
+            if (context != null && context.getAuthentication() != null) {
                 String username = context.getAuthentication().getName();
-                clientService.setUserOffline(username);
+                try {
+                    clientService.setUserOffline(username);
+                } catch (Exception e) {
+                     e.printStackTrace();
+                }
             }
         });
     }

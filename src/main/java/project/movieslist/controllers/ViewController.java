@@ -183,7 +183,12 @@ public class ViewController {
         String username=auth.getName();
         Optional<Client> clientOpt=clientService.getUserByUsername(username);
         Client authenticatedClient =clientOpt.get();
-        Map<Integer, Movie> top3 = authenticatedClient.getTop3Movies();
+        Map<Integer, Movie> top3;
+        if(!authenticatedClient.equals(client)){
+            top3=client.getTop3Movies();
+        }else {
+            top3=authenticatedClient.getTop3Movies();
+        }
         Movie first=top3.get(1);
         Movie second=top3.get(2);
         Movie third=top3.get(3);

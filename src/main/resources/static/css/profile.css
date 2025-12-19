@@ -13,6 +13,7 @@
     background: radial-gradient(circle at 20% 50%, rgba(113, 10, 66, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(68, 68, 186, 0.15) 0%, transparent 50%);
     z-index: 0;
+    pointer-events: none;
 }
 .profile-body{
     justify-content: center;
@@ -21,10 +22,12 @@
 
 }
 .profile-details{
+    position: relative;
     display: flex;
     flex-direction: column;
     padding-top:40px;
     align-items: center;
+    z-index: 1;
 }
 .profile-picture{
     height: 300px;
@@ -218,9 +221,7 @@ p{
     margin-bottom: 20px;
 }
 .edit-profile-btn{
-    position: absolute;
-    top: 120px;
-    right: 40%;
+    margin-right: 5px;
     background: #710a42;
     border: none;
     border-radius: 50%;
