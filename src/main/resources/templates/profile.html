@@ -74,7 +74,7 @@
     </div>
 
   </div>
-  <div th:if = "${first != null || second != null || third != null}" class="favourite-movies">
+  <div th:if="${client.id == authenticatedClient.id or first != null or second != null or third != null}" class="favourite-movies">
     <p class="title" th:text="${client.id == authenticatedClient.id} ? 'Your ' + 'favourite movies' : 'favourite movies'">
       Your favourite movies
     </p>

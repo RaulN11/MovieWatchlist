@@ -1,4 +1,4 @@
-package project.movieslist.security;
+package project.movieslist.configurations;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

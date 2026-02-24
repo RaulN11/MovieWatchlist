@@ -1,5 +1,5 @@
-body {
-    font-family: 'Oswald', sans-serif;
+body{
+    font-family: Oswald,sans-serif;
     background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
     min-height: 100vh;
     display: flex;
@@ -22,6 +22,7 @@ body::before{
     left: -100px;
     animation: float 20s infinite ease-in-out;
 }
+
 body::after {
     content: '';
     position: absolute;
@@ -32,16 +33,17 @@ body::after {
     right: -100px;
     animation: float 15s infinite ease-in-out reverse;
 }
+
 @keyframes float {
     0%, 100% { transform: translate(0, 0) scale(1); }
     50% { transform: translate(50px, 50px) scale(1.1); }
 }
 
 .verification-container {
-    width: 100%;
-    max-width: 500px;
     position: relative;
     z-index: 1;
+    width: 90%;
+    max-width: 500px;
 }
 
 .verification-box {
@@ -59,6 +61,8 @@ body::after {
     color: #fff;
     font-size: 32px;
     font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .verification-box p {
@@ -99,19 +103,18 @@ body::after {
 
 .btn {
     display: inline-block;
-    padding: 14px 35px;
+    padding: 15px 40px;
     background: linear-gradient(135deg, #710a42 0%, #8f0d52 100%);
     border: none;
+    border-radius: 10px;
     color: white;
     text-decoration: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
     font-family: 'Oswald', sans-serif;
-    transition: all 0.3s ease;
+    font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .btn:hover {
@@ -122,7 +125,7 @@ body::after {
 .title {
     text-align: center;
     font-size: 48px;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 .first-word {

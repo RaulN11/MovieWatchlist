@@ -1,9 +1,7 @@
 package project.movieslist.controllers;
 
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import project.movieslist.model.Client;
@@ -69,7 +67,7 @@ public class ClientController {
         if(username.equals(username1)) {
             throw new RuntimeException("Can not follow yourself");
         }
-        Client authenticatedClient = clientService.getUserByUsername(username1).get();
+        Client authenticatedClient = clientService.getUserByUsername(username1);
         if (authenticatedClient.getFollowing().contains(username)) {
             return clientService.removeFromFollowing(username1, username);
         } else {
@@ -81,7 +79,7 @@ public class ClientController {
         Optional<Movie> optMovie = movieService.getMovieByTid(tid);
         Movie movie = optMovie.orElseThrow(() -> new RuntimeException("Movie not found"));
         String username = auth.getName();
-        Client client = clientService.getUserByUsername(username).get();
+        Client client = clientService.getUserByUsername(username);
         Review review1 = new Review();
         review1.setAuthor(client.getUsername());
         review1.setAuthorPicture(client.getProfilePicture());
@@ -96,46 +94,46 @@ public class ClientController {
     @PostMapping("/addpicture")
     public Client addProfilePicture(@RequestBody String url, Authentication auth) {
         String username = auth.getName();
-        Client client = clientService.getUserByUsername(username).get();
+        Client client = clientService.getUserByUsername(username);
         return clientService.addProfilePicture(client,url);
     }
     @PostMapping("/addbio")
     public Client addBio(@RequestBody String bio, Authentication auth) {
         String username=auth.getName();
-        Client client = clientService.getUserByUsername(username).get();
+        Client client = clientService.getUserByUsername(username);
         return clientService.addBio(client,bio);
 
     }
     @PostMapping("/addcity")
     public Client addCity(@RequestBody String city, Authentication auth) {
         String username=auth.getName();
-        Client client = clientService.getUserByUsername(username).get();
+        Client client = clientService.getUserByUsername(username);
         return clientService.addCity(client,city);
     }
     @PostMapping("/addcountry")
     public Client addCountry(@RequestBody String country, Authentication auth) {
         String username=auth.getName();
-        Client client = clientService.getUserByUsername(username).get();
+        Client client = clientService.getUserByUsername(username);
         return clientService.addCountry(client,country);
     }
     @PostMapping("/top3/{place}/{tid}")
     public Client addToTop3(@PathVariable Integer tid, @PathVariable Integer place, Authentication auth){
         String username=auth.getName();
-        Client client = clientService.getUserByUsername(username).get();
+        Client client = clientService.getUserByUsername(username);
         Movie movie=tmDbService.fetchMovieByTid(tid);
         return clientService.addToTop3(client, movie, place);
     }
     @GetMapping("/testai")
     public String testAi(Authentication auth){
         String username=auth.getName();
-        Client client = clientService.getUserByUsername(username).get();
+        Client client = clientService.getUserByUsername(username);
         Map<Integer, Movie> top3= client.getTop3Movies();
         return aiService.generateRecommendations(top3);
     }
     @GetMapping("/api/recommendations")
     public ResponseEntity<List<Movie>> getRecommendations(Authentication auth){
         String username=auth.getName();
-        Client client = clientService.getUserByUsername(username).get();
+        Client client = clientService.getUserByUsername(username);
         String aiResponse=aiService.generateRecommendations(client.getTop3Movies());
         List<Movie> movies= aiService.parseAndFetchMovies(aiResponse);
         return ResponseEntity.ok(movies);

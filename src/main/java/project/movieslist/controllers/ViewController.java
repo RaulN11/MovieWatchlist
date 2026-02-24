@@ -39,9 +39,7 @@ public class ViewController {
     @GetMapping("/homepage")
     public String allMovies(Model model, HttpServletRequest request, Authentication auth) {
         if (auth != null) {
-            String username=auth.getName();
-            Optional<Client> clientOpt=clientService.getUserByUsername(username);
-            Client client = clientOpt.get();
+            Client client=clientService.getUserByUsername(auth.getName());
             model.addAttribute("client", client);
         }
         List<Movie> topUpcoming =tmDbService.getUpcomingMovies()
@@ -66,9 +64,7 @@ public class ViewController {
         Movie movie;
         movie = moviesInDb.orElseGet(() -> tmDbService.fetchMovieByTid(tid));
         if (auth != null) {
-            String username=auth.getName();
-            Optional<Client>clientOpt=clientService.getUserByUsername(username);
-            Client client = clientOpt.get();
+            Client client=clientService.getUserByUsername(auth.getName());
             List<Movie> likedMovies=client.getLikedMovies()!=null ? client.getLikedMovies(): List.of();
             List<Movie> watchedMovies=client.getWatchedMovies()!=null ? client.getWatchedMovies(): List.of();
             List<Movie> watchlist = client.getWatchList() != null ? client.getWatchList() : List.of();
@@ -85,10 +81,8 @@ public class ViewController {
 
     @GetMapping("/watched/{filter}")
     public String watchedMovies(Model model,HttpServletRequest request, Authentication auth, @PathVariable String filter){
-        String username=auth.getName();
-        Optional<Client>clientOpt=clientService.getUserByUsername(username);
-        Client client=clientOpt.get();
-        var movies=clientService.getWatchedMoviesByUsername(username);
+        Client client=clientService.getUserByUsername(auth.getName());
+        var movies=clientService.getWatchedMoviesByUsername(auth.getName());
         switch (filter){
             case "all":
                 model.addAttribute("movies", movies);
@@ -128,10 +122,8 @@ public class ViewController {
     }
     @GetMapping("/watchlist")
     public String watchlistMovies(Model model, HttpServletRequest request, Authentication auth) {
-        String username=auth.getName();
-        Optional<Client>clientOpt=clientService.getUserByUsername(username);
-        Client client=clientOpt.get();
-        var movies=clientService.getWatchlistByUsername(username);
+        Client client=clientService.getUserByUsername(auth.getName());
+        var movies=clientService.getWatchlistByUsername(auth.getName());
         int totalMinutes = 0;
         for (Movie movie : movies) {
             String runtimeStr = movie.getRuntime();
@@ -166,9 +158,8 @@ public class ViewController {
     }
     @GetMapping("/profile/{id}")
     public String profile(Model model, Authentication auth, @PathVariable String id) {
-        Optional<Client> clientOpt1=clientService.getUserById(id);
-        Client client=clientOpt1.get();
-        Map<Integer, LocalDateTime> dates=client.getMovieDates();
+        Client searchedClient=clientService.getUserById(id);
+        Map<Integer, LocalDateTime> dates=searchedClient.getMovieDates();
         List<Integer> recentTid=dates.entrySet()
                 .stream()
                 .sorted(Map.Entry.<Integer, LocalDateTime>comparingByValue().reversed())
@@ -181,11 +172,10 @@ public class ViewController {
                 .toList();
 
         String username=auth.getName();
-        Optional<Client> clientOpt=clientService.getUserByUsername(username);
-        Client authenticatedClient =clientOpt.get();
+        Client authenticatedClient =clientService.getUserByUsername(auth.getName());
         Map<Integer, Movie> top3;
-        if(!authenticatedClient.equals(client)){
-            top3=client.getTop3Movies();
+        if(!authenticatedClient.equals(authenticatedClient)){
+            top3= authenticatedClient.getTop3Movies();
         }else {
             top3=authenticatedClient.getTop3Movies();
         }
@@ -194,7 +184,7 @@ public class ViewController {
         Movie third=top3.get(3);
         model.addAttribute("recentMovies",recentMovies);
         model.addAttribute("authenticatedClient", authenticatedClient);
-        model.addAttribute("client", client);
+        model.addAttribute("client", searchedClient);
         model.addAttribute("first", first);
         model.addAttribute("second", second);
         model.addAttribute("third", third);
@@ -204,9 +194,7 @@ public class ViewController {
     public String searchMenu(@PathVariable String searched,@PathVariable String type, Model model, Authentication auth){
         List<Movie>byTitle= tmDbService.fetchMoviesByTitle(searched);
         if(auth!=null) {
-            String username = auth.getName();
-            Optional<Client> clientOpt = clientService.getUserByUsername(username);
-            Client client = clientOpt.get();
+            Client client=clientService.getUserByUsername(auth.getName());
             model.addAttribute("client", client);
         }
         switch (type.toLowerCase()){
@@ -220,11 +208,9 @@ public class ViewController {
         return "searchmenu";
     }
     @GetMapping("/moviesby/{type}/{searched}")
-    public String showMoviesBy(@PathVariable String type, @PathVariable String searched, Authentication authentication,Model model){
-        if(authentication!=null){
-            String username=authentication.getName();
-            Optional<Client>clientOpt=clientService.getUserByUsername(username);
-            Client client=clientOpt.get();
+    public String showMoviesBy(@PathVariable String type, @PathVariable String searched, Authentication auth, Model model){
+        if(auth!=null){
+            Client client=clientService.getUserByUsername(auth.getName());
             model.addAttribute("client",client);
         }
         switch (type.toLowerCase()){
@@ -237,22 +223,19 @@ public class ViewController {
     }
     @GetMapping("/chat")
     public String chat(Model model, Authentication auth){
-        String username=auth.getName();
-        Optional<Client> clientOpt=clientService.getUserByUsername(username);
-        Client client=clientOpt.get();
+        Client client=clientService.getUserByUsername(auth.getName());
         model.addAttribute("client", client);
         List<String> followingNamesList=client.getFollowing();
         List<Client> followingList=new ArrayList<>();
         for(String name: followingNamesList) {
-            followingList.add(clientService.getUserByUsername(name).get());
+            followingList.add(clientService.getUserByUsername(name));
         }
         model.addAttribute("followingList", followingList);
         return "chat";
     }
     @GetMapping("/recommendations")
     public String recommendations(Model model, Authentication auth){
-        String username=auth.getName();
-        Client client=clientService.getUserByUsername(username).get();
+        Client client=clientService.getUserByUsername(auth.getName());
         model.addAttribute("client", client);
         return "recommendations";
     }

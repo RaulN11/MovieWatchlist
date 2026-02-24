@@ -275,7 +275,7 @@ public class TMDbService {
                 .block();
 
         List<Map<String, Object>> results = (List<Map<String, Object>>) response.get("results");
-        if (results.isEmpty()) return null;
+        if (results.isEmpty()) return List.of();
 
         List<Actor> actors = new ArrayList<>();
         for (Map<String, Object> result : results) {
@@ -320,7 +320,7 @@ public class TMDbService {
                 .bodyToMono(Map.class)
                 .block();
         List<Map<String, Object>> results = (List<Map<String, Object>>) response.get("results");
-        if (results.isEmpty()) return null;
+        if (results.isEmpty()) return List.of();
         List<Director> directors = new ArrayList<>();
         for (Map<String, Object> result : results) {
             Integer directorId=(Integer)result.get("id");

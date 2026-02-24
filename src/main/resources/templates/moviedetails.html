@@ -105,7 +105,7 @@
     <hr class="separator">
         <div class="cast-list">
             <div class="actor" th:each="actor : ${movie.actors}">
-                <a th:href="'/moviesbyactor/'+${actor.getFullName()}">
+                <a th:href="'/moviesby/actor/'+${actor.getFullName()}">
                     <img th:src="@{'https://image.tmdb.org/t/p/w780/' + ${actor.picture}}"
                          alt="Actor Poster"
                          class="actor-poster"

@@ -27,11 +27,11 @@ public class ClientService implements UserDetailsService {
         return client.map(ClientSecurity::new)
                 .orElseThrow(()->new UsernameNotFoundException("Username not found!"+username));
     }
-    public Optional<Client> getUserByUsername(String username){
-        return clientRepository.findByUsername(username);
+    public Client getUserByUsername(String username){
+        return clientRepository.findByUsername(username).get();
     }
-    public Optional<Client> getUserById(String id){
-        return clientRepository.findById(id);
+    public Client getUserById(String id){
+        return clientRepository.findById(id).get();
     }
     public List<Client> getAllClientsByUsername(String username){
         return clientRepository.findAllByUsername(username);
@@ -80,8 +80,7 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
     }
     public Client removeMovieFromWatched(String username, Integer tid){
-        Client client=clientRepository.findByUsername(username)
-                .orElseThrow(()->new RuntimeException("Client not found"));
+        Client client=getUserByUsername(username);
         Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(() -> {
                     Movie fetched = tmDbService.fetchMovieByTid(tid);
@@ -105,8 +104,7 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
     }
     public Client addMoviesToWatchlist(String username, Integer tid){
-        Client client=clientRepository.findByUsername(username)
-                .orElseThrow(()->new RuntimeException("Client not found"));
+        Client client=getUserByUsername(username);
         Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(()->{
                     Movie fetched = tmDbService.fetchAndSaveMovieByTid(tid);
@@ -131,8 +129,7 @@ public class ClientService implements UserDetailsService {
 
     }
     public Client removeMovieFromWatchlist(String username, Integer tid){
-        Client client=clientRepository.findByUsername(username)
-                .orElseThrow(()->new RuntimeException("Client not found"));
+        Client client=getUserByUsername(username);
         Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(() -> {
                     Movie fetched = tmDbService.fetchMovieByTid(tid);
@@ -150,8 +147,7 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
     }
     public Client addMovieToLiked(String username, Integer tid){
-        Client client=clientRepository.findByUsername(username)
-                .orElseThrow(()->new RuntimeException("Client not found"));
+        Client client=getUserByUsername(username);
         Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(()->{
                     Movie fetched = tmDbService.fetchAndSaveMovieByTid(tid);
@@ -172,8 +168,7 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
     }
     public Client removeMovieFromLiked(String username, Integer tid){
-        Client client=clientRepository.findByUsername(username)
-                .orElseThrow(()->new RuntimeException("Client not found"));
+        Client client=getUserByUsername(username);
         Movie movie=movieRepository.findMovieByTid(tid)
                 .orElseGet(() -> {
                     Movie fetched = tmDbService.fetchMovieByTid(tid);
@@ -192,8 +187,7 @@ public class ClientService implements UserDetailsService {
         return clientRepository.save(client);
     }
     public List<Movie> getWatchedMoviesByUsername(String username){
-        Client client=clientRepository.findByUsername(username)
-                .orElseThrow(()->new RuntimeException("Client not found"));
+        Client client=getUserByUsername(username);
         List<Movie> watched=client.getWatchedMovies();
         if(watched==null){
             watched=new ArrayList<>();
@@ -201,8 +195,7 @@ public class ClientService implements UserDetailsService {
         return watched;
     }
     public List<Movie> getWatchlistByUsername(String username){
-        Client client=clientRepository.findByUsername(username)
-                .orElseThrow(()->new RuntimeException("Client not found"));
+        Client client=getUserByUsername(username);
         List<Movie> watchlist=client.getWatchList();
         if(watchlist==null){
             watchlist=new ArrayList<>();
@@ -210,8 +203,7 @@ public class ClientService implements UserDetailsService {
         return watchlist;
     }
     public List<Movie> getLikedByUsername(String username){
-        Client client=clientRepository.findByUsername(username)
-                .orElseThrow(()->new RuntimeException("Client not found"));
+        Client client=getUserByUsername(username);
         List<Movie> liked=client.getLikedMovies();
         if (liked==null){
             liked=new ArrayList<>();
@@ -219,11 +211,8 @@ public class ClientService implements UserDetailsService {
         return liked;
     }
     public Client addToFollowing(String c1, String c2){
-        Client client1=clientRepository.findByUsername(c1)
-                .orElseThrow(()->new RuntimeException("Client not found"));
-        Client client2=clientRepository.findByUsername(c2)
-                .orElseThrow(()->new RuntimeException("Client not found"));
-
+        Client client1=getUserByUsername(c1);
+        Client client2=getUserByUsername(c2);
         List<String> followingC1=client1.getFollowing();
         if(followingC1==null){
             followingC1=new ArrayList<>();
@@ -248,19 +237,16 @@ public class ClientService implements UserDetailsService {
     }
 
     public Client removeFromFollowing(String c1, String c2) {
-        Client client1 = clientRepository.findByUsername(c1)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
-        Client client2 = clientRepository.findByUsername(c2)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
-
+        Client client1=getUserByUsername(c1);
+        Client client2=getUserByUsername(c2);
         List<String> followingC1 = client1.getFollowing();
         if (followingC1 != null) {
             followingC1.remove(client2.getUsername());
         }
 
-        List<String> followersc2 = client2.getFollowers();
-        if (followersc2 != null) {
-            followersc2.remove(client1.getUsername());
+        List<String> followersC2 = client2.getFollowers();
+        if (followersC2 != null) {
+            followersC2.remove(client1.getUsername());
         }
 
         clientRepository.save(client2);
