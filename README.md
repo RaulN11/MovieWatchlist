@@ -32,6 +32,7 @@ git clone [https://github.com/RaulN11/MovieWatchlist.git](https://github.com/Rau
 cd MovieWatchlist
 ```
 **2. Configure Environment Variables**
+
 Create a .env file in the root directory by copying the provided example file:
 ```bash
 cp .env.example .env
@@ -41,4 +42,5 @@ cp .env.example .env
 docker-compose up --build
 ```
 **4. Access the App**
+
 Once the containers are running, open your browser and navigate to: http://localhost:8080/homepage
