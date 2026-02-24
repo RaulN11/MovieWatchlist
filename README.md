@@ -28,5 +28,17 @@ Before running the application, ensure you have the following installed:
 
 **1. Clone the repository**
 ```bash
-git clone [https://github.com/yourusername/MovieWatchlist.git](https://github.com/yourusername/MovieWatchlist.git)
+git clone [https://github.com/RaulN11/MovieWatchlist.git](https://github.com/RaulN11/MovieWatchlist.git)
 cd MovieWatchlist
+```
+**2. Configure Environment Variables**
+Create a .env file in the root directory by copying the provided example file:
+```bash
+cp .env.example .env
+```
+**3.Run the Application with Docker Compose**
+```bash
+docker-compose up --build
+```
+**4. Access the App**
+Once the containers are running, open your browser and navigate to: http://localhost:8080/homepage
