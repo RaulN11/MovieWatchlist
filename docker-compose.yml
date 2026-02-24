@@ -3,25 +3,12 @@ services:
     image: mongo:latest
     ports:
       - "27017:27017"
-    healthcheck:
-      test: mongosh --eval 'db.runCommand("ping").ok' --quiet
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
 
   app:
     build: .
     ports:
       - "8080:8080"
-    environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/moviesdb
-      - SPRING_MAIL_HOST=smtp.gmail.com
-      - SPRING_MAIL_PORT=587
-      - SPRING_MAIL_USERNAME=raulnicula2004@gmail.com
-      - SPRING_MAIL_PASSWORD=zrvl jway pxpn kwrz
-      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
-      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
     depends_on:
-      mongodb:
-        condition: service_healthy
+      - mongodb
+    env_file:
+      - .env
